@@ -21,9 +21,9 @@ syntax on " syntax highlighing
 filetype on " try to detect filetypes
 filetype plugin indent on " enable loading indent file for filetype
 
-""" appearence
-colorscheme solarized
+""" appearance
 set background=dark " We are using dark background in vim
+colorscheme solarized
 set title " show title in console title bar
 
 """ completions

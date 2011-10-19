@@ -25,3 +25,9 @@
 [submodule "_vim/vimoutliner"]
 	path = _vim/vimoutliner
 	url = https://github.com/vimoutliner/vimoutliner.git
+[submodule "_vim/bundle/vimoutliner"]
+	path = _vim/bundle/vimoutliner
+	url = https://github.com/vimoutliner/vimoutliner.git
+[submodule "_vim/bundle/vim-colors-solarized"]
+	path = _vim/bundle/vim-colors-solarized
+	url = https://github.com/altercation/vim-colors-solarized.git
