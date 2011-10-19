@@ -22,3 +22,6 @@
 [submodule "_vim/vim-colors-solarized"]
 	path = _vim/vim-colors-solarized
 	url = https://github.com/altercation/vim-colors-solarized.git
+[submodule "_vim/vimoutliner"]
+	path = _vim/vimoutliner
+	url = https://github.com/vimoutliner/vimoutliner.git
