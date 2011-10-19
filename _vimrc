@@ -5,7 +5,7 @@
 set modelines=0 " disable security holes
 set nocompatible " not compatiable with vi
 set encoding=utf-8
-
+let mapleader = ','
 " ==========================================================
 " Pathogen - Allows us to organize our vim plugins
 " ==========================================================
@@ -22,7 +22,7 @@ filetype on " try to detect filetypes
 filetype plugin indent on " enable loading indent file for filetype
 
 """ appearence
-colorscheme molokai
+colorscheme solarized
 set background=dark " We are using dark background in vim
 set title " show title in console title bar
 
@@ -178,6 +178,7 @@ au FileType python setlocal expandtab shiftwidth=4 tabstop=8 softtabstop=4 smart
 " PyFlakes
 " Don't let pyflakes use the quickfix window
 "let g:pyflakes_use_quickfix = 0
+highlight PyFlakes ctermbg=red
 
 "pep8
 let g:pep8_map='<leader>8'
