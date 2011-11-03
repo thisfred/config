@@ -1,1 +1,1 @@
-/home/wavy/.myconfig/_vim
+/home/eric/github/vim-config/_vim

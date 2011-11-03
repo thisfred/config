@@ -27,7 +27,6 @@ colorscheme solarized
 set title " show title in console title bar
 
 """ completions
-set wildmenu " Menu completion in command mode on <Tab>
 set wildmode=full " <Tab> cycles between all matching choices.
 set wildignore+=*.o,*.obj,.git,*.pyc
 
