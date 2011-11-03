@@ -166,10 +166,13 @@ au BufRead *.js set makeprg=jslint\ %
 
 " Python
 "au BufRead *.py compiler nose
-au FileType python set omnifunc=pythoncomplete#Complete
-au FileType python setlocal expandtab shiftwidth=4 tabstop=8 softtabstop=4 smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+"au FileType python set omnifunc=pythoncomplete#Complete
+au FileType python setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4 smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 
 
+let g:pyindent_open_paren = '&sw'
+let g:pyindent_nested_paren = '&sw'
+let g:pyindent_continue = '&sw'
 
 " ===========================================================
 " Plugin config
@@ -177,7 +180,7 @@ au FileType python setlocal expandtab shiftwidth=4 tabstop=8 softtabstop=4 smart
 
 " PyFlakes
 " Don't let pyflakes use the quickfix window
-"let g:pyflakes_use_quickfix = 0
+let g:pyflakes_use_quickfix = 0
 highlight PyFlakes ctermbg=red
 
 "pep8
