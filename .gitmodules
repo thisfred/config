@@ -31,3 +31,6 @@
 [submodule "_vim/bundle/vim-colors-solarized"]
 	path = _vim/bundle/vim-colors-solarized
 	url = https://github.com/altercation/vim-colors-solarized.git
+[submodule "_vim/bundle/vcscommand"]
+	path = _vim/bundle/vcscommand
+	url = git://repo.or.cz/vcscommand

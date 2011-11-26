@@ -105,7 +105,7 @@ set gdefault " global by default
 set smarttab " Handle tabs more intelligently
 set hlsearch " Highlight searches by default.
 set incsearch " Incrementally search while typing a /regex
-
+set clipboard=unnamed,autoselect
 
 
 " ===============
@@ -148,8 +148,8 @@ nnoremap <leader>S :%s/\s\+$//<cr>:let @/=''<CR>
 " Select the item in the list with enter
 "inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
-
-
+" add python debug statement
+nmap <c-p> oimport pdb; pdb.set_trace()<Esc>
 
 " ===========================================================
 " auto/FileType specific changes
@@ -164,8 +164,8 @@ autocmd FileType html,xhtml,xml,css setlocal expandtab shiftwidth=2 tabstop=2 so
 au BufRead *.js set makeprg=jslint\ %
 
 " Python
-"au BufRead *.py compiler nose
-"au FileType python set omnifunc=pythoncomplete#Complete
+" au BufRead *.py compiler nose
+au FileType python set omnifunc=pythoncomplete#Complete
 au FileType python setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4 smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 
 
@@ -186,8 +186,8 @@ highlight PyFlakes ctermbg=red
 let g:pep8_map='<leader>8'
 
 " SuperTab
-let g:SuperTabDefaultCompletionType = "context"
-set completeopt=menuone,longest,preview
+" let g:SuperTabDefaultCompletionType = "context"
+" set completeopt=menuone,longest,preview
 
 " NerdTree
 " Open NerdTree
@@ -200,4 +200,5 @@ map <leader>j :RopeGotoDefinition<CR>
 
 " Rename whatever the cursor is on (including references to it)
 map <leader>r :RopeRename<CR>
-
+set pastetoggle=<F2>
+set switchbuf=useopen
