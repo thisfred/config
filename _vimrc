@@ -44,7 +44,6 @@ set backspace=2 " Allow backspacing over autoindent, EOL, and BOL
 """line numbers
 set number " Display line numbers
 set numberwidth=1 " using only 1 column (and 1 space) while possible
-set relativenumber " relative line nos
 set ruler " show the cursor position all the time
 
 """ line endings/length
