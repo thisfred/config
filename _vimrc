@@ -201,3 +201,11 @@ map <leader>j :RopeGotoDefinition<CR>
 map <leader>r :RopeRename<CR>
 set pastetoggle=<F2>
 set switchbuf=useopen
+
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
+let g:syntastic_enable_signs=1
+"let g:syntastic_auto_jump=1
+"let g:syntastic_auto_loc_list=1
+"SyntasticEnable python
