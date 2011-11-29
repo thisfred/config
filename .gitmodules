@@ -34,3 +34,6 @@
 [submodule "_vim/bundle/vcscommand"]
 	path = _vim/bundle/vcscommand
 	url = git://repo.or.cz/vcscommand
+[submodule "_vim/bundle/syntastic"]
+	path = _vim/bundle/syntastic
+	url = https://github.com/scrooloose/syntastic.git
