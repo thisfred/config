@@ -22,8 +22,6 @@ filetype on " try to detect filetypes
 filetype plugin indent on " enable loading indent file for filetype
 
 """ appearance
-set background=dark " We are using dark background in vim
-colorscheme solarized
 set title " show title in console title bar
 
 """ completions
@@ -202,10 +200,10 @@ map <leader>r :RopeRename<CR>
 set pastetoggle=<F2>
 set switchbuf=useopen
 
-"set statusline+=%#warningmsg#
-"set statusline+=%{SyntasticStatuslineFlag()}
-"set statusline+=%*
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
 let g:syntastic_enable_signs=1
-"let g:syntastic_auto_jump=1
-"let g:syntastic_auto_loc_list=1
-"SyntasticEnable python
+let g:syntastic_auto_jump=1
+let g:syntastic_auto_loc_list=1
+
