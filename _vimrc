@@ -26,7 +26,8 @@ set title " show title in console title bar
 
 """ completions
 set wildmode=full " <Tab> cycles between all matching choices.
-set wildignore+=*.o,*.obj,.git,*.pyc
+set wildignore+=*.o,*.obj,.git,*.pyc,.svn,.bzr
+set tildeop
 
 """ don't bell or blink
 set noerrorbells
@@ -43,6 +44,7 @@ set backspace=2 " Allow backspacing over autoindent, EOL, and BOL
 set number " Display line numbers
 set numberwidth=1 " using only 1 column (and 1 space) while possible
 set ruler " show the cursor position all the time
+set rnu
 
 """ line endings/length
 set textwidth=79
@@ -88,7 +90,7 @@ set showcmd " Show incomplete normal mode commands as I type.
 set report=0 " : commands always print changed line count.
 set shortmess+=a " Use [+]/[RO]/[w] for modified/readonly/written.
 set laststatus=2 " Always show statusline, even if only 1 window.
-set statusline=[%l,%v\ %P%M]\ %f\ %r%h%w\ (%{&ff})\ %{fugitive#statusline()}
+set statusline=[%l,%v\ %P%M]\ %f\ %r%h%w\ (%{&ff})
 
 " displays tabs with :set list & displays when a line runs off-screen
 set listchars=tab:->,trail:-,precedes:<,extends:>
@@ -165,6 +167,21 @@ au BufRead *.js set makeprg=jslint\ %
 au FileType python set omnifunc=pythoncomplete#Complete
 au FileType python setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4 smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 
+function! SuperCleverTab()
+    if strpart(getline('.'), 0, col('.') - 1) =~ '^\s*$'
+        return "\<tab>"
+    else
+        "if &omnifunc != ''
+        "    return "\\"
+        "elseif &dictionary != ''
+        "    return "\"
+        "else
+            return "\<C-P>"
+        "endif
+    endif
+endfunction
+inoremap <Tab> <C-R>=SuperCleverTab()<cr>
+
 let g:pyindent_open_paren = '&sw'
 let g:pyindent_nested_paren = '&sw'
 let g:pyindent_continue = '&sw'
@@ -174,8 +191,6 @@ let g:pyindent_continue = '&sw'
 " ============================================================
 
 set background=dark
-let g:solarized_termtrans=1
-let g:solarized_termcolors=256
 colorscheme solarized
 
 set statusline+=%#warningmsg#
@@ -183,5 +198,4 @@ set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 let g:syntastic_enable_signs=1
 let g:syntastic_auto_jump=1
-let g:syntastic_auto_loc_list=1
-
+set pastetoggle=<F2>
