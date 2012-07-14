@@ -25,9 +25,10 @@ filetype plugin indent on " enable loading indent file for filetype
 set title " show title in console title bar
 
 """ completions
-set wildmode=full " <Tab> cycles between all matching choices.
+set wildmode=longest " <Tab> cycles between all matching choices.
 set wildignore+=*.o,*.obj,.git,*.pyc,.svn,.bzr
 set tildeop
+set completeopt=longest
 
 """ don't bell or blink
 set noerrorbells
@@ -44,7 +45,6 @@ set backspace=2 " Allow backspacing over autoindent, EOL, and BOL
 set number " Display line numbers
 set numberwidth=1 " using only 1 column (and 1 space) while possible
 set ruler " show the cursor position all the time
-set rnu
 
 """ line endings/length
 set textwidth=79
@@ -56,8 +56,6 @@ set linebreak " don't wrap textin the middle of a word
 set ffs=unix,dos,mac " Try recognizing dos, unix, and mac line endings.
 
 """ indentation
-set autoindent " always set autoindenting on
-set smartindent " use smart indent if there is no indent file
 set tabstop=4 " <tab> inserts 4 spaces
 set shiftwidth=4 " but an indent level is 2 spaces wide.
 set softtabstop=4 " <BS> over an autoindent deletes both spaces.
@@ -75,12 +73,6 @@ set noswapfile
 set noautowrite " Never write a file unless I request it.
 set noautowriteall " NEVER.
 set noautoread " Don't automatically re-read changed files.
-" save on focus lost
-au FocusLost * :wa 
-
-" close preview window automatically when we move around
-autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
-autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 
 """" Messages, Info, Status
 set ls=2 " allways show status line
@@ -115,28 +107,24 @@ set clipboard=unnamed,autoselect
 command! W :w
 
 " sudo write this
-cmap W! w !sudo tee % >/dev/null
-cmap w!! w !sudo tee % >/dev/null
+cnoremap W! w !sudo tee % >/dev/null
+cnoremap w!! w !sudo tee % >/dev/null
 
 " window navigation
-map <c-j> <c-w>j
-map <c-k> <c-w>k
-map <c-l> <c-w>l
-map <c-h> <c-w>h
+noremap <c-j> <c-w>j
+noremap <c-k> <c-w>k
+noremap <c-l> <c-w>l
+noremap <c-h> <c-w>h
 
 " and lets make these all work in insert mode too ( <C-O> makes next cmd
 " happen as if in command mode )
-imap <C-W> <C-O><C-W>
-
-" Paste from clipboard
-map <leader>p "+gP
+inoremap <C-W> <C-O><C-W>
 
 " open/close the quickfix window
-nmap <leader>c :copen<CR>
-nmap <leader>cc :cclose<CR>
-
-" Quit window on <leader>q
-nnoremap <leader>q :q<CR>
+nnoremap <leader>c :copen<CR>
+nnoremap <leader>n :cnext<CR>
+nnoremap <leader>p :cprevious<CR>
+nnoremap <leader>cc :cclose<CR>
 
 " hide matches on <leader>space
 nnoremap <leader><space> :nohlsearch<cr>
@@ -148,36 +136,31 @@ nnoremap <leader>S :%s/\s\+$//<cr>:let @/=''<CR>
 "inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 " add python debug statement
-nmap <c-p> oimport pdb; pdb.set_trace()<Esc>
+nnoremap <c-p> oimport pdb; pdb.set_trace()<Esc>
 
 " ===========================================================
 " auto/FileType specific changes
 " ============================================================
 
-
-" Mako/HTML
-autocmd BufNewFile,BufRead *.mako,*.mak setlocal ft=html
-autocmd FileType html,xhtml,xml,css setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
-
 "Javascript
-au BufRead *.js set makeprg=jslint\ %
+augroup js
+    autocmd!
+    au BufRead *.js set makeprg=jslint\ %
+augroup END
 
 " Python
 " au BufRead *.py compiler nose
-au FileType python set omnifunc=pythoncomplete#Complete
-au FileType python setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4 smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+" au FileType python set omnifunc=pythoncomplete#Complete
+augroup py
+    autocmd!
+    au FileType python setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4 nosmartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+augroup END
 
 function! SuperCleverTab()
     if strpart(getline('.'), 0, col('.') - 1) =~ '^\s*$'
         return "\<tab>"
     else
-        "if &omnifunc != ''
-        "    return "\\"
-        "elseif &dictionary != ''
-        "    return "\"
-        "else
-            return "\<C-P>"
-        "endif
+        return "\<C-P>"
     endif
 endfunction
 inoremap <Tab> <C-R>=SuperCleverTab()<cr>
@@ -190,6 +173,8 @@ let g:pyindent_continue = '&sw'
 " Plugin config
 " ============================================================
 
+let g:solarized_termtrans=1    "default value is 0
+syntax enable
 set background=dark
 colorscheme solarized
 
@@ -199,3 +184,30 @@ set statusline+=%*
 let g:syntastic_enable_signs=1
 let g:syntastic_auto_jump=1
 set pastetoggle=<F2>
+
+nnoremap <leader>ev :split $MYVIMRC<cr>
+nnoremap <leader>sv :source $MYVIMRC<cr>
+inoremap jk <esc>
+inoremap <esc> <nop>
+
+nnoremap <leader>t :execute "silent! grep -R --exclude-dir build TODO ."<cr>:redraw!<cr>
+nnoremap <leader>g :set operatorfunc=<SID>GrepOperator<cr>g@
+vnoremap <leader>g :<C-U>call <SID>GrepOperator(visualmode())<cr>
+
+function! s:GrepOperator(type)
+    let saved_unnamed_register = @@
+
+    if a:type ==# 'v'
+        normal! `<v`>y
+    elseif a:type ==# 'char'
+        normal! `[v`]y
+    else
+        return
+    endif
+
+    silent execute "grep! -R --exclude-dir build " . shellescape(@@) . " ."
+    redraw!
+
+    let @@ = saved_unnamed_register
+endfunction
+
