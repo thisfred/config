@@ -25,7 +25,7 @@ filetype plugin indent on " enable loading indent file for filetype
 set title " show title in console title bar
 
 """ completions
-set wildmode=longest " <Tab> cycles between all matching choices.
+set wildmode=longest,list " <Tab> cycles between all matching choices.
 set wildignore+=*.o,*.obj,.git,*.pyc,.svn,.bzr
 set tildeop
 set completeopt=longest
@@ -86,7 +86,10 @@ set statusline=[%l,%v\ %P%M]\ %f\ %r%h%w\ (%{&ff})
 
 " displays tabs with :set list & displays when a line runs off-screen
 set listchars=tab:->,trail:-,precedes:<,extends:>
+autocmd Filetype go setlocal nolist
 set list
+set rtp+=$GOROOT/misc/vim
+autocmd BufWritePre *.go :silent Fmt
 
 """ Searching and Patterns
 " sane regex
@@ -138,6 +141,19 @@ nnoremap <leader>S :%s/\s\+$//<cr>:let @/=''<CR>
 " add python debug statement
 nnoremap <c-p> oimport pdb; pdb.set_trace()<Esc>
 
+" keep cursor in place when joining
+nnoremap J mzJ`z
+
+" center after jumping
+nnoremap n nzz
+nnoremap } }zz
+
+" fix Y
+nnoremap Y y$
+
+set splitbelow
+set splitright
+
 " ===========================================================
 " auto/FileType specific changes
 " ============================================================
@@ -173,6 +189,7 @@ let g:pyindent_continue = '&sw'
 " Plugin config
 " ============================================================
 
+set t_Co=256
 let g:solarized_termtrans=1    "default value is 0
 syntax enable
 set background=dark
@@ -188,7 +205,6 @@ set pastetoggle=<F2>
 nnoremap <leader>ev :split $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
 inoremap jk <esc>
-inoremap <esc> <nop>
 
 nnoremap <leader>t :execute "silent! grep -R --exclude-dir build TODO ."<cr>:redraw!<cr>
 nnoremap <leader>g :set operatorfunc=<SID>GrepOperator<cr>g@
