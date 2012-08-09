@@ -13,3 +13,6 @@
 [submodule "_vim/bundle/indent-object.vim"]
 	path = _vim/bundle/indent-object.vim
 	url = https://github.com/michaeljsmith/vim-indent-object.git
+[submodule "_vim/bundle/vim-hybrid"]
+	path = _vim/bundle/vim-hybrid
+	url = https://github.com/w0ng/vim-hybrid.git
