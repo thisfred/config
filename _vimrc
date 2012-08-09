@@ -190,10 +190,10 @@ let g:pyindent_continue = '&sw'
 " ============================================================
 
 set t_Co=256
-let g:solarized_termtrans=1    "default value is 0
+" let g:solarized_termtrans=1    "default value is 0
 syntax enable
 set background=dark
-colorscheme solarized
+" colorscheme solarized
 
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -227,3 +227,13 @@ function! s:GrepOperator(type)
     let @@ = saved_unnamed_register
 endfunction
 
+" hybrid colorscheme
+let g:hybrid_use_Xresources = 1
+colorscheme hybrid
+
+" powerline
+
+set nocompatible   " Disable vi-compatibility
+set laststatus=2   " Always show the statusline
+set encoding=utf-8 " Necessary to show Unicode glyphs
+" let g:Powerline_symbols = 'fancy'

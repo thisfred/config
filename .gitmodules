@@ -16,3 +16,6 @@
 [submodule "_vim/bundle/vim-hybrid"]
 	path = _vim/bundle/vim-hybrid
 	url = https://github.com/w0ng/vim-hybrid.git
+[submodule "_vim/bundle/powerline"]
+	path = _vim/bundle/powerline
+	url = https://github.com/Lokaltog/vim-powerline.git
