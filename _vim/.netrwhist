@@ -1,4 +1,11 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =2
+let g:netrw_dirhist_cnt =9
 let g:netrw_dirhist_1='/home/eric/canonical/u1db/documentation-update/html-docs'
 let g:netrw_dirhist_2='/home/eric/canonical/u1db/create_doc-from-dict/u1todo'
+let g:netrw_dirhist_3='/home/eric/canonical/u1db/remove-local-gen-before-sync/u1db'
+let g:netrw_dirhist_4='/home/eric/manual'
+let g:netrw_dirhist_5='/home/eric/canonical/ubuntuone/music-user-reporting/utilities'
+let g:netrw_dirhist_6='/home/eric/launchpad/autoqueue/trunk'
+let g:netrw_dirhist_7='/home/eric/launchpad/autoqueue/trunk/autoqueue'
+let g:netrw_dirhist_8='/home/eric/quodlibet-trunk/quodlibet'
+let g:netrw_dirhist_9='/home/eric/.config/google-musicmanager'

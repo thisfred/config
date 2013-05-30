@@ -206,9 +206,9 @@ nnoremap <leader>ev :split $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
 inoremap jk <esc>
 
-nnoremap <leader>t :execute "silent! grep -R --exclude-dir build TODO ."<cr>:redraw!<cr>
 nnoremap <leader>g :set operatorfunc=<SID>GrepOperator<cr>g@
 vnoremap <leader>g :<C-U>call <SID>GrepOperator(visualmode())<cr>
+nnoremap <leader>t :execute '!wr test'<cr>
 
 function! s:GrepOperator(type)
     let saved_unnamed_register = @@
