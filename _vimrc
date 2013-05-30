@@ -99,8 +99,7 @@ set gdefault " global by default
 set smarttab " Handle tabs more intelligently
 set hlsearch " Highlight searches by default.
 set incsearch " Incrementally search while typing a /regex
-set clipboard=unnamed,autoselect
-
+set clipboard=unnamedplus,autoselect
 
 " ===============
 " Macros/commands
@@ -112,12 +111,6 @@ command! W :w
 " sudo write this
 cnoremap W! w !sudo tee % >/dev/null
 cnoremap w!! w !sudo tee % >/dev/null
-
-" window navigation
-noremap <c-j> <c-w>j
-noremap <c-k> <c-w>k
-noremap <c-l> <c-w>l
-noremap <c-h> <c-w>h
 
 " and lets make these all work in insert mode too ( <C-O> makes next cmd
 " happen as if in command mode )
@@ -147,9 +140,6 @@ nnoremap J mzJ`z
 " center after jumping
 nnoremap n nzz
 nnoremap } }zz
-
-" fix Y
-nnoremap Y y$
 
 set splitbelow
 set splitright
@@ -206,9 +196,30 @@ nnoremap <leader>ev :split $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
 inoremap jk <esc>
 
-nnoremap <leader>t :execute "silent! grep -R --exclude-dir build TODO ."<cr>:redraw!<cr>
+command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
+function! s:RunShellCommand(cmdline)
+  echo a:cmdline
+  let expanded_cmdline = a:cmdline
+  for part in split(a:cmdline, ' ')
+     if part[0] =~ '\v[%#<]'
+        let expanded_part = fnameescape(expand(part))
+        let expanded_cmdline = substitute(expanded_cmdline, part, expanded_part, '')
+     endif
+  endfor
+  botright new
+  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
+  call setline(1, 'You entered:    ' . a:cmdline)
+  call setline(2, 'Expanded Form:  ' .expanded_cmdline)
+  call setline(3,substitute(getline(2),'.','=','g'))
+  execute '$read !'. expanded_cmdline
+  setlocal nomodifiable
+  1
+endfunction
+
 nnoremap <leader>g :set operatorfunc=<SID>GrepOperator<cr>g@
 vnoremap <leader>g :<C-U>call <SID>GrepOperator(visualmode())<cr>
+nnoremap <leader>t :execute "!wr test"<cr>
+nnoremap <leader>a :execute "!wr acceptance"<cr>
 
 function! s:GrepOperator(type)
     let saved_unnamed_register = @@
@@ -221,7 +232,7 @@ function! s:GrepOperator(type)
         return
     endif
 
-    silent execute "grep! -R --exclude-dir build " . shellescape(@@) . " ."
+    silent execute "grep! -R --exclude-dir .virt " . shellescape(@@) . " ."
     redraw!
 
     let @@ = saved_unnamed_register
@@ -236,4 +247,6 @@ colorscheme hybrid
 set nocompatible   " Disable vi-compatibility
 set laststatus=2   " Always show the statusline
 set encoding=utf-8 " Necessary to show Unicode glyphs
-" let g:Powerline_symbols = 'fancy'
+let g:netrw_keepdir=0
+
+cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
