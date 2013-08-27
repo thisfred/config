@@ -5,7 +5,6 @@
 set modelines=0 " disable security holes
 set nocompatible " not compatiable with vi
 set encoding=utf-8
-let mapleader = ','
 " ==========================================================
 " Pathogen - Allows us to organize our vim plugins
 " ==========================================================
@@ -82,7 +81,7 @@ set showcmd " Show incomplete normal mode commands as I type.
 set report=0 " : commands always print changed line count.
 set shortmess+=a " Use [+]/[RO]/[w] for modified/readonly/written.
 set laststatus=2 " Always show statusline, even if only 1 window.
-set statusline=[%l,%v\ %P%M]\ %f\ %r%h%w\ (%{&ff})
+set statusline=[%l,%v\ %P%M]\ %f\ %r%h%w\ (%{&ff})\ %{fugitive#statusline()}
 
 " displays tabs with :set list & displays when a line runs off-screen
 set listchars=tab:->,trail:-,precedes:<,extends:>
@@ -180,10 +179,8 @@ let g:pyindent_continue = '&sw'
 " ============================================================
 
 set t_Co=256
-" let g:solarized_termtrans=1    "default value is 0
 syntax enable
 set background=dark
-" colorscheme solarized
 
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -196,7 +193,10 @@ nnoremap <leader>ev :split $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
 nnoremap <leader>g :set operatorfunc=<SID>GrepOperator<cr>g@
 vnoremap <leader>g :<C-U>call <SID>GrepOperator(visualmode())<cr>
-nnoremap <leader>t :execute '!wr test'<cr>
+nnoremap <leader>T :execute '!wr test'<cr>
+nnoremap <leader>t :execute '!PYTHONWARNINGS="d" TRAPIT_ENV=test nosetests %'<cr>
+nnoremap <leader>n :execute '!PYTHONWARNINGS="d" nosetests %:p:h'<cr>
+nnoremap <leader>p :execute '!PYTHONWARNINGS="d" py.test %:p:h'<cr>
 nnoremap <leader>a :execute "!wr acceptance"<cr>
 
 command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
