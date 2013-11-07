@@ -1,4 +1,10 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =2
+let g:netrw_dirhist_cnt =8
 let g:netrw_dirhist_1='/home/eric/trapit/elzar/tests/behavioral'
 let g:netrw_dirhist_2='/home/eric/trapit/elzar/elzar/resources'
+let g:netrw_dirhist_3='/home/eric/github/val/jsonpointer-1.0-py2.7.egg'
+let g:netrw_dirhist_4='/home/eric/.xmonad'
+let g:netrw_dirhist_5='/home/eric/launchpad/autoqueue/trunk/autoqueue'
+let g:netrw_dirhist_6='/home/eric/launchpad/bacchus/server-ubuntu'
+let g:netrw_dirhist_7='/home/eric/launchpad/bacchus/rhythmbox-client'
+let g:netrw_dirhist_8='/home/eric/quodlibet-trunk/quodlibet/quodlibet/util/cover'

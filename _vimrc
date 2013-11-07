@@ -195,6 +195,7 @@ nnoremap <leader>g :set operatorfunc=<SID>GrepOperator<cr>g@
 vnoremap <leader>g :<C-U>call <SID>GrepOperator(visualmode())<cr>
 nnoremap <leader>T :execute '!wr test'<cr>
 nnoremap <leader>t :execute '!PYTHONWARNINGS="d" TRAPIT_ENV=test nosetests %'<cr>
+nnoremap <leader>s :execute '!PYTHONWARNINGS="d" python setup.py test'<cr>
 nnoremap <leader>n :execute '!PYTHONWARNINGS="d" nosetests %:p:h'<cr>
 nnoremap <leader>p :execute '!PYTHONWARNINGS="d" py.test %:p:h'<cr>
 nnoremap <leader>a :execute "!wr acceptance"<cr>
@@ -249,3 +250,4 @@ set encoding=utf-8 " Necessary to show Unicode glyphs
 let g:netrw_keepdir=0
 
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
+autocmd Filetype gitcommit setlocal spell textwidth=72
