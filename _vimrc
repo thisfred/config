@@ -174,10 +174,6 @@ let g:pyindent_open_paren = '&sw'
 let g:pyindent_nested_paren = '&sw'
 let g:pyindent_continue = '&sw'
 
-" ===========================================================
-" Plugin config
-" ============================================================
-
 set t_Co=256
 syntax enable
 set background=dark
@@ -191,62 +187,17 @@ set pastetoggle=<F2>
 
 nnoremap <leader>ev :split $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
-nnoremap <leader>g :set operatorfunc=<SID>GrepOperator<cr>g@
-vnoremap <leader>g :<C-U>call <SID>GrepOperator(visualmode())<cr>
 nnoremap <leader>T :execute '!wr test'<cr>
 nnoremap <leader>t :execute '!PYTHONWARNINGS="d" TRAPIT_ENV=test nosetests %'<cr>
 nnoremap <leader>s :execute '!PYTHONWARNINGS="d" python setup.py test'<cr>
 nnoremap <leader>n :execute '!PYTHONWARNINGS="d" nosetests %:p:h'<cr>
 nnoremap <leader>p :execute '!PYTHONWARNINGS="d" py.test %:p:h'<cr>
-nnoremap <leader>a :execute "!wr acceptance"<cr>
-
-command! -complete=shellcmd -nargs=+ Shell call s:RunShellCommand(<q-args>)
-function! s:RunShellCommand(cmdline)
-  echo a:cmdline
-  let expanded_cmdline = a:cmdline
-  for part in split(a:cmdline, ' ')
-     if part[0] =~ '\v[%#<]'
-        let expanded_part = fnameescape(expand(part))
-        let expanded_cmdline = substitute(expanded_cmdline, part, expanded_part, '')
-     endif
-  endfor
-  botright new
-  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
-  call setline(1, 'You entered:    ' . a:cmdline)
-  call setline(2, 'Expanded Form:  ' .expanded_cmdline)
-  call setline(3,substitute(getline(2),'.','=','g'))
-  execute '$read !'. expanded_cmdline
-  setlocal nomodifiable
-  1
-endfunction
-
-
-function! s:GrepOperator(type)
-    let saved_unnamed_register = @@
-
-    if a:type ==# 'v'
-        normal! `<v`>y
-    elseif a:type ==# 'char'
-        normal! `[v`]y
-    else
-        return
-    endif
-
-    silent execute "grep! -R --exclude-dir .virt " . shellescape(@@) . " ."
-    redraw!
-
-    let @@ = saved_unnamed_register
-endfunction
 
 " hybrid colorscheme
 let g:hybrid_use_Xresources = 1
 colorscheme hybrid
 
 " powerline
-
-set nocompatible   " Disable vi-compatibility
-set laststatus=2   " Always show the statusline
-set encoding=utf-8 " Necessary to show Unicode glyphs
 let g:netrw_keepdir=0
 
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
