@@ -1,3 +1,9 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =1
+let g:netrw_dirhist_cnt =7
 let g:netrw_dirhist_1='/home/eric/trapit/mom'
+let g:netrw_dirhist_2='/home/eric/trapit/zoidberg/reqs'
+let g:netrw_dirhist_3='/home/eric/trapit/archer/modules/trapitstack/templates/config/astro'
+let g:netrw_dirhist_4='/home/eric/trapit/elzar/.virt/lib/python2.7/site-packages/thedude'
+let g:netrw_dirhist_5='/home/eric/trapit/archer/modules/trapitstack/templates/config/higgs'
+let g:netrw_dirhist_6='/home/eric/trapit/zoidberg/scripts'
+let g:netrw_dirhist_7='/home/eric/github/vim-config/_vim/bundle'

@@ -5,20 +5,29 @@
 set modelines=0 " disable security holes
 set nocompatible " not compatiable with vi
 set encoding=utf-8
-" ==========================================================
-" Pathogen - Allows us to organize our vim plugins
-" ==========================================================
-" Load pathogen with docs for all plugins
-filetype off
-call pathogen#runtime_append_all_bundles()
-call pathogen#helptags()
 
+set nocompatible
+filetype off
+
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+Bundle 'gmarik/vundle'
+
+Bundle 'scrooloose/syntastic'
+Bundle 'altercation/vim-colors-solarized'
+Bundle 'alfredodeza/pytest.vim'
+Bundle 'michaeljsmith/vim-indent-object'
+Bundle 'w0ng/vim-hybrid'
+Bundle 'Lokaltog/vim-powerline'
+Bundle 'tpope/vim-fugitive'
+
+filetype plugin indent on " enable loading indent file for filetype
 " ==========================================================
 " Basic Settings
 " ==========================================================
 syntax on " syntax highlighing
 filetype on " try to detect filetypes
-filetype plugin indent on " enable loading indent file for filetype
 
 """ appearance
 set title " show title in console title bar
@@ -187,10 +196,9 @@ set pastetoggle=<F2>
 
 nnoremap <leader>ev :split $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
-nnoremap <leader>T :execute '!wr test'<cr>
+nnoremap <leader>T :execute '!make test'<cr>
 nnoremap <leader>t :execute '!PYTHONWARNINGS="d" TRAPIT_ENV=test nosetests %'<cr>
 nnoremap <leader>s :execute '!PYTHONWARNINGS="d" python setup.py test'<cr>
-nnoremap <leader>n :execute '!PYTHONWARNINGS="d" nosetests %:p:h'<cr>
 nnoremap <leader>p :execute '!PYTHONWARNINGS="d" py.test %:p:h'<cr>
 
 " hybrid colorscheme
