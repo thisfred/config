@@ -21,6 +21,7 @@ Bundle 'michaeljsmith/vim-indent-object'
 Bundle 'w0ng/vim-hybrid'
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'tpope/vim-fugitive'
+Bundle "tommcdo/vim-exchange"
 
 filetype plugin indent on " enable loading indent file for filetype
 " ==========================================================
