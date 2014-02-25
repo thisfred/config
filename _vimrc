@@ -143,15 +143,7 @@ nnoremap <leader>S :%s/\s\+$//<cr>:let @/=''<CR>
 " add python debug statement
 nnoremap <c-p> oimport pdb; pdb.set_trace()<Esc>
 
-" keep cursor in place when joining
-nnoremap J mzJ`z
-
-" center after jumping
-nnoremap n nzz
-nnoremap } }zz
-
 set splitbelow
-set splitright
 
 " ===========================================================
 " auto/FileType specific changes
@@ -193,12 +185,13 @@ set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 let g:syntastic_enable_signs=1
 let g:syntastic_auto_jump=1
+let g:syntastic_python_flake8_args='--ignore=E712,E711 --max-complexity=12'
 set pastetoggle=<F2>
 
-nnoremap <leader>ev :split $MYVIMRC<cr>
+nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
 nnoremap <leader>T :execute '!make test'<cr>
-nnoremap <leader>t :execute '!PYTHONWARNINGS="d" TRAPIT_ENV=test nosetests %'<cr>
+nnoremap <leader>t :execute '!PYTHONWARNINGS="d" TRAPIT_ENV=test nosetests -sx %'<cr>
 nnoremap <leader>s :execute '!PYTHONWARNINGS="d" python setup.py test'<cr>
 nnoremap <leader>p :execute '!PYTHONWARNINGS="d" py.test %:p:h'<cr>
 
