@@ -177,9 +177,6 @@ autocmd! BufWritePost .vimrc source %
 cnoremap <C-j> <t_kd>
 cnoremap <C-k> <t_ku>
 
-" add python debug statement
-nnoremap <c-p> oimport pdb; pdb.set_trace()<Esc>
-
 let g:pymode = 1
 let g:pymode_options = 1
 let g:pymode_folding = 0
@@ -192,8 +189,9 @@ let g:pymode_breakpoint = 1
 let g:pymode_breakpoint_bind = '<leader>b'
 let g:pymode_lint = 1
 let g:pymode_lint_on_write = 1
+let g:pymode_lint_unmodified = 1
 let g:pymode_lint_message = 1
-let g:pymode_lint_checkers = ['pyflakes', 'pep8', 'mccabe']
+let g:pymode_lint_checkers = ['pyflakes', 'pep8', 'mccabe', 'pylint']
 let g:pymode_lint_cwindow = 1
 let g:pymode_lint_signs = 1
 let g:pymode_rope_regenerate_on_write = 1
@@ -201,3 +199,5 @@ let g:pymode_rope_show_doc_bind = '<C-c>d'
 let g:pymode_rope_organize_imports_bind = '<C-c>ro'
 let g:pymode_rope_completion = 0
 let g:pymode_rope_complete_on_dot = 0
+
+nnoremap <leader>v :PymodeVirtualenv "./.virt"<cr>
