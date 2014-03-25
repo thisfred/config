@@ -199,5 +199,6 @@ let g:pymode_rope_show_doc_bind = '<C-c>d'
 let g:pymode_rope_organize_imports_bind = '<C-c>ro'
 let g:pymode_rope_completion = 0
 let g:pymode_rope_complete_on_dot = 0
+let g:pymode_lint_sort = ['F', 'C', 'E', 'W', 'R', 'I']
 
 nnoremap <leader>v :PymodeVirtualenv "./.virt"<cr>
