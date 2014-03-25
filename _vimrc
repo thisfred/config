@@ -1,12 +1,7 @@
-" ==========================================================
-" General setup
-" ==========================================================
-
 set modelines=0 " disable security holes
 set nocompatible " not compatiable with vi
 set encoding=utf-8
 
-set nocompatible
 filetype off
 
 set rtp+=~/.vim/bundle/vundle/
@@ -14,22 +9,17 @@ call vundle#rc()
 
 Bundle 'gmarik/vundle'
 
-Bundle 'scrooloose/syntastic'
 Bundle 'altercation/vim-colors-solarized'
-Bundle 'alfredodeza/pytest.vim'
-Bundle 'michaeljsmith/vim-indent-object'
 Bundle 'w0ng/vim-hybrid'
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'tpope/vim-fugitive'
 Bundle "tommcdo/vim-exchange"
+Bundle "klen/python-mode"
 
 filetype plugin indent on " enable loading indent file for filetype
-" ==========================================================
-" Basic Settings
-" ==========================================================
-syntax on " syntax highlighing
-filetype on " try to detect filetypes
 
+set history=700
+set undolevels=700
 """ appearance
 set title " show title in console title bar
 
@@ -49,11 +39,6 @@ set nostartofline " Avoid moving cursor to BOL when jumping around
 set virtualedit=block " Let cursor move past the last char in <C-v> mode
 set scrolloff=5 " Keep context lines above and below the cursor
 set backspace=2 " Allow backspacing over autoindent, EOL, and BOL
-
-"""line numbers
-set number " Display line numbers
-set numberwidth=1 " using only 1 column (and 1 space) while possible
-set ruler " show the cursor position all the time
 
 """ line endings/length
 set textwidth=79
@@ -108,11 +93,10 @@ set gdefault " global by default
 set smarttab " Handle tabs more intelligently
 set hlsearch " Highlight searches by default.
 set incsearch " Incrementally search while typing a /regex
-set clipboard=unnamedplus,autoselect
 
-" ===============
-" Macros/commands
-" ===============
+" copying and pasting
+set clipboard=unnamed
+set pastetoggle=<F2>
 
 " Seriously, guys. It's not like :W is bound to anything anyway.
 command! W :w
@@ -125,23 +109,12 @@ cnoremap w!! w !sudo tee % >/dev/null
 " happen as if in command mode )
 inoremap <C-W> <C-O><C-W>
 
-" open/close the quickfix window
-nnoremap <leader>c :copen<CR>
-nnoremap <leader>n :cnext<CR>
-nnoremap <leader>p :cprevious<CR>
-nnoremap <leader>cc :cclose<CR>
-
 " hide matches on <leader>space
 nnoremap <leader><space> :nohlsearch<cr>
 
-" Remove trailing whitespace on <leader>S
-nnoremap <leader>S :%s/\s\+$//<cr>:let @/=''<CR>
-
-" Select the item in the list with enter
-"inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-
-" add python debug statement
-nnoremap <c-p> oimport pdb; pdb.set_trace()<Esc>
+" don't lose selection after reindenting
+vnoremap < <gv
+vnoremap > >gv
 
 set splitbelow
 
@@ -160,7 +133,8 @@ augroup END
 " au FileType python set omnifunc=pythoncomplete#Complete
 augroup py
     autocmd!
-    au FileType python setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4 nosmartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+    au FileType python setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4
+    " \ nosmartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 augroup END
 
 function! SuperCleverTab()
@@ -172,26 +146,16 @@ function! SuperCleverTab()
 endfunction
 inoremap <Tab> <C-R>=SuperCleverTab()<cr>
 
-let g:pyindent_open_paren = '&sw'
-let g:pyindent_nested_paren = '&sw'
-let g:pyindent_continue = '&sw'
-
-set t_Co=256
-syntax enable
-set background=dark
-
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-let g:syntastic_enable_signs=1
-let g:syntastic_auto_jump=1
-let g:syntastic_python_flake8_args='--ignore=E712,E711 --max-complexity=12'
-set pastetoggle=<F2>
+" syntax enable
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+" let g:syntastic_enable_signs=1
+" let g:syntastic_python_flake8_args='--ignore=E712,E711 --max-complexity=12'
 
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
-nnoremap <leader>sv :source $MYVIMRC<cr>
 nnoremap <leader>T :execute '!make test'<cr>
-nnoremap <leader>t :execute '!PYTHONWARNINGS="d" TRAPIT_ENV=test nosetests -sx %'<cr>
+nnoremap <leader>t :execute '!PYTHONWARNINGS="d" TRAPIT_ENV=test nosetests -s %'<cr>
 nnoremap <leader>s :execute '!PYTHONWARNINGS="d" python setup.py test'<cr>
 nnoremap <leader>p :execute '!PYTHONWARNINGS="d" py.test %:p:h'<cr>
 
@@ -204,3 +168,36 @@ let g:netrw_keepdir=0
 
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 autocmd Filetype gitcommit setlocal spell textwidth=72
+
+" reload .vimrc after saving
+autocmd! BufWritePost .vimrc source %
+
+
+" better command line editing
+cnoremap <C-j> <t_kd>
+cnoremap <C-k> <t_ku>
+
+" add python debug statement
+nnoremap <c-p> oimport pdb; pdb.set_trace()<Esc>
+
+let g:pymode = 1
+let g:pymode_options = 1
+let g:pymode_folding = 0
+let g:pymode_doc = 1
+let g:pymode_doc_bind = 'K'
+let g:pymode_virtualenv = 1
+let g:pymode_run = 1
+let g:pymode_run_bind = '<leader>r'
+let g:pymode_breakpoint = 1
+let g:pymode_breakpoint_bind = '<leader>b'
+let g:pymode_lint = 1
+let g:pymode_lint_on_write = 1
+let g:pymode_lint_message = 1
+let g:pymode_lint_checkers = ['pyflakes', 'pep8', 'mccabe']
+let g:pymode_lint_cwindow = 1
+let g:pymode_lint_signs = 1
+let g:pymode_rope_regenerate_on_write = 1
+let g:pymode_rope_show_doc_bind = '<C-c>d'
+let g:pymode_rope_organize_imports_bind = '<C-c>ro'
+let g:pymode_rope_completion = 0
+let g:pymode_rope_complete_on_dot = 0
