@@ -1,4 +1,5 @@
 let g:netrw_dirhistmax  =10
+<<<<<<< Updated upstream
 let g:netrw_dirhist_cnt =8
 let g:netrw_dirhist_1='/home/eric/trapit/mom'
 let g:netrw_dirhist_2='/home/eric/trapit/zoidberg/reqs'
@@ -8,3 +9,6 @@ let g:netrw_dirhist_5='/home/eric/trapit/archer/modules/trapitstack/templates/co
 let g:netrw_dirhist_6='/home/eric/trapit/zoidberg/scripts'
 let g:netrw_dirhist_7='/home/eric/github/vim-config/_vim/bundle'
 let g:netrw_dirhist_8='/home/eric/github/json-ld-go/json-ld.org/test-suite/tests'
+=======
+let g:netrw_dirhist_cnt =0
+>>>>>>> Stashed changes
