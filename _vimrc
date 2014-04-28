@@ -50,7 +50,7 @@ fun! SetupVAM()
     let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
 
     " Tell VAM which plugins to fetch & load:
-    call vam#ActivateAddons(['github:Lokaltog/powerline', 'github:altercation/vim-colors-solarized', 'github:w0ng/vim-hybrid', 'github:tpope/vim-fugitive', 'github:klen/python-mode', 'github:tommcdo/vim-exchange'], {'auto_install' : 0})
+    call vam#ActivateAddons(['github:alfredodeza/pytest.vim', 'github:jnwhiteh/vim-golang', 'github:Lokaltog/powerline', 'github:altercation/vim-colors-solarized', 'github:w0ng/vim-hybrid', 'github:tpope/vim-fugitive', 'github:klen/python-mode', 'github:tommcdo/vim-exchange'], {'auto_install' : 0})
     " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
     " Also See "plugins-per-line" below
 
@@ -77,14 +77,9 @@ call SetupVAM()
 " See BUGS sections below [*]
 " Vim 7.0 users see BUGS section [3]
 
-
 set modelines=0 " disable security holes
 set nocompatible " not compatiable with vi
 set encoding=utf-8
-
-filetype off
-
-filetype plugin indent on " enable loading indent file for filetype
 
 set history=700
 set undolevels=700
@@ -148,10 +143,6 @@ set statusline=[%l,%v\ %P%M]\ %f\ %r%h%w\ (%{&ff})\ %{fugitive#statusline()}
 
 " displays tabs with :set list & displays when a line runs off-screen
 set listchars=tab:->,trail:-,precedes:<,extends:>
-autocmd Filetype go setlocal nolist
-set list
-set rtp+=$GOROOT/misc/vim
-autocmd BufWritePre *.go :silent Fmt
 
 """ Searching and Patterns
 " sane regex
@@ -220,16 +211,16 @@ inoremap <Tab> <C-R>=SuperCleverTab()<cr>
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>T :execute '!make test'<cr>
 nnoremap <leader>t :execute '!PYTHONWARNINGS="d" TRAPIT_ENV=test nosetests -s %'<cr>
-nnoremap <leader>s :execute '!PYTHONWARNINGS="d" python setup.py test'<cr>
-nnoremap <leader>p :execute '!PYTHONWARNINGS="d" py.test %:p:h'<cr>
+
+" Pytest
+nmap <silent><Leader>p <Esc>:Pytest file<CR>
+nmap <silent><Leader>c <Esc>:Pytest class<CR>
+nmap <silent><Leader>m <Esc>:Pytest method<CR>
+nmap <silent><Leader>f <Esc>:Pytest function<CR>
 
 " hybrid colorscheme
 let g:hybrid_use_Xresources = 1
 colorscheme hybrid
-
-" powerline
-" let g:netrw_keepdir=0
-set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
 
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 autocmd Filetype gitcommit setlocal spell textwidth=72
@@ -268,5 +259,5 @@ let g:pymode_rope_complete_on_dot = 0
 let g:pymode_lint_sort = ['E', 'F', 'C', 'W', 'R', 'D']
 let g:pymode_lint_ignore = 'D100,D101,D102,D103'
 
-
 nnoremap <leader>v :PymodeVirtualenv "./.virt"<cr>
+autocmd FileType go autocmd BufWritePre <buffer> Fmt
