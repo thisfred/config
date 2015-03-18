@@ -1,9 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =7
-let g:netrw_dirhist_1='/Users/ericc/simple/capers/src/main/scala/com/simple/capers/resources'
-let g:netrw_dirhist_2='/Users/ericc/simple/nacho/src/main/scala/com/simple/nacho/files/tbbk/deposittransactions'
-let g:netrw_dirhist_3='/Users/ericc/simple/nacho/src/test/scala/com/simple/nacho'
-let g:netrw_dirhist_4='/Users/ericc/simple/warren'
-let g:netrw_dirhist_5='/Users/ericc/simple/capers'
-let g:netrw_dirhist_6='/Users/ericc/simple/capers/src/main/scala/com/simple/capers/services'
-let g:netrw_dirhist_7='/Users/ericc/simple/capers/src/main/scala/com/simple/capers'

@@ -1,27 +1,38 @@
-set nocompatible
-filetype off
+set nocompatible              " be iMproved, required
+filetype off                  " required
 
-set rtp+=~/.vim/bundle/Vundle.vim/
-
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+
 Plugin 'alfredodeza/pytest.vim'
 Plugin 'bling/vim-airline'
 Plugin 'derekwyatt/vim-scala'
-Plugin 'gmarik/Vundle.vim'
 Plugin 'jnwhiteh/vim-golang'
-Plugin 'klen/python-mode'
+Plugin 'jnwhiteh/vim-golang'
 Plugin 'michaeljsmith/vim-indent-object'
+Plugin 'python-rope/ropevim'
 Plugin 'scrooloose/syntastic'
 Plugin 'tommcdo/vim-exchange'
+Plugin 'tpope/vim-abolish'
+Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-speeddating'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-unimpaired'
 Plugin 'w0ng/vim-hybrid'
-call vundle#end()            " required
-syntax on
-filetype plugin indent on    
 
-"set syn on
+
+call vundle#end()            " required
+filetype plugin indent on    " required
+
 set modelines=0 " disable security holes
-set nocompatible " not compatiable with vi
 set encoding=utf-8
 
 set history=700
@@ -152,7 +163,12 @@ syntax enable
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
-let g:syntastic_enable_signs=1
+let g:syntastic_enable_signs = 1
+let g:syntastic_auto_loc_list = 1
+" let g:syntastic_python_flake8_args = '--ignore=E712,E711 --max-complexity=12'
+let g:syntastic_python_prospector_args = '--strictness=veryhigh --profile /home/eric/.prospector/pp.yaml'
+" let g:syntastic_python_prospector_sort = 1
+let g:syntastic_python_checkers = ['prospector']
 
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>T :execute '!make test'<cr>
@@ -179,33 +195,6 @@ autocmd! BufWritePost .vimrc source %
 cnoremap <C-j> <t_kd>
 cnoremap <C-k> <t_ku>
 
-let g:pymode = 1
-let g:pymode_options = 1
-let g:pymode_folding = 0
-let g:pymode_doc = 1
-let g:pymode_doc_bind = 'K'
-let g:pymode_virtualenv = 1
-let g:pymode_run = 1
-let g:pymode_run_bind = '<leader>r'
-let g:pymode_breakpoint = 1
-let g:pymode_breakpoint_bind = '<leader>b'
-let g:pymode_indent = 1
-let g:pymode_lint = 1
-let g:pymode_lint_on_write = 1
-let g:pymode_lint_unmodified = 1
-let g:pymode_lint_message = 1
-let g:pymode_lint_checkers = ['pyflakes', 'pep8', 'pep257', 'mccabe', 'pylint']
-let g:pymode_lint_cwindow = 1
-let g:pymode_lint_signs = 1
-let g:pymode_rope_regenerate_on_write = 1
-let g:pymode_rope_show_doc_bind = '<C-c>d'
-let g:pymode_rope_organize_imports_bind = '<C-c>ro'
-let g:pymode_rope_completion = 0
-let g:pymode_rope_complete_on_dot = 0
-let g:pymode_lint_sort = ['E', 'F', 'C', 'W', 'R', 'D']
-let g:pymode_lint_ignore = 'D100,D101,D102,D103'
-
-nnoremap <leader>v :PymodeVirtualenv "./.virt"<cr>
 autocmd FileType go autocmd BufWritePre <buffer> Fmt
 
 func! DeleteTrailingWS()
