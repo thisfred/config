@@ -4,19 +4,12 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim/
 
 call vundle#begin()
-Plugin 'gmarik/Vundle.vim'
-Plugin 'Lokaltog/vim-powerline'
-Plugin 'Shougo/vimproc'
-Plugin 'Shougo/vimshell'
-Plugin 'aemoncannon/ensime'
 Plugin 'alfredodeza/pytest.vim'
-Plugin 'altercation/vim-colors-solarized'
+Plugin 'bling/vim-airline'
 Plugin 'derekwyatt/vim-scala'
+Plugin 'gmarik/Vundle.vim'
 Plugin 'jnwhiteh/vim-golang'
 Plugin 'klen/python-mode'
-Plugin 'megaannum/forms' 
-Plugin 'megaannum/self'
-Plugin 'megaannum/vimside'   
 Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'scrooloose/syntastic'
 Plugin 'tommcdo/vim-exchange'
@@ -54,7 +47,7 @@ set scrolloff=5 " Keep context lines above and below the cursor
 set backspace=2 " Allow backspacing over autoindent, EOL, and BOL
 
 """ line endings/length
-set textwidth=79
+set textwidth=100
 set formatoptions=tcroqn1
 set colorcolumn=+1 "one beyond textwidth
 "#highlight ColorColumn ctermbg=darkgrey guibg=darkgrey
@@ -138,7 +131,7 @@ augroup END
 " au FileType python set omnifunc=pythoncomplete#Complete
 augroup py
     autocmd!
-    au FileType python setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4
+    au FileType python setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4 tw=79
     " \ nosmartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 augroup END
 
@@ -201,7 +194,7 @@ let g:pymode_lint = 1
 let g:pymode_lint_on_write = 1
 let g:pymode_lint_unmodified = 1
 let g:pymode_lint_message = 1
-let g:pymode_lint_checkers = ['pyflakes', 'pep8', 'mccabe', 'pylint', 'pep257']
+let g:pymode_lint_checkers = ['pyflakes', 'pep8', 'pep257', 'mccabe', 'pylint']
 let g:pymode_lint_cwindow = 1
 let g:pymode_lint_signs = 1
 let g:pymode_rope_regenerate_on_write = 1
@@ -214,3 +207,12 @@ let g:pymode_lint_ignore = 'D100,D101,D102,D103'
 
 nnoremap <leader>v :PymodeVirtualenv "./.virt"<cr>
 autocmd FileType go autocmd BufWritePre <buffer> Fmt
+
+func! DeleteTrailingWS()
+  exe "normal mz"
+  %s/\s\+$//ge
+  exe "normal `z"
+endfunc
+
+autocmd BufWrite *.scala :call DeleteTrailingWS()
+autocmd BufWrite *.java :call DeleteTrailingWS()
