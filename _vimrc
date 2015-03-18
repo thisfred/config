@@ -152,6 +152,10 @@ function! SuperCleverTab()
 endfunction
 inoremap <Tab> <C-R>=SuperCleverTab()<cr>
 
+let g:pyindent_open_paren = '&sw'
+let g:pyindent_nested_paren = '&sw'
+let g:pyindent_continue = '&sw'
+
 syntax enable
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
