@@ -1,84 +1,35 @@
-set nocompatible | filetype indent plugin on | syn on
+set nocompatible              " be iMproved, required
+filetype off                  " required
 
-fun! EnsureVamIsOnDisk(plugin_root_dir)
-    " windows users may want to use http://mawercer.de/~marc/vam/index.php
-    " to fetch VAM, VAM-known-repositories and the listed plugins
-    " without having to install curl, 7-zip and git tools first
-    " -> BUG [4] (git-less installation)
-    let vam_autoload_dir = a:plugin_root_dir.'/vim-addon-manager/autoload'
-    if isdirectory(vam_autoload_dir)
-        return 1
-    else
-        if 1 == confirm("Clone VAM into ".a:plugin_root_dir."?","&Y\n&N")
-            " I'm sorry having to add this reminder. Eventually it'll pay off.
-            call confirm("Remind yourself that most plugins ship with ".
-                        \"documentation (README*, doc/*.txt). It is your ".
-                        \"first source of knowledge. If you can't find ".
-                        \"the info you're looking for in reasonable ".
-                        \"time ask maintainers to improve documentation")
-            call mkdir(a:plugin_root_dir, 'p')
-            execute '!git clone --depth=1 git://github.com/MarcWeber/vim-addon-manager '.
-                        \       shellescape(a:plugin_root_dir, 1).'/vim-addon-manager'
-            " VAM runs helptags automatically when you install or update 
-            " plugins
-            exec 'helptags '.fnameescape(a:plugin_root_dir.'/vim-addon-manager/doc')
-        endif
-        return isdirectory(vam_autoload_dir)
-    endif
-endfun
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
 
-fun! SetupVAM()
-    " Set advanced options like this:
-    " let g:vim_addon_manager = {}
-    " let g:vim_addon_manager.key = value
-    "     Pipe all output into a buffer which gets written to disk
-    " let g:vim_addon_manager.log_to_buf =1
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
 
-    " Example: drop git sources unless git is in PATH. Same plugins can
-    " be installed from www.vim.org. Lookup MergeSources to get more control
-    " let g:vim_addon_manager.drop_git_sources = !executable('git')
-    " let g:vim_addon_manager.debug_activation = 1
+Plugin 'alfredodeza/pytest.vim'
+Plugin 'bling/vim-airline'
+Plugin 'jnwhiteh/vim-golang'
+Plugin 'python-rope/ropevim'
+Plugin 'scrooloose/syntastic'
+Plugin 'tommcdo/vim-exchange'
+Plugin 'tpope/vim-abolish'
+Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-speeddating'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'w0ng/vim-hybrid'
 
-    " VAM install location:
-    let c = get(g:, 'vim_addon_manager', {})
-    let g:vim_addon_manager = c
-    let c.plugin_root_dir = expand('$HOME/.vim/vim-addons', 1)
-    if !EnsureVamIsOnDisk(c.plugin_root_dir)
-    echohl ErrorMsg | echomsg "No VAM found!" | echohl NONE
-    return
-    endif
-    let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
 
-    " Tell VAM which plugins to fetch & load:
-    call vam#ActivateAddons(['github:alfredodeza/pytest.vim', 'github:jnwhiteh/vim-golang', 'github:Lokaltog/powerline', 'github:altercation/vim-colors-solarized', 'github:w0ng/vim-hybrid', 'github:tpope/vim-fugitive', 'github:klen/python-mode', 'github:tommcdo/vim-exchange'], {'auto_install' : 0})
-    " sample: call vam#ActivateAddons(['pluginA','pluginB', ...], {'auto_install' : 0})
-    " Also See "plugins-per-line" below
-
-    " Addons are put into plugin_root_dir/plugin-name directory
-    " unless those directories exist. Then they are activated.
-    " Activating means adding addon dirs to rtp and do some additional
-    " magic
-
-    " How to find addon names?
-    " - look up source from pool
-    " - (<c-x><c-p> complete plugin names):
-    " You can use name rewritings to point to sources:
-    "    ..ActivateAddons(["github:foo", .. => github://foo/vim-addon-foo
-    "    ..ActivateAddons(["github:user/repo", .. => github://user/repo
-    " Also see section "2.2. names of addons and addon sources" in VAM's documentation
-endfun
-
-call SetupVAM()
-" experimental [E1]: load plugins lazily depending on filetype, See
-" NOTES
-" experimental [E2]: run after gui has been started (gvim) [3]
-" option1:  au VimEnter * call SetupVAM()
-" option2:  au GUIEnter * call SetupVAM()
-" See BUGS sections below [*]
-" Vim 7.0 users see BUGS section [3]
+call vundle#end()            " required
+filetype plugin indent on    " required
 
 set modelines=0 " disable security holes
-set nocompatible " not compatiable with vi
 set encoding=utf-8
 
 set history=700
@@ -201,12 +152,16 @@ function! SuperCleverTab()
 endfunction
 inoremap <Tab> <C-R>=SuperCleverTab()<cr>
 
-" syntax enable
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
-" let g:syntastic_enable_signs=1
-" let g:syntastic_python_flake8_args='--ignore=E712,E711 --max-complexity=12'
+syntax enable
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+let g:syntastic_enable_signs = 1
+let g:syntastic_auto_loc_list = 1
+" let g:syntastic_python_flake8_args = '--ignore=E712,E711 --max-complexity=12'
+let g:syntastic_python_prospector_args = '--strictness=veryhigh --profile /home/eric/.prospector/pp.yaml'
+" let g:syntastic_python_prospector_sort = 1
+let g:syntastic_python_checkers = ['prospector']
 
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>T :execute '!make test'<cr>
@@ -233,31 +188,4 @@ autocmd! BufWritePost .vimrc source %
 cnoremap <C-j> <t_kd>
 cnoremap <C-k> <t_ku>
 
-let g:pymode = 1
-let g:pymode_options = 1
-let g:pymode_folding = 0
-let g:pymode_doc = 1
-let g:pymode_doc_bind = 'K'
-let g:pymode_virtualenv = 1
-let g:pymode_run = 1
-let g:pymode_run_bind = '<leader>r'
-let g:pymode_breakpoint = 1
-let g:pymode_breakpoint_bind = '<leader>b'
-let g:pymode_indent = 1
-let g:pymode_lint = 1
-let g:pymode_lint_on_write = 1
-let g:pymode_lint_unmodified = 1
-let g:pymode_lint_message = 1
-let g:pymode_lint_checkers = ['pyflakes', 'pep8', 'mccabe', 'pylint', 'pep257']
-let g:pymode_lint_cwindow = 1
-let g:pymode_lint_signs = 1
-let g:pymode_rope_regenerate_on_write = 1
-let g:pymode_rope_show_doc_bind = '<C-c>d'
-let g:pymode_rope_organize_imports_bind = '<C-c>ro'
-let g:pymode_rope_completion = 0
-let g:pymode_rope_complete_on_dot = 0
-let g:pymode_lint_sort = ['E', 'F', 'C', 'W', 'R', 'D']
-let g:pymode_lint_ignore = 'D100,D101,D102,D103'
-
-nnoremap <leader>v :PymodeVirtualenv "./.virt"<cr>
 autocmd FileType go autocmd BufWritePre <buffer> Fmt

@@ -1,14 +1,11 @@
 let g:netrw_dirhistmax  =10
-<<<<<<< Updated upstream
-let g:netrw_dirhist_cnt =8
-let g:netrw_dirhist_1='/home/eric/trapit/mom'
-let g:netrw_dirhist_2='/home/eric/trapit/zoidberg/reqs'
-let g:netrw_dirhist_3='/home/eric/trapit/archer/modules/trapitstack/templates/config/astro'
-let g:netrw_dirhist_4='/home/eric/trapit/elzar/.virt/lib/python2.7/site-packages/thedude'
-let g:netrw_dirhist_5='/home/eric/trapit/archer/modules/trapitstack/templates/config/higgs'
-let g:netrw_dirhist_6='/home/eric/trapit/zoidberg/scripts'
-let g:netrw_dirhist_7='/home/eric/github/vim-config/_vim/bundle'
-let g:netrw_dirhist_8='/home/eric/github/json-ld-go/json-ld.org/test-suite/tests'
-=======
-let g:netrw_dirhist_cnt =0
->>>>>>> Stashed changes
+let g:netrw_dirhist_cnt =9
+let g:netrw_dirhist_1='/home/eric/trapit/mom/mom/search'
+let g:netrw_dirhist_2='/home/eric/.newsbeuter'
+let g:netrw_dirhist_3='/home/eric/github/mypy/lib-typing'
+let g:netrw_dirhist_4='/home/eric/github/mypy/lib-typing/3.2'
+let g:netrw_dirhist_5='/home/eric/launchpad/autoqueue/trunk/mirage'
+let g:netrw_dirhist_6='/home/eric/launchpad/autoqueue/trunk/autoqueue'
+let g:netrw_dirhist_7='/home/eric/Dropbox/holland_oat/vol_16_the_doors_of_deception'
+let g:netrw_dirhist_8='/home/eric/Dropbox/holland_oat/vol_15_know_when_to_run'
+let g:netrw_dirhist_9='/home/eric/Music/SXSW_2015_Showcasing_Artists_Part1'
