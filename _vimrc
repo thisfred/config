@@ -14,7 +14,6 @@ Plugin 'alfredodeza/pytest.vim'
 Plugin 'bling/vim-airline'
 Plugin 'derekwyatt/vim-scala'
 Plugin 'jnwhiteh/vim-golang'
-Plugin 'jnwhiteh/vim-golang'
 Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'python-rope/ropevim'
 Plugin 'scrooloose/syntastic'
@@ -166,7 +165,7 @@ set statusline+=%*
 let g:syntastic_enable_signs = 1
 let g:syntastic_auto_loc_list = 1
 " let g:syntastic_python_flake8_args = '--ignore=E712,E711 --max-complexity=12'
-let g:syntastic_python_prospector_args = '--strictness=veryhigh --profile /home/eric/.prospector/pp.yaml'
+let g:syntastic_python_prospector_args = '--strictness=veryhigh --profile pp'
 " let g:syntastic_python_prospector_sort = 1
 let g:syntastic_python_checkers = ['prospector']
 
@@ -203,5 +202,6 @@ func! DeleteTrailingWS()
   exe "normal `z"
 endfunc
 
-autocmd BufWrite *.scala :call DeleteTrailingWS()
-autocmd BufWrite *.java :call DeleteTrailingWS()
+autocmd BufWritePre *.py :call DeleteTrailingWS()
+autocmd BufWritePre *.scala :call DeleteTrailingWS()
+autocmd BufWritePre *.java :call DeleteTrailingWS()
