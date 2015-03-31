@@ -14,10 +14,10 @@ Plugin 'alfredodeza/pytest.vim'
 Plugin 'bling/vim-airline'
 Plugin 'derekwyatt/vim-scala'
 Plugin 'jnwhiteh/vim-golang'
-Plugin 'jnwhiteh/vim-golang'
 Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'python-rope/ropevim'
 Plugin 'scrooloose/syntastic'
+Plugin 'fisadev/vim-isort'
 Plugin 'tommcdo/vim-exchange'
 Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-commentary'
@@ -205,3 +205,4 @@ endfunc
 
 autocmd BufWrite *.scala :call DeleteTrailingWS()
 autocmd BufWrite *.java :call DeleteTrailingWS()
+autocmd BufWrite *.py :call DeleteTrailingWS()
