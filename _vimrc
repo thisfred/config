@@ -13,11 +13,13 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'alfredodeza/pytest.vim'
 Plugin 'bling/vim-airline'
 Plugin 'derekwyatt/vim-scala'
+Plugin 'fisadev/vim-isort'
 Plugin 'jnwhiteh/vim-golang'
+Plugin 'junegunn/vim-easy-align'
+Plugin 'majutsushi/tagbar'
 Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'python-rope/ropevim'
 Plugin 'scrooloose/syntastic'
-Plugin 'fisadev/vim-isort'
 Plugin 'tommcdo/vim-exchange'
 Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-commentary'
@@ -27,7 +29,8 @@ Plugin 'tpope/vim-speeddating'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'w0ng/vim-hybrid'
-
+Plugin 'xolox/vim-easytags'
+Plugin 'xolox/vim-misc'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -169,6 +172,9 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_python_prospector_args = '--strictness=veryhigh --profile pp'
 " let g:syntastic_python_prospector_sort = 1
 let g:syntastic_python_checkers = ['prospector']
+let g:syntastic_scala_scalastyle_jar = '~/scalastyle/scalastyle_2.11-0.6.0-batch.jar'
+let g:syntastic_scala_scalastyle_config_file = '~/scalastyle/scalastyle_config.xml'
+let g:syntastic_scala_checkers = ['scalac', 'fsc', 'scalastyle']
 
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>T :execute '!make test'<cr>
@@ -203,6 +209,15 @@ func! DeleteTrailingWS()
   exe "normal `z"
 endfunc
 
+autocmd BufWritePre *.md :call DeleteTrailingWS()
 autocmd BufWritePre *.py :call DeleteTrailingWS()
 autocmd BufWritePre *.scala :call DeleteTrailingWS()
 autocmd BufWritePre *.java :call DeleteTrailingWS()
+
+nmap <F8> :TagbarToggle<CR>
+
+" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
+vmap <Enter> <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
