@@ -10,14 +10,16 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
 
+Plugin 'NLKNguyen/papercolor-theme'
 Plugin 'alfredodeza/pytest.vim'
 Plugin 'bling/vim-airline'
 Plugin 'derekwyatt/vim-scala'
+Plugin 'fisadev/vim-isort'
 Plugin 'jnwhiteh/vim-golang'
+Plugin 'majutsushi/tagbar'
 Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'python-rope/ropevim'
 Plugin 'scrooloose/syntastic'
-Plugin 'fisadev/vim-isort'
 Plugin 'tommcdo/vim-exchange'
 Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-commentary'
@@ -27,7 +29,6 @@ Plugin 'tpope/vim-speeddating'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'w0ng/vim-hybrid'
-
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -206,3 +207,5 @@ endfunc
 autocmd BufWrite *.scala :call DeleteTrailingWS()
 autocmd BufWrite *.java :call DeleteTrailingWS()
 autocmd BufWrite *.py :call DeleteTrailingWS()
+
+nmap <F8> :TagbarToggle<CR>
