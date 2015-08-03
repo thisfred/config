@@ -19,6 +19,7 @@ Plugin 'junegunn/vim-easy-align'
 Plugin 'majutsushi/tagbar'
 Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'python-rope/ropevim'
+Plugin 'ryanoasis/vim-devicons'
 Plugin 'scrooloose/syntastic'
 Plugin 'tommcdo/vim-exchange'
 Plugin 'tpope/vim-abolish'
@@ -221,3 +222,5 @@ vmap <Enter> <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
+
+let g:airline_powerline_fonts=1
