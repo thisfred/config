@@ -170,10 +170,10 @@ set statusline+=%*
 let g:syntastic_enable_signs = 1
 let g:syntastic_auto_loc_list = 1
 " let g:syntastic_python_flake8_args = '--ignore=E712,E711 --max-complexity=12'
-let g:syntastic_python_prospector_args = '--strictness=veryhigh --profile pp'
+let g:syntastic_python_prospector_args = '--strictness=veryhigh --profile ~/.prospector/pp.yaml'
 " let g:syntastic_python_prospector_sort = 1
 let g:syntastic_python_checkers = ['prospector']
-let g:syntastic_scala_scalastyle_jar = '~/scalastyle/scalastyle_2.11-0.6.0-batch.jar'
+let g:syntastic_scala_scalastyle_jar = '~/scalastyle/scalastyle_2.11-0.8.0-20150730.210236-3-batch.jar'
 let g:syntastic_scala_scalastyle_config_file = '~/scalastyle/scalastyle_config.xml'
 let g:syntastic_scala_checkers = ['scalac', 'fsc', 'scalastyle']
 
