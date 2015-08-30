@@ -10,18 +10,22 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
 
-Plugin 'NLKNguyen/papercolor-theme'
+Plugin 'airblade/vim-gitgutter'
 Plugin 'alfredodeza/pytest.vim'
+Plugin 'benekastah/neomake'
 Plugin 'bling/vim-airline'
 Plugin 'derekwyatt/vim-scala'
+Plugin 'fatih/vim-go'
 Plugin 'fisadev/vim-isort'
-Plugin 'jnwhiteh/vim-golang'
 Plugin 'junegunn/vim-easy-align'
-Plugin 'majutsushi/tagbar'
+Plugin 'mbbill/undotree'
 Plugin 'michaeljsmith/vim-indent-object'
 Plugin 'python-rope/ropevim'
+Plugin 'rhysd/committia.vim'
+Plugin 'rking/ag.vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'tommcdo/vim-exchange'
+Plugin 'tomtom/tcomment_vim'
 Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-fugitive'
@@ -30,21 +34,16 @@ Plugin 'tpope/vim-speeddating'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'w0ng/vim-hybrid'
-Plugin 'xolox/vim-easytags'
-Plugin 'xolox/vim-misc'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
 
 set modelines=0 " disable security holes
 set encoding=utf-8
-
-set t_Co=256
-set term=xterm-256color
 set termencoding=utf-8
 
-set history=700
-set undolevels=700
+set history=1000
+set undolevels=1000
 """ appearance
 set title " show title in console title bar
 
@@ -56,7 +55,6 @@ set completeopt=longest
 
 """ don't bell or blink
 set noerrorbells
-set vb t_vb=
 
 """ Moving Around/Editing
 "set cursorline " have a line indicate the cursor location
@@ -174,16 +172,25 @@ set statusline+=%*
 let g:syntastic_enable_signs = 1
 let g:syntastic_auto_loc_list = 1
 " let g:syntastic_python_flake8_args = '--ignore=E712,E711 --max-complexity=12'
-let g:syntastic_python_prospector_args = '--strictness=veryhigh --profile ~/.prospector/pp.yaml'
+" let g:syntastic_python_prospector_args = '--strictness=veryhigh --profile ~/.prospector/pp.yaml'
 " let g:syntastic_python_prospector_sort = 1
-let g:syntastic_python_checkers = ['prospector']
+let g:syntastic_python_checkers = []
 let g:syntastic_scala_scalastyle_jar = '~/scalastyle/scalastyle_2.11-0.8.0-20150730.210236-3-batch.jar'
 let g:syntastic_scala_scalastyle_config_file = '~/scalastyle/scalastyle_config.xml'
 let g:syntastic_scala_checkers = ['scalac', 'fsc', 'scalastyle']
 let g:syntastic_scala_fsc_args = '-Xfatal-warnings:false -Xfuture -Xlint -Xlint:adapted-args -Xlint:by-name-right-associative -Xlint:delayedinit-select -Xlint:doc-detached -Xlint:inaccessible -Xlint:infer-any -Xlint:missing-interpolator -Xlint:nullary-override -Xlint:nullary-unit -Xlint:option-implicit -Xlint:package-object-classes -Xlint:poly-implicit-overload -Xlint:private-shadow -Xlint:type-parameter-shadow -Xlint:unsound-match -Yno-adapted-args -Ywarn-adapted-args -Ywarn-dead-code -Ywarn-inaccessible -Ywarn-infer-any -Ywarn-nullary-override -Ywarn-nullary-unit -Ywarn-numeric-widen -Ywarn-unused-import -Ywarn-value-discard -d /private/var/tmp/ -deprecation -encoding UTF-8 -feature -language:existentials -language:higherKinds -language:implicitConversions -unchecked'
+
+let g:neomake_python_prospector_maker = {
+    \ 'args': ['--strictness=veryhigh', '--profile=/home/eric/.prospector/pp.yaml', '-o', 'text', '--messages-only', '--absolute-paths', '--die-on-tool-error', '--zero-exit'],
+    \ 'errorformat': '%A%.%#\ (%f):,%A%f:,%C %#L%l:%c\ %m,%C %#L%l:-\ %m,%Z %#%m,%-G%.%#',
+    \ }
+let g:neomake_python_enabled_makers = ['prospector']
+let g:neomake_open_list = 1
+let g:neomake_verbose = 0
+let g:neomake_logfile = 'neomake.log'
+
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>T :execute '!make test'<cr>
-nnoremap <leader>t :execute '!PYTHONWARNINGS="d" TRAPIT_ENV=test nosetests -s %'<cr>
 
 " Pytest
 nmap <silent><Leader>p <Esc>:Pytest file<CR>
@@ -197,10 +204,12 @@ colorscheme hybrid
 
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 autocmd Filetype gitcommit setlocal spell textwidth=72
+autocmd Filetype markdown setlocal spell textwidth=72
 
 " reload .vimrc after saving
 autocmd! BufWritePost .vimrc source %
-
+autocmd! BufWritePost .nvimrc source %
+autocmd! BufWritePost *.py Neomake
 
 " better command line editing
 cnoremap <C-j> <t_kd>
@@ -218,8 +227,6 @@ autocmd BufWritePre *.md :call DeleteTrailingWS()
 autocmd BufWritePre *.py :call DeleteTrailingWS()
 autocmd BufWritePre *.scala :call DeleteTrailingWS()
 autocmd BufWritePre *.java :call DeleteTrailingWS()
-
-nmap <F8> :TagbarToggle<CR>
 
 " Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
 vmap <Enter> <Plug>(EasyAlign)
