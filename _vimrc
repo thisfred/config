@@ -1,42 +1,36 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
 
-" let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
+call plug#begin('~/.vim/bundle')
 
-Plugin 'airblade/vim-gitgutter'
-Plugin 'alfredodeza/pytest.vim'
-Plugin 'benekastah/neomake'
-Plugin 'bling/vim-airline'
-Plugin 'derekwyatt/vim-scala'
-Plugin 'fatih/vim-go'
-Plugin 'fisadev/vim-isort'
-Plugin 'junegunn/vim-easy-align'
-Plugin 'mbbill/undotree'
-Plugin 'michaeljsmith/vim-indent-object'
-Plugin 'python-rope/ropevim'
-Plugin 'rhysd/committia.vim'
-Plugin 'rking/ag.vim'
-Plugin 'scrooloose/syntastic'
-Plugin 'tommcdo/vim-exchange'
-Plugin 'tomtom/tcomment_vim'
-Plugin 'tpope/vim-abolish'
-Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-speeddating'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'w0ng/vim-hybrid'
+Plug 'airblade/vim-gitgutter'
+Plug 'alfredodeza/pytest.vim', {'for': 'python'}
+Plug 'benekastah/neomake'
+Plug 'bling/vim-airline'
+Plug 'derekwyatt/vim-scala', {'for': 'scala'}
+Plug 'fatih/vim-go', {'for': 'go'}
+Plug 'fisadev/vim-isort'
+Plug 'junegunn/vim-easy-align'
+Plug 'junegunn/vim-after-object'
+Plug 'mbbill/undotree'
+Plug 'michaeljsmith/vim-indent-object'
+Plug 'python-rope/ropevim', {'for': 'python'}
+Plug 'rhysd/committia.vim'
+Plug 'rking/ag.vim'
+Plug 'scrooloose/syntastic'
+Plug 'tommcdo/vim-exchange'
+Plug 'tomtom/tcomment_vim'
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-speeddating'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+Plug 'w0ng/vim-hybrid'
 
-call vundle#end()            " required
-filetype plugin indent on    " required
+call plug#end()
 
 set modelines=0 " disable security holes
 set encoding=utf-8
@@ -175,8 +169,8 @@ let g:syntastic_auto_loc_list = 1
 " let g:syntastic_python_prospector_args = '--strictness=veryhigh --profile ~/.prospector/pp.yaml'
 " let g:syntastic_python_prospector_sort = 1
 let g:syntastic_python_checkers = []
-let g:syntastic_scala_scalastyle_jar = '~/scalastyle/scalastyle_2.11-0.8.0-20150730.210236-3-batch.jar'
-let g:syntastic_scala_scalastyle_config_file = '~/scalastyle/scalastyle_config.xml'
+let g:syntastic_scala_scalastyle_jar = '/Users/ericc/scalastyle/scalastyle_2.11-0.8.0-20150902.090323-5-batch.jar'
+let g:syntastic_scala_scalastyle_config_file = '/Users/ericc/scalastyle/scalastyle_config.xml'
 let g:syntastic_scala_checkers = ['scalac', 'fsc', 'scalastyle']
 let g:syntastic_scala_fsc_args = '-Xfatal-warnings:false -Xfuture -Xlint -Xlint:adapted-args -Xlint:by-name-right-associative -Xlint:delayedinit-select -Xlint:doc-detached -Xlint:inaccessible -Xlint:infer-any -Xlint:missing-interpolator -Xlint:nullary-override -Xlint:nullary-unit -Xlint:option-implicit -Xlint:package-object-classes -Xlint:poly-implicit-overload -Xlint:private-shadow -Xlint:type-parameter-shadow -Xlint:unsound-match -Yno-adapted-args -Ywarn-adapted-args -Ywarn-dead-code -Ywarn-inaccessible -Ywarn-infer-any -Ywarn-nullary-override -Ywarn-nullary-unit -Ywarn-numeric-widen -Ywarn-unused-import -Ywarn-value-discard -d /private/var/tmp/ -deprecation -encoding UTF-8 -feature -language:existentials -language:higherKinds -language:implicitConversions -unchecked'
 
@@ -201,6 +195,7 @@ nmap <silent><Leader>f <Esc>:Pytest function<CR>
 " hybrid colorscheme
 let g:hybrid_use_Xresources = 1
 colorscheme hybrid
+set background=dark
 
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 autocmd Filetype gitcommit setlocal spell textwidth=72
@@ -229,11 +224,15 @@ autocmd BufWritePre *.scala :call DeleteTrailingWS()
 autocmd BufWritePre *.java :call DeleteTrailingWS()
 
 " Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
-vmap <Enter> <Plug>(EasyAlign)
+vmap <Enter> <Plugin>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
+nmap ga <Plugin>(EasyAlign)
 
 let g:airline_powerline_fonts=1
 let g:airline_left_sep=''
 let g:airline_right_sep=''
+
+
+" vim-after-object
+autocmd VimEnter * call after_object#enable('=', ':', '-', '#', ' ')
