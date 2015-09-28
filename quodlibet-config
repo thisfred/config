@@ -1,0 +1,193 @@
+[header_maps]
+
+[rename]
+ascii = false
+diacriticals = true
+lowercase = true
+spaces = false
+windows = true
+
+[settings]
+bayesian_rating_factor = 0.0
+bypass_trash = true
+columns = artist,performer,~album~discsubtitle,~#disc,~#track,~title~version,date,~basename,~#length,grouping,~#laststarted,~#playcount,~#rating,~#bitrate,~#added
+	
+default_rating = 0.5
+disable_hints = false
+eager_search = true
+jump = true
+rating_symbol_blank = ☆
+rating_symbol_full = ★
+ratings = 4
+repeat = False
+scan = /media/eric/passport/music:/media/eric/passport/ogg:/media/eric/passport/ogg2
+search_tags = 
+
+[__config__]
+version = 0
+
+[plugins]
+active_plugins = Title Case
+	QLScrobbler
+	AutoQueue
+	Merge Groupings
+	MusicBrainz lookup
+	mpd_server
+	Automatic Rating 2
+	Mirage Analysis
+	Export title list
+	LastFMTagger
+	ReplayGain
+	Python Console
+	Miximize
+	MirageMiximize
+	Automatic Searching
+	Merge Artist Groupings
+	Remove Playlist Duplicates
+	Acoustic Analysis
+	Search artist in Wikipedia
+	Merge Album Groupings
+animosd_bcolor = (0.0, 0.0, 0.0, 0.2)
+animosd_fill = (0.25, 0.25, 0.25, 0.5)
+animosd_outline = (-1.0, 0.0, 0.0, 0.2)
+animosd_shadow = (-1.0, 0.0, 0.0, 0.1)
+animosd_text = (0.9, 0.9, 0.9, 0.0)
+autoqueue_artist_block_time = 1
+autoqueue_birthdays = tina:1973-06-11,eric:1972-03-21,irene:2005-01-27
+autoqueue_by_artists = true
+autoqueue_by_mirage = true
+autoqueue_by_tags = true
+autoqueue_by_tracks = true
+autoqueue_cache_time = 360
+autoqueue_contextualize = true
+autoqueue_desired_queue_length = 900
+autoqueue_extra_context = l:shortlist,i was just a girl then,an arrow unshot fixed in a bow,come and take it,râra avis,all you get for your money,cold cold hearts,cosmic landlords,­.9̅̅9̅̅9̅̅­̅ = 1,les mouches,beer and thank you,fear is a good thing; it teaches us humility,sickness and civilization,hard times and fancy funerals,the first chapters of lives,it's thunder and it's lightning,laundry,no regrets coyote
+autoqueue_favor_new = true
+autoqueue_geohash = c20g22phh52m
+autoqueue_location = Portland,Oregon
+autoqueue_number = 40
+autoqueue_present = eric
+autoqueue_restrictions = 
+autoqueue_shuffle = true
+autoqueue_southern_hemisphere = false
+autoqueue_track_block_time = 90
+autoqueue_use_gaia = true
+autoqueue_use_groupings = true
+autoqueue_use_lastfm = true
+autoqueue_use_mirage = true
+autoqueue_verbose = true
+autoqueue_weed = true
+autoqueue_whole_albums = true
+autoqueue_zipcode = 97217
+brainz_albumartist = true
+brainz_labelid = true
+brainz_split_disc = true
+brainz_standard = true
+cover_engine_amazon = True
+default_max_plugin_invocations = 30
+lastfmtagger_password =
+lastfmtagger_username = thisfred
+quodlibet.fake.plugins.gajim_status_accounts = 
+quodlibet.fake.plugins.gajim_status_pattern = <artist> - <title>
+quodlibet.fake.plugins.gajim_status_paused = True
+quodlibet.fake.plugins.gajim_status_statuses = online chat
+scrobbler_password =
+scrobbler_scrobbler_offline = False
+scrobbler_service = Last.fm
+scrobbler_username = thisfred
+squeezebox_debug = False
+titlecase_allow_all_caps = True
+titlecase_human_title_case = True
+
+[library]
+exclude = 
+refresh_on_start = false
+
+[player]
+backend = gstbe
+fallback_gain = 0.0
+gst_buffer = 1.5
+gst_device = 
+gst_disable_gapless = false
+gst_pipeline = 
+pre_amp_gain = 0.0
+replaygain = true
+time_remaining = true
+
+[tagsfrompath]
+add = false
+split = true
+titlecase = true
+underscores = true
+
+[browsers]
+album_covers = 1
+album_sort = 0
+album_substrings = 1
+albums = 
+background = 
+collection_headers = ~people 0
+cover_size = -1
+pane_selection = 
+pane_wide_mode = 0
+panedbrowser_pos = 0.358760429082
+panes = ~people	<~year|[b][i]<~year>[/i][/b] - ><album>
+query_text = 
+radio = 
+rating_click = true
+rating_confirm_multiple = false
+rating_hotkeys = true
+search_limit = true
+
+[albumart]
+filename = folder.jpg
+force_filename = false
+prefer_embedded = true
+round = true
+
+[memory]
+browser = SearchBar
+browser_searchbar_maximized = 0
+browser_searchbar_position = 1366 16
+browser_searchbar_size_ = 1920 1047
+column_expands = artist,1,performer,1,~album~discsubtitle,1,~title~version,1,date,1,~basename,1,grouping,1,~#laststarted,1,~#added,0
+	
+column_widths = artist,-1,performer,-1,~album~discsubtitle,-1,~title~version,-1,date,-1,~basename,-1,grouping,-1,~#laststarted,-1,~#added,112
+	
+open_browsers = 
+order = inorder
+order_shuffle = shuffle
+plugin_selection = mpd_server
+queue = True
+queue_position = 0.871287128713
+quodlibet_information_maximized = 0
+quodlibet_information_position = 551 184
+quodlibet_information_size_ = 400 400
+quodlibet_last_active_version = 3.4.-1
+quodlibet_maximized = 0
+quodlibet_position = 1366 16
+quodlibet_properties_maximized = 0
+quodlibet_properties_pos = 0.390070921986
+quodlibet_properties_position = 492 351
+quodlibet_properties_size_ = 600 400
+quodlibet_properties_size_single = 400 400
+quodlibet_size_ = 1920 1047
+seek = 0
+shuffle = True
+shufflequeue = false
+song = /media/eric/passport/ogg/heavy_rotation/Esme Patterson - My Young Man.mp3
+songlist = True
+sortby = 0~title~version
+	
+volume = 1.0
+
+[editing]
+alltags = true
+auto_save_changes = false
+default_tags = 
+human_title_case = true
+id3encoding = 
+save_email = quodlibet@lists.sacredchao.net
+save_to_songs = true
+split_on = / & ,
+

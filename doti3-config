@@ -150,5 +150,5 @@ exec --no-startup-id gnome-settings-daemon
 exec --no-startup-id gnome-keyring-daemon
 exec --no-startup-id gnome-screensaver
 
-exec --no-startup-id gdbus call --system --dest org.freedesktop.UDisks2 --object-path /org/freedesktop/UDisks2/block_devices/sdb1 --method org.freedesktop.UDisks2.Filesystem.Mount []
 exec --no-startup-id xset dpms 600
+exec --no-startup-id udiskie --tray
