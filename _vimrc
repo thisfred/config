@@ -188,6 +188,7 @@ let g:neomake_python_enabled_makers = ['prospector']
 let g:neomake_open_list = 1
 let g:neomake_verbose = 0
 let g:neomake_logfile = 'neomake.log'
+let g:ropevim_goto_def_newwin = 'vnew'
 
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>T :execute '!make test'<cr>
