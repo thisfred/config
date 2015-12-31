@@ -6,13 +6,11 @@ call plug#begin('~/.vim/bundle')
 
 Plug 'airblade/vim-gitgutter'
 Plug 'alfredodeza/pytest.vim', {'for': 'python'}
-Plug 'benekastah/neomake'
 Plug 'bling/vim-airline'
 Plug 'derekwyatt/vim-scala', {'for': 'scala'}
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'fisadev/vim-isort'
 Plug 'junegunn/vim-after-object'
-Plug 'junegunn/vim-easy-align'
 Plug 'kien/ctrlp.vim'
 Plug 'mbbill/undotree'
 Plug 'michaeljsmith/vim-indent-object'
@@ -20,16 +18,16 @@ Plug 'python-rope/ropevim', {'for': 'python'}
 Plug 'rhysd/committia.vim'
 Plug 'rking/ag.vim'
 Plug 'scrooloose/syntastic'
+Plug 'tell-k/vim-autopep8'
 Plug 'tommcdo/vim-exchange'
 Plug 'tomtom/tcomment_vim'
-Plug 'tpope/vim-abolish'
-Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-speeddating'
+Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-unimpaired'
 Plug 'w0ng/vim-hybrid'
+Plug 'xolox/vim-easytags'
+Plug 'xolox/vim-misc'
 
 call plug#end()
 
@@ -152,6 +150,14 @@ cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
 " ## Plugins
 
+" # fugitive
+
+let g:fugitive_github_domains = ['https://github.banksimple.com']
+
+" # rhubarb
+
+let g:github_enterprise_urls = ['https://github.banksimple.com']
+
 " # syntastic
 
 syntax enable
@@ -168,10 +174,9 @@ let g:syntastic_python_checkers = []
 
 " # neomake
 
-let g:neomake_open_list = 1
-let g:neomake_verbose = 0
-let g:neomake_logfile = 'neomake.log'
-let g:ropevim_goto_def_newwin = 'vnew'
+" let g:neomake_open_list = 1
+" let g:neomake_logfile = 'neomake.log'
+" let g:ropevim_goto_def_newwin = 'vnew'
 
 nnoremap <leader>T :execute '!make test'<cr>
 
@@ -207,18 +212,19 @@ augroup py
     " \ nosmartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 augroup END
 
-autocmd! BufWritePost *.py Neomake
+" autocmd! BufWritePost *.py Neomake
 autocmd BufWritePre *.py :call DeleteTrailingWS()
 
 let g:pyindent_open_paren = '&sw'
 let g:pyindent_nested_paren = '&sw'
 let g:pyindent_continue = '&sw'
-let g:neomake_python_enabled_makers = ['prospector']
 
-let g:neomake_python_prospector_maker = {
-    \ 'args': ['--strictness=veryhigh', '--profile=/home/eric/.prospector/pp.yaml', '-o', 'text', '--messages-only', '--absolute-paths', '--die-on-tool-error', '--zero-exit'],
-    \ 'errorformat': '%A%.%#\ (%f):,%A%f:,%C %#L%l:%c\ %m,%C %#L%l:-\ %m,%Z %#%m,%-G%.%#',
-    \ }
+" let g:neomake_python_enabled_makers = ['prospector']
+" let g:neomake_python_prospector_maker = {
+"     \ 'args': ['--strictness=veryhigh', '--profile=$HOME/.prospector/pp.yaml', '-o', 'text', '--messages-only', '--absolute-paths', '--die-on-tool-error', '--zero-exit'],
+"     \ 'errorformat': '%A%.%#\ (%f):,%A%f:,%C %#L%l:%c\ %m,%C %#L%l:-\ %m,%Z %#%m,%-G%.%#',
+"     \ }
+let g:autopep8_aggressive=1
 
 " Pytest
 nmap <silent><Leader>p <Esc>:Pytest file<CR>
@@ -243,15 +249,117 @@ autocmd BufWritePre *.java :call DeleteTrailingWS()
 
 let g:syntastic_scala_scalastyle_jar = '/Users/ericc/scalastyle/scalastyle_2.11-0.8.0-20150902.090323-5-batch.jar'
 let g:syntastic_scala_scalastyle_config_file = '/Users/ericc/scalastyle/scalastyle_config.xml'
-let g:syntastic_scala_checkers = ['scalac', 'fsc', 'scalastyle']
-let g:syntastic_scala_fsc_args = '-Xfatal-warnings:false -Xfuture -Xlint -Xlint:adapted-args -Xlint:by-name-right-associative -Xlint:delayedinit-select -Xlint:doc-detached -Xlint:inaccessible -Xlint:infer-any -Xlint:missing-interpolator -Xlint:nullary-override -Xlint:nullary-unit -Xlint:option-implicit -Xlint:package-object-classes -Xlint:poly-implicit-overload -Xlint:private-shadow -Xlint:type-parameter-shadow -Xlint:unsound-match -Yno-adapted-args -Ywarn-adapted-args -Ywarn-dead-code -Ywarn-inaccessible -Ywarn-infer-any -Ywarn-nullary-override -Ywarn-nullary-unit -Ywarn-numeric-widen -Ywarn-unused-import -Ywarn-value-discard -d /private/var/tmp/ -deprecation -encoding UTF-8 -feature -language:existentials -language:higherKinds -language:implicitConversions -unchecked'
+" let g:syntastic_scala_fsc_args = '-Xfatal-warnings:false -Xfuture -Xlint -Xlint:adapted-args -Xlint:by-name-right-associative -Xlint:delayedinit-select -Xlint:doc-detached -Xlint:inaccessible -Xlint:infer-any -Xlint:missing-interpolator -Xlint:nullary-override -Xlint:nullary-unit -Xlint:option-implicit -Xlint:package-object-classes -Xlint:poly-implicit-overload -Xlint:private-shadow -Xlint:type-parameter-shadow -Xlint:unsound-match -Yno-adapted-args -Ywarn-adapted-args -Ywarn-dead-code -Ywarn-inaccessible -Ywarn-infer-any -Ywarn-nullary-override -Ywarn-nullary-unit -Ywarn-numeric-widen -Ywarn-unused-import -Ywarn-value-discard -d /private/var/tmp/ -deprecation -encoding UTF-8 -feature -language:existentials -language:higherKinds -language:implicitConversions -unchecked'
+let g:syntastic_scala_checkers = ['fsc_improved', 'scalastyle']
 
 autocmd BufWritePre *.scala :call DeleteTrailingWS()
 
-augroup TagScala
-    au!
-    au BufWritePost *.scala silent! !ctags -R --exclude=target --exclude=vendor &
-augroup END
+function! s:LoadClasspathsFromFile(filename)
+    let classpath_file = fnamemodify('.classpath', ':p')
+    if filereadable(classpath_file)
+        return join(readfile(classpath_file), ':')[:-2]
+    else
+        return ''
+    endif
+endfunction
+
+if !exists('g:neomake_scala_fsc_smart_classpath_file')
+    let g:neomake_scala_fsc_smart_classpath_file = '.classpath'
+endif
+
+" let g:neomake_scala_fsclint_maker = {
+"         \ 'exe': 'fsc',
+"         \ 'errorformat': '%E%f:%l: %trror: %m,%Z%p^,%-G%.%#',
+"         \ 'args': [
+"            \ '-J-XX:MaxPermSize=2048M',
+"            \ '-J-XX:PermSize=512M',
+"            \ '-J-Xms512M',
+"            \ '-J-Xmx2048M',
+"            \ '-J-Xss512M',
+"            \ '-Xfatal-warnings:false',
+"            \ '-Xfuture',
+"            \ '-Xlint',
+"            \ '-Xlint:adapted-args',
+"            \ '-Xlint:by-name-right-associative',
+"            \ '-Xlint:delayedinit-select',
+"            \ '-Xlint:doc-detached',
+"            \ '-Xlint:inaccessible',
+"            \ '-Xlint:infer-any',
+"            \ '-Xlint:missing-interpolator',
+"            \ '-Xlint:nullary-override',
+"            \ '-Xlint:nullary-unit',
+"            \ '-Xlint:option-implicit',
+"            \ '-Xlint:package-object-classes',
+"            \ '-Xlint:poly-implicit-overload',
+"            \ '-Xlint:private-shadow',
+"            \ '-Xlint:stars-align',
+"            \ '-Xlint:type-parameter-shadow',
+"            \ '-Xlint:unsound-match',
+"            \ '-Yno-adapted-args',
+"            \ '-Ywarn-adapted-args',
+"            \ '-Ywarn-dead-code',
+"            \ '-Ywarn-inaccessible',
+"            \ '-Ywarn-infer-any',
+"            \ '-Ywarn-nullary-override',
+"            \ '-Ywarn-nullary-unit',
+"            \ '-Ywarn-numeric-widen',
+"            \ '-Ywarn-unused-import',
+"            \ '-d /private/var/tmp/',
+"            \ '-deprecation',
+"            \ '-encoding UTF-8',
+"            \ '-feature',
+"            \ '-language:existentials',
+"            \ '-language:higherKinds',
+"            \ '-language:implicitConversions',
+"            \ '-unchecked',
+"            \ '-classpath ' . s:LoadClasspathsFromFile(g:neomake_scala_fsc_smart_classpath_file) 
+"         \ ]
+"     \ }
+
+let g:neomake_scala_fsclint_maker = {
+        \ 'exe': 'fsc',
+        \ 'errorformat': '%E%f:%l: %trror: %m,%Z%p^,%-G%.%#',
+        \ 'args': [
+            \ '-J-XX:MaxPermSize=2048M',
+            \ '-J-XX:PermSize=512M',
+            \ '-J-Xms512M',
+            \ '-J-Xmx2048M',
+            \ '-J-Xss512M',
+            \ '-Xlint',
+            \ '-Xlint:adapted-args',
+            \ '-Xlint:by-name-right-associative',
+            \ '-Xlint:delayedinit-select',
+            \ '-Xlint:doc-detached',
+            \ '-Xlint:inaccessible',
+            \ '-Xlint:infer-any',
+            \ '-Xlint:missing-interpolator',
+            \ '-Xlint:nullary-override',
+            \ '-Xlint:nullary-unit',
+            \ '-Xlint:option-implicit',
+            \ '-Xlint:package-object-classes',
+            \ '-Xlint:poly-implicit-overload',
+            \ '-Xlint:private-shadow',
+            \ '-Xlint:type-parameter-shadow',
+            \ '-Xlint:unsound-match',
+            \ '-Yno-adapted-args',
+            \ '-Ywarn-adapted-args',
+            \ '-Ywarn-dead-code',
+            \ '-Ywarn-inaccessible',
+            \ '-Ywarn-infer-any',
+            \ '-Ywarn-nullary-override',
+            \ '-Ywarn-nullary-unit',
+            \ '-Ywarn-numeric-widen',
+            \ '-Ywarn-unused-import',
+            \ '-deprecation',
+            \ '-feature',
+            \ '-language:existentials',
+            \ '-language:higherKinds',
+            \ '-language:implicitConversions',
+            \ '-unchecked',
+            \ '-classpath "' . s:LoadClasspathsFromFile(g:neomake_scala_fsc_smart_classpath_file) . '"']}
+let g:neomake_scala_enabled_makers = [] " 'fsclint']
+
+au BufEnter *.scala setl formatprg=java\ -jar\ /Users/ericc/github/scalariform/cli/target/scala-2.10/cli-assembly-0.1.7.jar\ -f\ -q\ +doubleIndentClassDeclaration\ --stdin\ --stdout
 
 "Javascript
 augroup js
