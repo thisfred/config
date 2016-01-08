@@ -18,7 +18,7 @@ set $mod Mod4
 # clear in small sizes. However, if you need a lot of unicode glyphs or
 # right-to-left text rendering, you should instead use pango for rendering and
 # chose a FreeType font, such as:
-font pango:Ubuntu Mono 8
+font pango:Ubuntu Mono 10
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -143,6 +143,7 @@ bindsym XF86AudioStop exec quodlibet --stop
 bindsym XF86AudioPrev exec quodlibet --previous
 bindsym XF86AudioNext exec quodlibet --next
 bindsym $mod+Shift+x exec dbus-send --system --print-reply --dest="org.freedesktop.ConsoleKit" /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Stop
+bindsym $mod+Shift+z exec /home/ericc/bin/screen-reset
 
 exec --no-startup-id xsetroot -solid "#333333"
 exec --no-startup-id nm-applet

@@ -221,7 +221,7 @@ let g:pyindent_continue = '&sw'
 
 " let g:neomake_python_enabled_makers = ['prospector']
 " let g:neomake_python_prospector_maker = {
-"     \ 'args': ['--strictness=veryhigh', '--profile=$HOME/.prospector/pp.yaml', '-o', 'text', '--messages-only', '--absolute-paths', '--die-on-tool-error', '--zero-exit'],
+"     \ 'args': ['--strictness=veryhigh', '--profile=~/.prospector/pp.yaml', '-o', 'text', '--messages-only', '--absolute-paths', '--die-on-tool-error', '--zero-exit'],
 "     \ 'errorformat': '%A%.%#\ (%f):,%A%f:,%C %#L%l:%c\ %m,%C %#L%l:-\ %m,%Z %#%m,%-G%.%#',
 "     \ }
 let g:autopep8_aggressive=1
@@ -247,8 +247,8 @@ autocmd BufWritePre *.java :call DeleteTrailingWS()
 
 " Scala :(
 
-let g:syntastic_scala_scalastyle_jar = '/Users/ericc/scalastyle/scalastyle_2.11-0.8.0-20150902.090323-5-batch.jar'
-let g:syntastic_scala_scalastyle_config_file = '/Users/ericc/scalastyle/scalastyle_config.xml'
+let g:syntastic_scala_scalastyle_jar = '~/scalastyle/scalastyle_2.11-0.8.0-20150902.090323-5-batch.jar'
+let g:syntastic_scala_scalastyle_config_file = '~/scalastyle/scalastyle_config.xml'
 " let g:syntastic_scala_fsc_args = '-Xfatal-warnings:false -Xfuture -Xlint -Xlint:adapted-args -Xlint:by-name-right-associative -Xlint:delayedinit-select -Xlint:doc-detached -Xlint:inaccessible -Xlint:infer-any -Xlint:missing-interpolator -Xlint:nullary-override -Xlint:nullary-unit -Xlint:option-implicit -Xlint:package-object-classes -Xlint:poly-implicit-overload -Xlint:private-shadow -Xlint:type-parameter-shadow -Xlint:unsound-match -Yno-adapted-args -Ywarn-adapted-args -Ywarn-dead-code -Ywarn-inaccessible -Ywarn-infer-any -Ywarn-nullary-override -Ywarn-nullary-unit -Ywarn-numeric-widen -Ywarn-unused-import -Ywarn-value-discard -d /private/var/tmp/ -deprecation -encoding UTF-8 -feature -language:existentials -language:higherKinds -language:implicitConversions -unchecked'
 let g:syntastic_scala_checkers = ['fsc_improved', 'scalastyle']
 
@@ -359,7 +359,7 @@ let g:neomake_scala_fsclint_maker = {
             \ '-classpath "' . s:LoadClasspathsFromFile(g:neomake_scala_fsc_smart_classpath_file) . '"']}
 let g:neomake_scala_enabled_makers = [] " 'fsclint']
 
-au BufEnter *.scala setl formatprg=java\ -jar\ /Users/ericc/github/scalariform/cli/target/scala-2.10/cli-assembly-0.1.7.jar\ -f\ -q\ +doubleIndentClassDeclaration\ --stdin\ --stdout
+au BufEnter *.scala setl formatprg=java\ -jar\ ~/scalariform/cli_2.11-0.1.8-SNAPSHOT-assembly.jar\ -f\ -q\ +doubleIndentClassDeclaration\ --stdin\ --stdout
 
 "Javascript
 augroup js
