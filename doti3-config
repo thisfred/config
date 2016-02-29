@@ -144,6 +144,7 @@ bindsym XF86AudioPrev exec quodlibet --previous
 bindsym XF86AudioNext exec quodlibet --next
 bindsym $mod+Shift+x exec dbus-send --system --print-reply --dest="org.freedesktop.ConsoleKit" /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Stop
 bindsym $mod+Shift+z exec /home/ericc/bin/screen-reset
+bindsym $mod+Shift+o exec i3lock -c 000000
 
 exec --no-startup-id xsetroot -solid "#333333"
 exec --no-startup-id nm-applet

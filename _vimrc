@@ -7,7 +7,9 @@ call plug#begin('~/.vim/bundle')
 Plug 'airblade/vim-gitgutter'
 Plug 'alfredodeza/pytest.vim', {'for': 'python'}
 Plug 'bling/vim-airline'
+Plug 'chriskempson/base16-vim'
 Plug 'derekwyatt/vim-scala', {'for': 'scala'}
+"Plug 'ensime/ensime-vim', {'for': 'scala'}
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'fisadev/vim-isort'
 Plug 'junegunn/vim-after-object'
@@ -25,6 +27,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
+Plug 'vimwiki/vimwiki'
 Plug 'w0ng/vim-hybrid'
 Plug 'xolox/vim-easytags'
 Plug 'xolox/vim-misc'
@@ -58,9 +61,8 @@ set backspace=2 " Allow backspacing over autoindent, EOL, and BOL
 
 """ line endings/length
 set textwidth=100
+set colorcolumn=+1
 set formatoptions=tcroqn1
-set colorcolumn=+1 "one beyond textwidth
-"#highlight ColorColumn ctermbg=darkgrey guibg=darkgrey
 set nowrap " don't wrap text
 set linebreak " don't wrap textin the middle of a word
 set ffs=unix,dos,mac " Try recognizing dos, unix, and mac line endings.
@@ -113,6 +115,13 @@ set pastetoggle=<F2>
 " Seriously, guys. It's not like :W is bound to anything anyway.
 command! W :w
 
+" move between windows
+
+map <c-h> <c-w><c-h>
+map <c-j> <c-w><c-j>
+map <c-k> <c-w><c-k>
+map <c-l> <c-w><c-l>
+
 " sudo write this
 cnoremap W! w !sudo tee % >/dev/null
 cnoremap w!! w !sudo tee % >/dev/null
@@ -150,6 +159,10 @@ cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
 " ## Plugins
 
+" # vimwiki
+
+let g:vimwiki_list = [{'path': '~/simple/notes'}]
+
 " # fugitive
 
 let g:fugitive_github_domains = ['https://github.banksimple.com']
@@ -167,6 +180,7 @@ set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 let g:syntastic_enable_signs = 1
 let g:syntastic_auto_loc_list = 1
+let g:syntastic_aggregate_errors = 1
 " let g:syntastic_python_flake8_args = '--ignore=E712,E711 --max-complexity=12'
 " let g:syntastic_python_prospector_args = '--strictness=veryhigh --profile ~/.prospector/pp.yaml'
 " let g:syntastic_python_prospector_sort = 1
@@ -189,7 +203,7 @@ vmap <Enter> <Plugin>(EasyAlign)
 nmap ga <Plugin>(EasyAlign)
 
 " # airline
-let g:airline_powerline_fonts=1
+let g:airline_powerline_fonts=0
 let g:airline_left_sep=''
 let g:airline_right_sep=''
 
@@ -197,8 +211,9 @@ let g:airline_right_sep=''
 autocmd VimEnter * call after_object#enable('=', ':', '-', '#', ' ')
 
 " # hybrid colorscheme
-let g:hybrid_use_Xresources = 1
-colorscheme hybrid
+"let g:hybrid_use_Xresources = 1
+let base16colorspace=256  " Access colors present in 256 colorspace
+colorscheme base16-ocean
 set background=dark
 
 
@@ -236,7 +251,7 @@ nmap <silent><Leader>f <Esc>:Pytest function<CR>
 autocmd Filetype gitcommit setlocal spell textwidth=72
 
 " # Go
-autocmd FileType go autocmd BufWritePre <buffer> Fmt
+autocmd FileType go autocmd BufWritePre <buffer> GoFmt
 
 " markdown
 autocmd BufWritePre *.md :call DeleteTrailingWS()
@@ -250,7 +265,7 @@ autocmd BufWritePre *.java :call DeleteTrailingWS()
 let g:syntastic_scala_scalastyle_jar = '~/scalastyle/scalastyle_2.11-0.8.0-20150902.090323-5-batch.jar'
 let g:syntastic_scala_scalastyle_config_file = '~/scalastyle/scalastyle_config.xml'
 " let g:syntastic_scala_fsc_args = '-Xfatal-warnings:false -Xfuture -Xlint -Xlint:adapted-args -Xlint:by-name-right-associative -Xlint:delayedinit-select -Xlint:doc-detached -Xlint:inaccessible -Xlint:infer-any -Xlint:missing-interpolator -Xlint:nullary-override -Xlint:nullary-unit -Xlint:option-implicit -Xlint:package-object-classes -Xlint:poly-implicit-overload -Xlint:private-shadow -Xlint:type-parameter-shadow -Xlint:unsound-match -Yno-adapted-args -Ywarn-adapted-args -Ywarn-dead-code -Ywarn-inaccessible -Ywarn-infer-any -Ywarn-nullary-override -Ywarn-nullary-unit -Ywarn-numeric-widen -Ywarn-unused-import -Ywarn-value-discard -d /private/var/tmp/ -deprecation -encoding UTF-8 -feature -language:existentials -language:higherKinds -language:implicitConversions -unchecked'
-let g:syntastic_scala_checkers = ['fsc_improved', 'scalastyle']
+let g:syntastic_scala_checkers = ['scalastyle', 'fsc_improved']
 
 autocmd BufWritePre *.scala :call DeleteTrailingWS()
 
@@ -359,7 +374,7 @@ let g:neomake_scala_fsclint_maker = {
             \ '-classpath "' . s:LoadClasspathsFromFile(g:neomake_scala_fsc_smart_classpath_file) . '"']}
 let g:neomake_scala_enabled_makers = [] " 'fsclint']
 
-au BufEnter *.scala setl formatprg=java\ -jar\ ~/scalariform/cli_2.11-0.1.8-SNAPSHOT-assembly.jar\ -f\ -q\ +doubleIndentClassDeclaration\ --stdin\ --stdout
+au BufEnter *.scala setl formatprg=java\ -jar\ ~/scalariform/cli_2.11-0.1.8-SNAPSHOT-assembly.jar\ -f\ -q\ -danglingCloseParenthesis=prevent\ +doubleIndentClassDeclaration\ --stdin\ --stdout
 
 "Javascript
 augroup js
