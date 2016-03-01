@@ -9,7 +9,7 @@ Plug 'alfredodeza/pytest.vim', {'for': 'python'}
 Plug 'bling/vim-airline'
 Plug 'chriskempson/base16-vim'
 Plug 'derekwyatt/vim-scala', {'for': 'scala'}
-"Plug 'ensime/ensime-vim', {'for': 'scala'}
+Plug 'ensime/ensime-vim', {'for': 'scala'}
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'fisadev/vim-isort'
 Plug 'junegunn/vim-after-object'
@@ -18,11 +18,10 @@ Plug 'mbbill/undotree'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'python-rope/ropevim', {'for': 'python'}
 Plug 'rhysd/committia.vim'
-Plug 'rking/ag.vim'
 Plug 'scrooloose/syntastic'
-Plug 'tell-k/vim-autopep8'
-Plug 'tommcdo/vim-exchange'
-Plug 'tomtom/tcomment_vim'
+Plug 'tell-k/vim-autopep8', {'for': 'python'}
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rhubarb'
@@ -47,7 +46,7 @@ set title " show title in console title bar
 set wildmode=longest,list " <Tab> cycles between all matching choices.
 set wildignore+=*.o,*.obj,.git,*.pyc,.svn,.bzr
 set tildeop
-set completeopt=longest
+"set completeopt=longest
 
 """ don't bell or blink
 set noerrorbells
@@ -115,8 +114,7 @@ set pastetoggle=<F2>
 " Seriously, guys. It's not like :W is bound to anything anyway.
 command! W :w
 
-" move between windows
-
+" window navigation
 map <c-h> <c-w><c-h>
 map <c-j> <c-w><c-j>
 map <c-k> <c-w><c-k>
@@ -157,6 +155,8 @@ cnoremap <C-k> <t_ku>
 
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
+nnoremap <leader>T :execute '!make test'<cr>
+
 " ## Plugins
 
 " # vimwiki
@@ -170,6 +170,10 @@ let g:fugitive_github_domains = ['https://github.banksimple.com']
 " # rhubarb
 
 let g:github_enterprise_urls = ['https://github.banksimple.com']
+
+" # autopep8
+
+let g:autopep8_aggressive=3
 
 " # syntastic
 
@@ -188,12 +192,9 @@ let g:syntastic_python_checkers = []
 
 " # neomake
 
-" let g:neomake_open_list = 1
-" let g:neomake_logfile = 'neomake.log'
-" let g:ropevim_goto_def_newwin = 'vnew'
-
-nnoremap <leader>T :execute '!make test'<cr>
-
+let g:neomake_open_list = 1
+let g:neomake_verbose = 1
+let g:neomake_logfile = 'neomake.log'
 
 " # easyalign
 
@@ -216,7 +217,6 @@ let base16colorspace=256  " Access colors present in 256 colorspace
 colorscheme base16-ocean
 set background=dark
 
-
 " ## auto/FileType specific changes
 
 " # Python
@@ -234,18 +234,20 @@ let g:pyindent_open_paren = '&sw'
 let g:pyindent_nested_paren = '&sw'
 let g:pyindent_continue = '&sw'
 
-" let g:neomake_python_enabled_makers = ['prospector']
-" let g:neomake_python_prospector_maker = {
-"     \ 'args': ['--strictness=veryhigh', '--profile=~/.prospector/pp.yaml', '-o', 'text', '--messages-only', '--absolute-paths', '--die-on-tool-error', '--zero-exit'],
-"     \ 'errorformat': '%A%.%#\ (%f):,%A%f:,%C %#L%l:%c\ %m,%C %#L%l:-\ %m,%Z %#%m,%-G%.%#',
-"     \ }
-let g:autopep8_aggressive=1
+let g:neomake_python_pylint_maker = {
+    \ 'args': [
+        \ '-f', 'text',
+        \ '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg}"',
+        \ '-r', 'n',
+        \ '-d', 'missing-docstring']}
 
 " Pytest
 nmap <silent><Leader>p <Esc>:Pytest file<CR>
 nmap <silent><Leader>c <Esc>:Pytest class<CR>
 nmap <silent><Leader>m <Esc>:Pytest method<CR>
 nmap <silent><Leader>f <Esc>:Pytest function<CR>
+
+let g:ropevim_goto_def_newwin = 'vnew'
 
 " git commits
 autocmd Filetype gitcommit setlocal spell textwidth=72
