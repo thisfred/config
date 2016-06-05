@@ -4,21 +4,25 @@ filetype off                  " required
 
 call plug#begin('~/.vim/bundle')
 
+Plug 'ensime/ensime-vim', {'for': 'scala'}
+Plug 'PeterRincker/vim-argumentative'
 Plug 'airblade/vim-gitgutter'
 Plug 'alfredodeza/pytest.vim', {'for': 'python'}
 Plug 'bling/vim-airline'
 Plug 'chriskempson/base16-vim'
 Plug 'derekwyatt/vim-scala', {'for': 'scala'}
-Plug 'ensime/ensime-vim', {'for': 'scala'}
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'fisadev/vim-isort'
+Plug 'fntlnz/atags.vim', {'for': 'scala'}
+Plug 'gcmt/wildfire.vim'
+Plug 'idris-hackers/idris-vim'
 Plug 'junegunn/vim-after-object'
 Plug 'kien/ctrlp.vim'
 Plug 'mbbill/undotree'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'python-rope/ropevim', {'for': 'python'}
 Plug 'rhysd/committia.vim'
-Plug 'scrooloose/syntastic'
+Plug 'scrooloose/syntastic',
 Plug 'tell-k/vim-autopep8', {'for': 'python'}
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
@@ -28,7 +32,6 @@ Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
 Plug 'vimwiki/vimwiki'
 Plug 'w0ng/vim-hybrid'
-Plug 'xolox/vim-easytags'
 Plug 'xolox/vim-misc'
 
 call plug#end()
@@ -119,6 +122,11 @@ map <c-h> <c-w><c-h>
 map <c-j> <c-w><c-j>
 map <c-k> <c-w><c-k>
 map <c-l> <c-w><c-l>
+" Move between windows
+tnoremap <c-h> <C-\><C-n><C-w>h
+tnoremap <c-j> <C-\><C-n><C-w>j
+tnoremap <c-k> <C-\><C-n><C-w>k
+tnoremap <c-l> <C-\><C-n><C-w>l
 
 " sudo write this
 cnoremap W! w !sudo tee % >/dev/null
@@ -159,6 +167,9 @@ nnoremap <leader>T :execute '!make test'<cr>
 
 " ## Plugins
 
+" # atags
+
+
 " # vimwiki
 
 let g:vimwiki_list = [{'path': '~/simple/notes'}]
@@ -185,10 +196,11 @@ set statusline+=%*
 let g:syntastic_enable_signs = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_aggregate_errors = 1
-" let g:syntastic_python_flake8_args = '--ignore=E712,E711 --max-complexity=12'
-" let g:syntastic_python_prospector_args = '--strictness=veryhigh --profile ~/.prospector/pp.yaml'
-" let g:syntastic_python_prospector_sort = 1
-let g:syntastic_python_checkers = []
+let g:syntastic_python_flake8_args = '--ignore=E712,E711 --max-complexity=12'
+let g:syntastic_python_pylint_args = '-d missing-docstring,superfluous-parens'
+" let g:syntastic_python_prospector_args = --strictness=veryhigh --profile ~/.prospector/pp.yaml'
+" let g:syntastic_python_prospector_sort = v
+let g:syntastic_python_checkers = ['flake8', 'pylint']
 
 " # neomake
 
@@ -264,12 +276,14 @@ autocmd BufWritePre *.java :call DeleteTrailingWS()
 
 " Scala :(
 
+autocmd BufWritePost *.scala call atags#generate()
 let g:syntastic_scala_scalastyle_jar = '~/scalastyle/scalastyle_2.11-0.8.0-20150902.090323-5-batch.jar'
 let g:syntastic_scala_scalastyle_config_file = '~/scalastyle/scalastyle_config.xml'
 " let g:syntastic_scala_fsc_args = '-Xfatal-warnings:false -Xfuture -Xlint -Xlint:adapted-args -Xlint:by-name-right-associative -Xlint:delayedinit-select -Xlint:doc-detached -Xlint:inaccessible -Xlint:infer-any -Xlint:missing-interpolator -Xlint:nullary-override -Xlint:nullary-unit -Xlint:option-implicit -Xlint:package-object-classes -Xlint:poly-implicit-overload -Xlint:private-shadow -Xlint:type-parameter-shadow -Xlint:unsound-match -Yno-adapted-args -Ywarn-adapted-args -Ywarn-dead-code -Ywarn-inaccessible -Ywarn-infer-any -Ywarn-nullary-override -Ywarn-nullary-unit -Ywarn-numeric-widen -Ywarn-unused-import -Ywarn-value-discard -d /private/var/tmp/ -deprecation -encoding UTF-8 -feature -language:existentials -language:higherKinds -language:implicitConversions -unchecked'
-let g:syntastic_scala_checkers = ['scalastyle', 'fsc_improved']
+let g:syntastic_scala_checkers = ['ensime', 'scalastyle', 'fsc_improved']
 
 autocmd BufWritePre *.scala :call DeleteTrailingWS()
+autocmd BufWritePost *.scala :EnTypeCheck 
 
 function! s:LoadClasspathsFromFile(filename)
     let classpath_file = fnamemodify('.classpath', ':p')
