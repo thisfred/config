@@ -4,7 +4,7 @@ filetype off                  " required
 
 call plug#begin('~/.vim/bundle')
 
-Plug 'ensime/ensime-vim', {'for': 'scala'}
+"Plug 'ensime/ensime-vim', {'for': 'scala'}
 Plug 'PeterRincker/vim-argumentative'
 Plug 'airblade/vim-gitgutter'
 Plug 'alfredodeza/pytest.vim', {'for': 'python'}
@@ -195,12 +195,18 @@ set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 let g:syntastic_enable_signs = 1
 let g:syntastic_auto_loc_list = 1
+let g:syntastic_loc_list_height=3
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_python_flake8_args = '--ignore=E712,E711 --max-complexity=12'
 let g:syntastic_python_pylint_args = '-d missing-docstring,superfluous-parens'
 " let g:syntastic_python_prospector_args = --strictness=veryhigh --profile ~/.prospector/pp.yaml'
 " let g:syntastic_python_prospector_sort = v
 let g:syntastic_python_checkers = ['flake8', 'pylint']
+
+let g:syntastic_error_symbol='!'
+let g:syntastic_style_error_symbol='x'
+let g:syntastic_warning_symbol='?'
+let g:syntastic_style_warning_symbol='~'
 
 " # neomake
 
@@ -279,118 +285,52 @@ autocmd BufWritePre *.java :call DeleteTrailingWS()
 autocmd BufWritePost *.scala call atags#generate()
 let g:syntastic_scala_scalastyle_jar = '~/scalastyle/scalastyle_2.11-0.8.0-20150902.090323-5-batch.jar'
 let g:syntastic_scala_scalastyle_config_file = '~/scalastyle/scalastyle_config.xml'
-" let g:syntastic_scala_fsc_args = '-Xfatal-warnings:false -Xfuture -Xlint -Xlint:adapted-args -Xlint:by-name-right-associative -Xlint:delayedinit-select -Xlint:doc-detached -Xlint:inaccessible -Xlint:infer-any -Xlint:missing-interpolator -Xlint:nullary-override -Xlint:nullary-unit -Xlint:option-implicit -Xlint:package-object-classes -Xlint:poly-implicit-overload -Xlint:private-shadow -Xlint:type-parameter-shadow -Xlint:unsound-match -Yno-adapted-args -Ywarn-adapted-args -Ywarn-dead-code -Ywarn-inaccessible -Ywarn-infer-any -Ywarn-nullary-override -Ywarn-nullary-unit -Ywarn-numeric-widen -Ywarn-unused-import -Ywarn-value-discard -d /private/var/tmp/ -deprecation -encoding UTF-8 -feature -language:existentials -language:higherKinds -language:implicitConversions -unchecked'
-let g:syntastic_scala_checkers = ['ensime', 'scalastyle', 'fsc_improved']
+let g:syntastic_scala_checkers = ['scalastyle', 'fsc']
+let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': ['scala'] }
+" let g:syntastic_debug = 63
 
-autocmd BufWritePre *.scala :call DeleteTrailingWS()
-autocmd BufWritePost *.scala :EnTypeCheck 
+if has('autocmd')
+    function! FindClasspath(where)
+        let cpf = findfile('.classpath', escape(a:where, ' ') . ';')
+        let sep = syntastic#util#isRunningWindows() || has('win32unix') ? ';' : ':'
+        try
+            return cpf !=# '' ? [ '-classpath', join(readfile(cpf), sep) ] : []
+        catch
+            return []
+        endtry
+    endfunction
 
-function! s:LoadClasspathsFromFile(filename)
-    let classpath_file = fnamemodify('.classpath', ':p')
-    if filereadable(classpath_file)
-        return join(readfile(classpath_file), ':')[:-2]
-    else
-        return ''
-    endif
-endfunction
+    let g:syntastic_scala_fsc_args = [
+        \ '-Xfatal-warnings:false',
+        \ '-Xfuture',
+        \ '-Xlint',
+        \ '-Ywarn-adapted-args',
+        \ '-Ywarn-dead-code', 
+        \ '-Ywarn-inaccessible',
+        \ '-Ywarn-infer-any',
+        \ '-Ywarn-nullary-override',
+        \ '-Ywarn-nullary-unit',
+        \ '-Ywarn-numeric-widen',
+        \ '-Ywarn-unused-import',
+        \ '-Ywarn-value-discard',
+        \ '-deprecation',
+        \ '-encoding', 'UTF-8',
+        \ '-feature',
+        \ '-language:existentials',
+        \ '-language:higherKinds', 
+        \ '-language:implicitConversions',
+        \ '-unchecked',
+        \ '-d', ($TMPDIR !=# '' ? $TMPDIR : '/tmp') ]
 
-if !exists('g:neomake_scala_fsc_smart_classpath_file')
-    let g:neomake_scala_fsc_smart_classpath_file = '.classpath'
+    augroup syntastic_fsc
+        autocmd!
+        autocmd FileType scala let b:syntastic_scala_fsc_args =
+            \ get(g:, 'syntastic_scala_fsc_args', []) +
+            \ FindClasspath(expand('<afile>:p:h', 1))
+    augroup END
 endif
 
-" let g:neomake_scala_fsclint_maker = {
-"         \ 'exe': 'fsc',
-"         \ 'errorformat': '%E%f:%l: %trror: %m,%Z%p^,%-G%.%#',
-"         \ 'args': [
-"            \ '-J-XX:MaxPermSize=2048M',
-"            \ '-J-XX:PermSize=512M',
-"            \ '-J-Xms512M',
-"            \ '-J-Xmx2048M',
-"            \ '-J-Xss512M',
-"            \ '-Xfatal-warnings:false',
-"            \ '-Xfuture',
-"            \ '-Xlint',
-"            \ '-Xlint:adapted-args',
-"            \ '-Xlint:by-name-right-associative',
-"            \ '-Xlint:delayedinit-select',
-"            \ '-Xlint:doc-detached',
-"            \ '-Xlint:inaccessible',
-"            \ '-Xlint:infer-any',
-"            \ '-Xlint:missing-interpolator',
-"            \ '-Xlint:nullary-override',
-"            \ '-Xlint:nullary-unit',
-"            \ '-Xlint:option-implicit',
-"            \ '-Xlint:package-object-classes',
-"            \ '-Xlint:poly-implicit-overload',
-"            \ '-Xlint:private-shadow',
-"            \ '-Xlint:stars-align',
-"            \ '-Xlint:type-parameter-shadow',
-"            \ '-Xlint:unsound-match',
-"            \ '-Yno-adapted-args',
-"            \ '-Ywarn-adapted-args',
-"            \ '-Ywarn-dead-code',
-"            \ '-Ywarn-inaccessible',
-"            \ '-Ywarn-infer-any',
-"            \ '-Ywarn-nullary-override',
-"            \ '-Ywarn-nullary-unit',
-"            \ '-Ywarn-numeric-widen',
-"            \ '-Ywarn-unused-import',
-"            \ '-d /private/var/tmp/',
-"            \ '-deprecation',
-"            \ '-encoding UTF-8',
-"            \ '-feature',
-"            \ '-language:existentials',
-"            \ '-language:higherKinds',
-"            \ '-language:implicitConversions',
-"            \ '-unchecked',
-"            \ '-classpath ' . s:LoadClasspathsFromFile(g:neomake_scala_fsc_smart_classpath_file) 
-"         \ ]
-"     \ }
-
-let g:neomake_scala_fsclint_maker = {
-        \ 'exe': 'fsc',
-        \ 'errorformat': '%E%f:%l: %trror: %m,%Z%p^,%-G%.%#',
-        \ 'args': [
-            \ '-J-XX:MaxPermSize=2048M',
-            \ '-J-XX:PermSize=512M',
-            \ '-J-Xms512M',
-            \ '-J-Xmx2048M',
-            \ '-J-Xss512M',
-            \ '-Xlint',
-            \ '-Xlint:adapted-args',
-            \ '-Xlint:by-name-right-associative',
-            \ '-Xlint:delayedinit-select',
-            \ '-Xlint:doc-detached',
-            \ '-Xlint:inaccessible',
-            \ '-Xlint:infer-any',
-            \ '-Xlint:missing-interpolator',
-            \ '-Xlint:nullary-override',
-            \ '-Xlint:nullary-unit',
-            \ '-Xlint:option-implicit',
-            \ '-Xlint:package-object-classes',
-            \ '-Xlint:poly-implicit-overload',
-            \ '-Xlint:private-shadow',
-            \ '-Xlint:type-parameter-shadow',
-            \ '-Xlint:unsound-match',
-            \ '-Yno-adapted-args',
-            \ '-Ywarn-adapted-args',
-            \ '-Ywarn-dead-code',
-            \ '-Ywarn-inaccessible',
-            \ '-Ywarn-infer-any',
-            \ '-Ywarn-nullary-override',
-            \ '-Ywarn-nullary-unit',
-            \ '-Ywarn-numeric-widen',
-            \ '-Ywarn-unused-import',
-            \ '-deprecation',
-            \ '-feature',
-            \ '-language:existentials',
-            \ '-language:higherKinds',
-            \ '-language:implicitConversions',
-            \ '-unchecked',
-            \ '-classpath "' . s:LoadClasspathsFromFile(g:neomake_scala_fsc_smart_classpath_file) . '"']}
-let g:neomake_scala_enabled_makers = [] " 'fsclint']
-
-au BufEnter *.scala setl formatprg=java\ -jar\ ~/scalariform/cli_2.11-0.1.8-SNAPSHOT-assembly.jar\ -f\ -q\ -danglingCloseParenthesis=prevent\ +doubleIndentClassDeclaration\ --stdin\ --stdout
+autocmd BufWritePre *.scala :call DeleteTrailingWS()
 
 "Javascript
 augroup js
