@@ -1,16 +1,16 @@
-set nocompatible              " be iMproved, required
 filetype off                  " required
-
+let mapleader=","
 
 call plug#begin('~/.vim/bundle')
 
-"Plug 'ensime/ensime-vim', {'for': 'scala'}
 Plug 'PeterRincker/vim-argumentative'
 Plug 'airblade/vim-gitgutter'
 Plug 'alfredodeza/pytest.vim', {'for': 'python'}
 Plug 'bling/vim-airline'
 Plug 'chriskempson/base16-vim'
 Plug 'derekwyatt/vim-scala', {'for': 'scala'}
+Plug 'easymotion/vim-easymotion'
+Plug 'ensime/ensime-vim', {'for': 'scala'}
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'fisadev/vim-isort'
 Plug 'fntlnz/atags.vim', {'for': 'scala'}
@@ -30,6 +30,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
+Plug 'valloric/youcompleteme'
 Plug 'vimwiki/vimwiki'
 Plug 'w0ng/vim-hybrid'
 Plug 'xolox/vim-misc'
@@ -90,7 +91,6 @@ set noautoread " Don't automatically re-read changed files.
 
 """" Messages, Info, Status
 set ls=2 " allways show status line
-set vb t_vb= " Disable all bells. I hate ringing/flashing.
 set confirm " Y-N-C prompt if closing with unsaved changes.
 set showcmd " Show incomplete normal mode commands as I type.
 set report=0 " : commands always print changed line count.
@@ -148,16 +148,6 @@ func! DeleteTrailingWS()
   exe "normal `z"
 endfunc
 
-function! SuperCleverTab()
-    if strpart(getline('.'), 0, col('.') - 1) =~ '^\s*$'
-        return "\<tab>"
-    else
-        return "\<C-P>"
-    endif
-endfunction
-inoremap <Tab> <C-R>=SuperCleverTab()<cr>
-
-" better command line editing
 cnoremap <C-j> <t_kd>
 cnoremap <C-k> <t_ku>
 
@@ -167,8 +157,9 @@ nnoremap <leader>T :execute '!make test'<cr>
 
 " ## Plugins
 
-" # atags
+" # easymotion
 
+map <Leader> <Plug>(easymotion-prefix)
 
 " # vimwiki
 

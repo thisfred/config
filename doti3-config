@@ -136,12 +136,6 @@ new_window none
 workspace_layout tabbed
 force_focus_wrapping yes
 
-bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 0 +5%
-bindsym XF86AudioLowerVolume exec pactl set-sink-volume 0 -- -5%
-bindsym XF86AudioPlay exec quodlibet --play-pause
-bindsym XF86AudioStop exec quodlibet --stop
-bindsym XF86AudioPrev exec quodlibet --previous
-bindsym XF86AudioNext exec quodlibet --next
 bindsym $mod+Shift+x exec dbus-send --system --print-reply --dest="org.freedesktop.ConsoleKit" /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Stop
 bindsym $mod+Shift+z exec /home/ericc/bin/screen-reset
 bindsym $mod+Shift+o exec i3lock -c 000000
