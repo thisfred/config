@@ -6,7 +6,6 @@ call plug#begin('~/.vim/bundle')
 Plug 'PeterRincker/vim-argumentative'
 Plug 'airblade/vim-gitgutter'
 Plug 'alfredodeza/pytest.vim', {'for': 'python'}
-Plug 'bling/vim-airline'
 Plug 'chriskempson/base16-vim'
 Plug 'derekwyatt/vim-scala', {'for': 'scala'}
 Plug 'easymotion/vim-easymotion'
@@ -26,10 +25,14 @@ Plug 'scrooloose/syntastic',
 Plug 'tell-k/vim-autopep8', {'for': 'python'}
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-classpath'
+Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-flagship'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-vinegar'
 Plug 'valloric/youcompleteme'
 Plug 'vimwiki/vimwiki'
 Plug 'w0ng/vim-hybrid'
@@ -90,13 +93,13 @@ set noautowriteall " NEVER.
 set noautoread " Don't automatically re-read changed files.
 
 """" Messages, Info, Status
-set ls=2 " allways show status line
 set confirm " Y-N-C prompt if closing with unsaved changes.
 set showcmd " Show incomplete normal mode commands as I type.
 set report=0 " : commands always print changed line count.
 set shortmess+=a " Use [+]/[RO]/[w] for modified/readonly/written.
 set laststatus=2 " Always show statusline, even if only 1 window.
-set statusline=[%l,%v\ %P%M]\ %f\ %r%h%w\ (%{&ff})\ %{fugitive#statusline()}
+set statusline=[%l,%v\ %P%M]\ %f\ %r%h%w\ (%{&ff})
+set showtabline=1
 
 " displays tabs with :set list & displays when a line runs off-screen
 set listchars=tab:->,trail:-,precedes:<,extends:>
@@ -157,6 +160,13 @@ nnoremap <leader>T :execute '!make test'<cr>
 
 " ## Plugins
 
+" # flagship
+
+set laststatus=2
+set guioptions-=e
+autocmd User Flags call Hoist("window", "SyntasticStatuslineFlag")
+autocmd User Flags call Hoist("global", "%{&ignorecase ? '[IC]' : ''}")
+
 " # easymotion
 
 map <Leader> <Plug>(easymotion-prefix)
@@ -184,21 +194,21 @@ syntax enable
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
-let g:syntastic_enable_signs = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_loc_list_height=3
+
 let g:syntastic_aggregate_errors = 1
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_enable_signs = 1
+let g:syntastic_error_symbol='!'
+let g:syntastic_loc_list_height=3
+let g:syntastic_python_checkers = ['flake8', 'pylint', 'mypy']
 let g:syntastic_python_flake8_args = '--ignore=E712,E711 --max-complexity=12'
 let g:syntastic_python_pylint_args = '-d missing-docstring,superfluous-parens'
-" let g:syntastic_python_prospector_args = --strictness=veryhigh --profile ~/.prospector/pp.yaml'
-" let g:syntastic_python_prospector_sort = v
-let g:syntastic_python_checkers = ['flake8', 'pylint']
-
-let g:syntastic_error_symbol='!'
 let g:syntastic_style_error_symbol='x'
-let g:syntastic_warning_symbol='?'
 let g:syntastic_style_warning_symbol='~'
-
+let g:syntastic_warning_symbol='?'
 " # neomake
 
 let g:neomake_open_list = 1
@@ -277,7 +287,7 @@ autocmd BufWritePost *.scala call atags#generate()
 let g:syntastic_scala_scalastyle_jar = '~/scalastyle/scalastyle_2.11-0.8.0-20150902.090323-5-batch.jar'
 let g:syntastic_scala_scalastyle_config_file = '~/scalastyle/scalastyle_config.xml'
 let g:syntastic_scala_checkers = ['scalastyle', 'fsc']
-let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': ['scala'] }
+let g:syntastic_mode_map = { 'mode': 'active' }
 " let g:syntastic_debug = 63
 
 if has('autocmd')
@@ -333,3 +343,4 @@ augroup END
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 autocmd! BufWritePost .vimrc source %
 autocmd! BufWritePost .nvimrc source %
+autocmd! BufWritePost init.vim source %
