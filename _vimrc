@@ -8,24 +8,22 @@ Plug 'airblade/vim-gitgutter'
 Plug 'alfredodeza/pytest.vim', {'for': 'python'}
 Plug 'chriskempson/base16-vim'
 Plug 'derekwyatt/vim-scala', {'for': 'scala'}
-Plug 'easymotion/vim-easymotion'
 Plug 'ensime/ensime-vim', {'for': 'scala'}
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'fisadev/vim-isort'
-Plug 'fntlnz/atags.vim', {'for': 'scala'}
+Plug 'fntlnz/atags.vim'
 Plug 'gcmt/wildfire.vim'
 Plug 'idris-hackers/idris-vim'
-Plug 'junegunn/vim-after-object'
 Plug 'kien/ctrlp.vim'
 Plug 'mbbill/undotree'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'python-rope/ropevim', {'for': 'python'}
 Plug 'rhysd/committia.vim'
 Plug 'scrooloose/syntastic',
+Plug 'svermeulen/vim-easyclip'
 Plug 'tell-k/vim-autopep8', {'for': 'python'}
-Plug 'tpope/vim-abolish'
-Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-classpath'
+Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-flagship'
 Plug 'tpope/vim-fugitive'
@@ -34,8 +32,6 @@ Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-vinegar'
 Plug 'valloric/youcompleteme'
-Plug 'vimwiki/vimwiki'
-Plug 'w0ng/vim-hybrid'
 Plug 'xolox/vim-misc'
 
 call plug#end()
@@ -144,9 +140,12 @@ nnoremap <leader><space> :nohlsearch<cr>
 
 set splitbelow
 
+" remap gm to m, to work with easyclip
+nnoremap gm m
 
 func! DeleteTrailingWS()
-  exe "normal mz"
+ " use remapped gm to m, to work with easyclip
+  exe "normal gmz"
   %s/\s\+$//ge
   exe "normal `z"
 endfunc
@@ -160,20 +159,18 @@ nnoremap <leader>T :execute '!make test'<cr>
 
 " ## Plugins
 
+" # easyclip
+
+let g:EasyClipUseSubstituteDefaults=1
+imap <c-v> <plug>EasyClipInsertModePaste
+cmap <c-v> <plug>EasyClipCommandModePaste
+
 " # flagship
 
 set laststatus=2
 set guioptions-=e
 autocmd User Flags call Hoist("window", "SyntasticStatuslineFlag")
 autocmd User Flags call Hoist("global", "%{&ignorecase ? '[IC]' : ''}")
-
-" # easymotion
-
-map <Leader> <Plug>(easymotion-prefix)
-
-" # vimwiki
-
-let g:vimwiki_list = [{'path': '~/simple/notes'}]
 
 " # fugitive
 
@@ -214,21 +211,6 @@ let g:syntastic_warning_symbol='?'
 let g:neomake_open_list = 1
 let g:neomake_verbose = 1
 let g:neomake_logfile = 'neomake.log'
-
-" # easyalign
-
-" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
-vmap <Enter> <Plugin>(EasyAlign)
-" Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plugin>(EasyAlign)
-
-" # airline
-let g:airline_powerline_fonts=0
-let g:airline_left_sep=''
-let g:airline_right_sep=''
-
-" # vim-after-object
-autocmd VimEnter * call after_object#enable('=', ':', '-', '#', ' ')
 
 " # hybrid colorscheme
 "let g:hybrid_use_Xresources = 1
@@ -283,7 +265,7 @@ autocmd BufWritePre *.java :call DeleteTrailingWS()
 
 " Scala :(
 
-autocmd BufWritePost *.scala call atags#generate()
+autocmd BufWritePost * call atags#generate()
 let g:syntastic_scala_scalastyle_jar = '~/scalastyle/scalastyle_2.11-0.8.0-20150902.090323-5-batch.jar'
 let g:syntastic_scala_scalastyle_config_file = '~/scalastyle/scalastyle_config.xml'
 let g:syntastic_scala_checkers = ['scalastyle', 'fsc']
@@ -332,12 +314,6 @@ if has('autocmd')
 endif
 
 autocmd BufWritePre *.scala :call DeleteTrailingWS()
-
-"Javascript
-augroup js
-    autocmd!
-    au BufRead *.js set makeprg=jslint\ %
-augroup END
 
 " .vimrc
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
