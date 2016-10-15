@@ -3,24 +3,25 @@ let mapleader=","
 
 call plug#begin('~/.vim/bundle')
 
+" Plug 'valloric/youcompleteme'
 Plug 'PeterRincker/vim-argumentative'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'airblade/vim-gitgutter'
 Plug 'alfredodeza/pytest.vim', {'for': 'python'}
 Plug 'chriskempson/base16-vim'
+Plug 'cohama/lexima.vim'
 Plug 'derekwyatt/vim-scala', {'for': 'scala'}
-Plug 'ensime/ensime-vim', {'for': 'scala'}
+Plug 'ensime/ensime-vim', {'for': 'scala', 'do': ':UpdateRemotePlugins' }
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'fisadev/vim-isort'
 Plug 'fntlnz/atags.vim'
 Plug 'gcmt/wildfire.vim'
 Plug 'idris-hackers/idris-vim'
 Plug 'kien/ctrlp.vim'
-Plug 'mbbill/undotree'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'python-rope/ropevim', {'for': 'python'}
 Plug 'rhysd/committia.vim'
 Plug 'scrooloose/syntastic',
-Plug 'svermeulen/vim-easyclip'
 Plug 'tell-k/vim-autopep8', {'for': 'python'}
 Plug 'tpope/vim-classpath'
 Plug 'tpope/vim-commentary'
@@ -31,7 +32,6 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-vinegar'
-Plug 'valloric/youcompleteme'
 Plug 'xolox/vim-misc'
 
 call plug#end()
@@ -159,11 +159,13 @@ nnoremap <leader>T :execute '!make test'<cr>
 
 " ## Plugins
 
-" # easyclip
+" deoplete.
+let g:deoplete#enable_at_startup = 1
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
-let g:EasyClipUseSubstituteDefaults=1
-imap <c-v> <plug>EasyClipInsertModePaste
-cmap <c-v> <plug>EasyClipCommandModePaste
+" # youcompleteme
+
+" let g:ycm_register_as_syntastic_checker = 0
 
 " # flagship
 
@@ -269,9 +271,8 @@ autocmd BufWritePre *.java :call DeleteTrailingWS()
 autocmd BufWritePost * call atags#generate()
 let g:syntastic_scala_scalastyle_jar = '~/scalastyle/scalastyle_2.11-0.8.0-20150902.090323-5-batch.jar'
 let g:syntastic_scala_scalastyle_config_file = '~/scalastyle/scalastyle_config.xml'
-let g:syntastic_scala_checkers = ['scalastyle', 'fsc']
+let g:syntastic_scala_checkers = ['scalastyle', 'ensime', 'fsc']
 let g:syntastic_mode_map = { 'mode': 'active' }
-" let g:syntastic_debug = 63
 
 if has('autocmd')
     function! FindClasspath(where)
