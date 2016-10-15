@@ -203,6 +203,7 @@ let g:syntastic_loc_list_height=3
 let g:syntastic_python_checkers = ['flake8', 'pylint', 'mypy']
 let g:syntastic_python_flake8_args = '--ignore=E712,E711 --max-complexity=12'
 let g:syntastic_python_pylint_args = '-d missing-docstring,superfluous-parens'
+let g:syntastic_python_mypy_args = '--strict-optional'
 let g:syntastic_style_error_symbol='x'
 let g:syntastic_style_warning_symbol='~'
 let g:syntastic_warning_symbol='?'
