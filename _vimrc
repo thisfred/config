@@ -171,7 +171,7 @@ inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
 set laststatus=2
 set guioptions-=e
-autocmd User Flags call Hoist("window", "SyntasticStatuslineFlag")
+autocmd User Flags call Hoist("window")
 autocmd User Flags call Hoist("global", "%{&ignorecase ? '[IC]' : ''}")
 
 " # fugitive
@@ -191,17 +191,17 @@ let g:autopep8_aggressive=3
 syntax enable
 
 set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
+let g:syntastic_auto_loc_list = 0
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_enable_signs = 1
 let g:syntastic_error_symbol='!'
-let g:syntastic_loc_list_height=3
+let g:syntastic_loc_list_height=10
 let g:syntastic_python_checkers = ['flake8', 'pylint', 'mypy']
 let g:syntastic_python_flake8_args = '--ignore=E712,E711 --max-complexity=12'
 let g:syntastic_python_pylint_args = '-d missing-docstring,superfluous-parens'
