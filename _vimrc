@@ -3,10 +3,10 @@ let mapleader=","
 
 call plug#begin('~/.vim/bundle')
 
-" Plug 'valloric/youcompleteme'
 Plug 'PeterRincker/vim-argumentative'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'airblade/vim-gitgutter'
+Plug 'alfredodeza/coveragepy.vim'
 Plug 'alfredodeza/pytest.vim', {'for': 'python'}
 Plug 'chriskempson/base16-vim'
 Plug 'cohama/lexima.vim'
@@ -37,8 +37,6 @@ Plug 'xolox/vim-misc'
 call plug#end()
 
 set modelines=0 " disable security holes
-set encoding=utf-8
-set termencoding=utf-8
 
 set history=10000
 set undolevels=1000
