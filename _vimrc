@@ -7,21 +7,27 @@ Plug 'airblade/vim-gitgutter'
 Plug 'alfredodeza/coveragepy.vim'
 Plug 'alfredodeza/pytest.vim', {'for': 'python'}
 Plug 'chriskempson/base16-vim'
+Plug 'christoomey/vim-sort-motion'
 Plug 'cohama/lexima.vim'
 Plug 'derekwyatt/vim-scala', {'for': 'scala'}
 Plug 'ensime/ensime-vim', {'for': 'scala', 'do': ':UpdateRemotePlugins' }
 Plug 'fatih/vim-go', {'for': 'go'}
+Plug 'michaeljsmith/vim-indent-object'
 Plug 'python-rope/ropevim', {'for': 'python'}
 Plug 'rhysd/committia.vim'
 Plug 'scrooloose/syntastic',
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'vim-scripts/ReplaceWithRegister'
 
 call plug#end()
 
 set modelines=0 " disable security holes
 
 set relativenumber
+set number
 let mapleader=","
 set path+=**
 command! MakeTags !ctags -R --exclude=.tox --exclude=.cache --exclude=.git --exclude=.venv --exclude=.ropeproject --exclude=.egg-info .
