@@ -21,6 +21,7 @@ call plug#end()
 
 set modelines=0 " disable security holes
 
+set relativenumber
 let mapleader=","
 set path+=**
 command! MakeTags !ctags -R --exclude=.tox --exclude=.cache --exclude=.git --exclude=.venv --exclude=.ropeproject --exclude=.egg-info .
@@ -34,7 +35,7 @@ set wildmenu
 set wildmode=longest,full " <Tab> cycles between all matching choices.
 set wildignore+=*.o,*.obj,.git,*.pyc,.svn,.bzr,__pycache__
 set tildeop
-"set completeopt=longest
+set complete=.,w,b,u,t,i,kspell
 
 """ don't bell or blink
 set noerrorbells
