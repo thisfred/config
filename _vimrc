@@ -1,9 +1,7 @@
 filetype off                  " required
-let mapleader=","
 
 call plug#begin('~/.vim/bundle')
 
-Plug 'PeterRincker/vim-argumentative'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'airblade/vim-gitgutter'
 Plug 'alfredodeza/coveragepy.vim'
@@ -13,39 +11,28 @@ Plug 'cohama/lexima.vim'
 Plug 'derekwyatt/vim-scala', {'for': 'scala'}
 Plug 'ensime/ensime-vim', {'for': 'scala', 'do': ':UpdateRemotePlugins' }
 Plug 'fatih/vim-go', {'for': 'go'}
-Plug 'fisadev/vim-isort'
-Plug 'fntlnz/atags.vim'
-Plug 'gcmt/wildfire.vim'
-Plug 'idris-hackers/idris-vim'
-Plug 'kien/ctrlp.vim'
-Plug 'michaeljsmith/vim-indent-object'
 Plug 'python-rope/ropevim', {'for': 'python'}
 Plug 'rhysd/committia.vim'
 Plug 'scrooloose/syntastic',
-Plug 'tell-k/vim-autopep8', {'for': 'python'}
-Plug 'tpope/vim-classpath'
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-flagship'
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-rhubarb'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-vinegar'
-Plug 'xolox/vim-misc'
 
 call plug#end()
 
 set modelines=0 " disable security holes
 
+let mapleader=","
+set path+=**
+command! MakeTags !ctags -R --exclude=.tox --exclude=.cache --exclude=.git --exclude=.venv --exclude=.ropeproject --exclude=.egg-info .
 set history=10000
 set undolevels=1000
 """ appearance
 set title " show title in console title bar
 
 """ completions
-set wildmode=longest,list " <Tab> cycles between all matching choices.
-set wildignore+=*.o,*.obj,.git,*.pyc,.svn,.bzr
+set wildmenu
+set wildmode=longest,full " <Tab> cycles between all matching choices.
+set wildignore+=*.o,*.obj,.git,*.pyc,.svn,.bzr,__pycache__
 set tildeop
 "set completeopt=longest
 
@@ -161,17 +148,6 @@ nnoremap <leader>T :execute '!make test'<cr>
 let g:deoplete#enable_at_startup = 1
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
-" # youcompleteme
-
-" let g:ycm_register_as_syntastic_checker = 0
-
-" # flagship
-
-set laststatus=2
-set guioptions-=e
-autocmd User Flags call Hoist("window")
-autocmd User Flags call Hoist("global", "%{&ignorecase ? '[IC]' : ''}")
-
 " # fugitive
 
 let g:fugitive_github_domains = ['https://github.banksimple.com']
@@ -179,10 +155,6 @@ let g:fugitive_github_domains = ['https://github.banksimple.com']
 " # rhubarb
 
 let g:github_enterprise_urls = ['https://github.banksimple.com']
-
-" # autopep8
-
-let g:autopep8_aggressive=3
 
 " # syntastic
 
@@ -213,8 +185,6 @@ let g:neomake_open_list = 1
 let g:neomake_verbose = 1
 let g:neomake_logfile = 'neomake.log'
 
-" # hybrid colorscheme
-"let g:hybrid_use_Xresources = 1
 let base16colorspace=256  " Access colors present in 256 colorspace
 colorscheme base16-ocean
 set background=dark
@@ -266,7 +236,6 @@ autocmd BufWritePre *.java :call DeleteTrailingWS()
 
 " Scala :(
 
-autocmd BufWritePost * call atags#generate()
 let g:syntastic_scala_scalastyle_jar = '~/scalastyle/scalastyle_2.11-0.8.0-20150902.090323-5-batch.jar'
 let g:syntastic_scala_scalastyle_config_file = '~/scalastyle/scalastyle_config.xml'
 let g:syntastic_scala_checkers = ['scalastyle', 'ensime', 'fsc']
@@ -320,3 +289,4 @@ nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 autocmd! BufWritePost .vimrc source %
 autocmd! BufWritePost .nvimrc source %
 autocmd! BufWritePost init.vim source %
+autocmd! BufWritePost * MakeTags
