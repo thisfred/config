@@ -30,7 +30,7 @@ set relativenumber
 set number
 let mapleader=","
 set path+=**
-command! MakeTags !ctags -R --exclude=.tox --exclude=.cache --exclude=.git --exclude=.venv --exclude=.ropeproject --exclude=.egg-info .
+command! MakeTags call jobstart('ctags -R --exclude=.tox --exclude=.m2 --exclude=.ensime_cache --exclude=target --exclude=.cache --exclude=.git --exclude=.venv --exclude=.ropeproject --exclude=.egg-info .')
 set history=10000
 set undolevels=1000
 """ appearance
@@ -38,8 +38,8 @@ set title " show title in console title bar
 
 """ completions
 set wildmenu
-set wildmode=longest,full " <Tab> cycles between all matching choices.
-set wildignore+=*.o,*.obj,.git,*.pyc,.svn,.bzr,__pycache__
+set wildmode=longest,list,full
+set wildignore+=*.o,*.obj,.git,*.pyc,.svn,.bzr,__pycache__,.ensime_cache,**/target/**,.git,.m2,.tox,.venv
 set tildeop
 set complete=.,w,b,u,t,i,kspell
 
@@ -131,6 +131,7 @@ inoremap <C-W> <C-O><C-W>
 nnoremap <leader><space> :nohlsearch<cr>
 
 set splitbelow
+set splitright
 
 " remap gm to m, to work with easyclip
 nnoremap gm m
