@@ -150,6 +150,7 @@ cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
 nnoremap <leader>T :execute '!make test'<cr>
 
+
 " ## Plugins
 
 " deoplete.
@@ -171,6 +172,11 @@ syntax enable
 set statusline+=%#warningmsg#
 "set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
+
+hi link SyntasticErrorSign Error
+hi link SyntasticWarningSign Search
+hi link SyntasticError Error
+hi link SyntasticWarning Search
 
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_always_populate_loc_list = 1
