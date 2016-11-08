@@ -2,13 +2,11 @@ filetype off                  " required
 
 call plug#begin('~/.vim/bundle')
 
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'airblade/vim-gitgutter'
 Plug 'alfredodeza/coveragepy.vim'
 Plug 'alfredodeza/pytest.vim', {'for': 'python'}
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-sort-motion'
-Plug 'cohama/lexima.vim'
 Plug 'derekwyatt/vim-scala', {'for': 'scala'}
 Plug 'ensime/ensime-vim', {'for': 'scala', 'do': ':UpdateRemotePlugins' }
 Plug 'fatih/vim-go', {'for': 'go'}
@@ -42,6 +40,22 @@ set wildmode=longest,list,full
 set wildignore+=*.o,*.obj,.git,*.pyc,.svn,.bzr,__pycache__,.ensime_cache,**/target/**,.git,.m2,.tox,.venv
 set tildeop
 set complete=.,w,b,u,t,i,kspell
+set completeopt=longest
+
+ function! SuperCleverTab()
+    if strpart(getline('.'), 0, col('.') - 1) =~ '^\s*$'
+        return "\<Tab>"
+    else
+        if &omnifunc != ''
+            return "\<C-X>\<C-O>"
+        elseif &dictionary != ''
+            return "\<C-K>"
+        else
+            return "\<C-N>"
+        endif
+    endif
+endfunction
+inoremap <Tab> <C-R>=SuperCleverTab()<cr>
 
 """ don't bell or blink
 set noerrorbells
@@ -131,7 +145,6 @@ inoremap <C-W> <C-O><C-W>
 nnoremap <leader><space> :nohlsearch<cr>
 
 set splitbelow
-set splitright
 
 " remap gm to m, to work with easyclip
 nnoremap gm m
