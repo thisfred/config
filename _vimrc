@@ -28,7 +28,6 @@ set relativenumber
 set number
 let mapleader=","
 set path+=**
-command! MakeTags call jobstart('ctags -R --exclude=.tox --exclude=.m2 --exclude=.ensime_cache --exclude=target --exclude=.cache --exclude=.git --exclude=.venv --exclude=.ropeproject --exclude=.egg-info .')
 set history=10000
 set undolevels=1000
 """ appearance
@@ -40,15 +39,17 @@ set wildmode=longest,list,full
 set wildignore+=*.o,*.obj,.git,*.pyc,.svn,.bzr,__pycache__,.ensime_cache,**/target/**,.git,.m2,.tox,.venv
 set tildeop
 set complete=.,w,b,u,t,i,kspell
-set completeopt=longest
+set tags=tags
+set completeopt=menu
 
  function! SuperCleverTab()
     if strpart(getline('.'), 0, col('.') - 1) =~ '^\s*$'
         return "\<Tab>"
     else
-        if &omnifunc != ''
-            return "\<C-X>\<C-O>"
-        elseif &dictionary != ''
+        " if &omnifunc != ''
+        "     return "\<C-X>\<C-O>"
+        " else
+        if &dictionary != ''
             return "\<C-K>"
         else
             return "\<C-N>"
@@ -108,7 +109,6 @@ set listchars=tab:->,trail:-,precedes:<,extends:>
 
 """ Searching and Patterns
 " sane regex
-set ignorecase " Default to using case insensitive searches,
 set smartcase " unless uppercase letters are used in the regex.
 set gdefault " global by default
 set smarttab " Handle tabs more intelligently
@@ -168,7 +168,6 @@ nnoremap <leader>T :execute '!make test'<cr>
 
 " deoplete.
 let g:deoplete#enable_at_startup = 1
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
 " # fugitive
 
@@ -316,4 +315,3 @@ nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 autocmd! BufWritePost .vimrc source %
 autocmd! BufWritePost .nvimrc source %
 autocmd! BufWritePost init.vim source %
-autocmd! BufWritePost * MakeTags
