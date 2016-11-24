@@ -13,7 +13,8 @@ Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'python-rope/ropevim', {'for': 'python'}
 Plug 'rhysd/committia.vim'
-Plug 'scrooloose/syntastic',
+Plug 'scrooloose/syntastic'
+Plug 'thisfred/breakfast', {'for': 'python', 'rtp': 'vim'}
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
@@ -123,10 +124,10 @@ set pastetoggle=<F2>
 command! W :w
 
 " window navigation
-map <c-h> <c-w><c-h>
-map <c-j> <c-w><c-j>
-map <c-k> <c-w><c-k>
-map <c-l> <c-w><c-l>
+noremap <c-h> <c-w><c-h>
+noremap <c-j> <c-w><c-j>
+noremap <c-k> <c-w><c-k>
+noremap <c-l> <c-w><c-l>
 " Move between windows
 tnoremap <c-h> <C-\><C-n><C-w>h
 tnoremap <c-j> <C-\><C-n><C-w>j
@@ -222,11 +223,9 @@ set background=dark
 augroup py
     autocmd!
     au FileType python setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4 tw=79
-    " \ nosmartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+      \ nosmartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+    autocmd BufWritePre *.py :call DeleteTrailingWS()
 augroup END
-
-" autocmd! BufWritePost *.py Neomake
-autocmd BufWritePre *.py :call DeleteTrailingWS()
 
 let g:pyindent_open_paren = '&sw'
 let g:pyindent_nested_paren = '&sw'
@@ -240,25 +239,37 @@ let g:neomake_python_pylint_maker = {
         \ '-d', 'missing-docstring']}
 
 " Pytest
-nmap <silent><Leader>p <Esc>:Pytest file<CR>
-nmap <silent><Leader>c <Esc>:Pytest class<CR>
-nmap <silent><Leader>m <Esc>:Pytest method<CR>
-nmap <silent><Leader>f <Esc>:Pytest function<CR>
+nnoremap <silent><Leader>p <Esc>:Pytest file<CR>
+nnoremap <silent><Leader>c <Esc>:Pytest class<CR>
+nnoremap <silent><Leader>m <Esc>:Pytest method<CR>
+nnoremap <silent><Leader>f <Esc>:Pytest function<CR>
 
 let g:ropevim_goto_def_newwin = 'vnew'
 
 " git commits
-autocmd Filetype gitcommit setlocal spell textwidth=72
+augroup git
+    autocmd!
+    autocmd Filetype gitcommit setlocal spell textwidth=72
+augroup END
 
 " # Go
-autocmd FileType go autocmd BufWritePre <buffer> GoFmt
+augroup go
+    autocmd!
+    autocmd FileType go autocmd BufWritePre <buffer> GoFmt
+augroup END
 
 " markdown
-autocmd BufWritePre *.md :call DeleteTrailingWS()
-autocmd Filetype markdown setlocal spell textwidth=72
+augroup md
+    autocmd!
+    autocmd BufWritePre *.md :call DeleteTrailingWS()
+    autocmd Filetype markdown setlocal spell textwidth=72
+augroup END
 
 " java
-autocmd BufWritePre *.java :call DeleteTrailingWS()
+augroup java
+    autocmd!
+    autocmd BufWritePre *.java :call DeleteTrailingWS()
+augroup END
 
 " Scala :(
 
@@ -308,7 +319,10 @@ if has('autocmd')
     augroup END
 endif
 
-autocmd BufWritePre *.scala :call DeleteTrailingWS()
+augroup scala
+    autocmd!
+    autocmd BufWritePre *.scala :call DeleteTrailingWS()
+augroup END
 
 " .vimrc
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
