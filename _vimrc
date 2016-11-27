@@ -147,6 +147,7 @@ inoremap <C-W> <C-O><C-W>
 nnoremap <leader><space> :nohlsearch<cr>
 
 set splitbelow
+set splitright
 
 func! DeleteTrailingWS()
  " use remapped gm to m, to work with easyclip
