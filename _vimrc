@@ -31,6 +31,7 @@ let mapleader=","
 set path+=**
 set history=10000
 set undolevels=1000
+
 """ appearance
 set title " show title in console title bar
 
@@ -43,7 +44,7 @@ set complete=.,w,b,u,t,i,kspell
 set tags=tags
 set completeopt=menu
 
- function! SuperCleverTab()
+function! SuperCleverTab()
     if strpart(getline('.'), 0, col('.') - 1) =~ '^\s*$'
         return "\<Tab>"
     else
@@ -146,9 +147,6 @@ inoremap <C-W> <C-O><C-W>
 nnoremap <leader><space> :nohlsearch<cr>
 
 set splitbelow
-
-" remap gm to m, to work with easyclip
-nnoremap gm m
 
 func! DeleteTrailingWS()
  " use remapped gm to m, to work with easyclip
@@ -326,6 +324,12 @@ augroup END
 
 " .vimrc
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
-autocmd! BufWritePost .vimrc source %
-autocmd! BufWritePost .nvimrc source %
-autocmd! BufWritePost init.vim source %
+
+augroup vimrc
+    autocmd!
+    autocmd! BufWritePost .vimrc source %
+    autocmd! BufWritePost .nvimrc source %
+    autocmd! BufWritePost init.vim source %
+augroup END
+
+autocmd BufEnter * :syntax sync fromstart
