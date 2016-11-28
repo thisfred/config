@@ -151,7 +151,7 @@ set splitright
 
 func! DeleteTrailingWS()
  " use remapped gm to m, to work with easyclip
-  exe "normal gmz"
+  exe "normal mz"
   %s/\s\+$//ge
   exe "normal `z"
 endfunc
