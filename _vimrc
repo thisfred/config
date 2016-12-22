@@ -31,6 +31,7 @@ let mapleader=","
 set path+=**
 set history=10000
 set undolevels=1000
+set undofile
 
 """ appearance
 set title " show title in console title bar
@@ -192,7 +193,7 @@ hi link SyntasticWarning Search
 
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 0
+let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_enable_signs = 1
@@ -321,6 +322,12 @@ endif
 augroup scala
     autocmd!
     autocmd BufWritePre *.scala :call DeleteTrailingWS()
+augroup END
+
+" ruby
+
+augroup ruby
+    autocmd Filetype ruby setlocal ts=2 sts=2 sw=2
 augroup END
 
 " .vimrc
