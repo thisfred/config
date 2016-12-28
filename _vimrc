@@ -32,6 +32,7 @@ set path+=**
 set history=10000
 set undolevels=1000
 set undofile
+set inccommand=split
 
 """ appearance
 set title " show title in console title bar
@@ -201,7 +202,7 @@ let g:syntastic_error_symbol='!'
 let g:syntastic_loc_list_height=10
 let g:syntastic_python_checkers = ['flake8', 'pylint', 'mypy']
 let g:syntastic_python_flake8_args = '--ignore=E712,E711 --max-complexity=12'
-let g:syntastic_python_pylint_args = '-d missing-docstring,superfluous-parens'
+let g:syntastic_python_pylint_args = '-d unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name'
 let g:syntastic_python_mypy_args = '--strict-optional'
 let g:syntastic_style_error_symbol='x'
 let g:syntastic_style_warning_symbol='~'
