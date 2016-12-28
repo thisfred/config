@@ -3,8 +3,6 @@ filetype off                  " required
 call plug#begin('~/.vim/bundle')
 
 Plug 'airblade/vim-gitgutter'
-Plug 'alfredodeza/coveragepy.vim'
-Plug 'alfredodeza/pytest.vim', {'for': 'python'}
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-sort-motion'
 Plug 'derekwyatt/vim-scala', {'for': 'scala'}
@@ -19,7 +17,6 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
-Plug 'vim-scripts/ReplaceWithRegister'
 
 call plug#end()
 
