@@ -2,6 +2,7 @@ filetype off                  " required
 
 call plug#begin('~/.vim/bundle')
 
+Plug 'PeterRincker/vim-argumentative'
 Plug 'airblade/vim-gitgutter'
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-sort-motion'
@@ -31,17 +32,20 @@ set undolevels=1000
 set undofile
 set inccommand=split
 
+""" netrw
+let g:netrw_banner=0
+
 """ appearance
 set title " show title in console title bar
 
 """ completions
 set wildmenu
 set wildmode=longest,list,full
+set complete=.,w,b,u,t,i,kspell
+set completeopt=menu
 set wildignore+=*.o,*.obj,.git,*.pyc,.svn,.bzr,__pycache__,.ensime_cache,**/target/**,.git,.m2,.tox,.venv
 set tildeop
-set complete=.,w,b,u,t,i,kspell
 set tags=tags
-set completeopt=menu
 
 function! SuperCleverTab()
     if strpart(getline('.'), 0, col('.') - 1) =~ '^\s*$'
