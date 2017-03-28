@@ -202,8 +202,9 @@ let g:syntastic_enable_signs = 1
 let g:syntastic_error_symbol='!'
 let g:syntastic_loc_list_height=10
 let g:syntastic_python_checkers = ['flake8', 'pylint', 'mypy']
+let g:syntastic_sh_checkers = ['shellcheck']
 let g:syntastic_python_flake8_args = '--ignore=E712,E711 --max-complexity=12'
-let g:syntastic_python_pylint_args = '-d unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name'
+let g:syntastic_python_pylint_args = '-d unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name'
 let g:syntastic_python_mypy_args = '--strict-optional'
 let g:syntastic_style_error_symbol='x'
 let g:syntastic_style_warning_symbol='~'
