@@ -2,7 +2,9 @@ filetype off                  " required
 
 call plug#begin('~/.vim/bundle')
 
+"Plug 'scrooloose/syntastic'
 Plug 'PeterRincker/vim-argumentative'
+Plug 'Valloric/YouCompleteMe'
 Plug 'airblade/vim-gitgutter'
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-sort-motion'
@@ -10,9 +12,9 @@ Plug 'derekwyatt/vim-scala', {'for': 'scala'}
 Plug 'ensime/ensime-vim', {'for': 'scala', 'do': ':UpdateRemotePlugins' }
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'michaeljsmith/vim-indent-object'
+Plug 'neomake/neomake'
 Plug 'python-rope/ropevim', {'for': 'python'}
 Plug 'rhysd/committia.vim'
-Plug 'scrooloose/syntastic'
 Plug 'thisfred/breakfast', {'for': 'python', 'rtp': 'vim'}
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
@@ -47,21 +49,23 @@ set wildignore+=*.o,*.obj,.git,*.pyc,.svn,.bzr,__pycache__,.ensime_cache,**/targ
 set tildeop
 set tags=tags
 
-function! SuperCleverTab()
-    if strpart(getline('.'), 0, col('.') - 1) =~ '^\s*$'
-        return "\<Tab>"
-    else
-        " if &omnifunc != ''
-        "     return "\<C-X>\<C-O>"
-        " else
-        if &dictionary != ''
-            return "\<C-K>"
-        else
-            return "\<C-N>"
-        endif
-    endif
-endfunction
-inoremap <Tab> <C-R>=SuperCleverTab()<cr>
+let g:ycm_python_binary_path = '.venv/bin/python'
+
+" function! SuperCleverTab()
+"     if strpart(getline('.'), 0, col('.') - 1) =~ '^\s*$'
+"         return "\<Tab>"
+"     else
+"         " if &omnifunc != ''
+"         "     return "\<C-X>\<C-O>"
+"         " else
+"         if &dictionary != ''
+"             return "\<C-K>"
+"         else
+"             return "\<C-N>"
+"         endif
+"     endif
+" endfunction
+" inoremap <Tab> <C-R>=SuperCleverTab()<cr>
 
 """ don't bell or blink
 set noerrorbells
@@ -180,12 +184,53 @@ let g:fugitive_github_domains = ['https://github.banksimple.com']
 
 let g:github_enterprise_urls = ['https://github.banksimple.com']
 
+" # neomake
+
+let g:neomake_logfile = 'neomake.log'
+let g:neomake_python_enabled_makers = ['flake8', 'frosted', 'mypy', 'pylint']
+
+let g:neomake_python_pylint_maker = { 
+        \ 'args': [
+            \ '-d', 'trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name',
+            \ '--output-format=text',
+            \ '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg} [{msg_id}]"',
+            \ '--reports=no'
+        \ ],
+        \ 'errorformat':
+            \ '%A%f:%l:%c:%t: %m,' .
+            \ '%A%f:%l: %m,' .
+            \ '%A%f:(%l): %m,' .
+            \ '%-Z%p^%.%#,' .
+            \ '%-G%.%#',
+        \ 'postprocess': [
+        \   function('neomake#postprocess#GenericLengthPostprocess'),
+        \   function('neomake#makers#ft#python#PylintEntryProcess'),
+\ ]}
+
+let g:neomake_python_flake8_maker = {
+    \ 'args': ['--ignore', 'E712,E711', '--max-complexity', '12']}
+
+let g:neomake_python_mypy_maker = {
+    \ 'args': ['--strict-optional']}
+
+" # ale
+let g:ale_sign_column_always = 0
+let g:ale_virtualenv_dir_names = ['.venv', 'venv', 'env', '.env']
+let g:ale_python_flake8_options = '--ignore=E712,E711 --max-complexity=12'
+let g:ale_python_pylint_options = '-d trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name'
+let g:ale_sign_error = '!'
+let g:ale_sign_warning = '?'
+
+hi link AleError Error
+hi link AleWarning Search
+
 " # syntastic
 
 syntax enable
 
-set statusline+=%#warningmsg#
-"set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%#warningmsg# 
+" set statusline+=%{ALEGetStatusLine()}
+" set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
 hi link SyntasticErrorSign Error
@@ -204,17 +249,11 @@ let g:syntastic_loc_list_height=10
 let g:syntastic_python_checkers = ['flake8', 'pylint', 'mypy']
 let g:syntastic_sh_checkers = ['shellcheck']
 let g:syntastic_python_flake8_args = '--ignore=E712,E711 --max-complexity=12'
-let g:syntastic_python_pylint_args = '-d unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name'
+let g:syntastic_python_pylint_args = '-d trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name'
 let g:syntastic_python_mypy_args = '--strict-optional'
 let g:syntastic_style_error_symbol='x'
 let g:syntastic_style_warning_symbol='~'
 let g:syntastic_warning_symbol='?'
-" # neomake
-
-let g:neomake_open_list = 1
-let g:neomake_verbose = 1
-let g:neomake_logfile = 'neomake.log'
-
 let base16colorspace=256  " Access colors present in 256 colorspace
 colorscheme base16-ocean
 set background=dark
@@ -233,13 +272,6 @@ augroup END
 let g:pyindent_open_paren = '&sw'
 let g:pyindent_nested_paren = '&sw'
 let g:pyindent_continue = '&sw'
-
-let g:neomake_python_pylint_maker = {
-    \ 'args': [
-        \ '-f', 'text',
-        \ '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg}"',
-        \ '-r', 'n',
-        \ '-d', 'missing-docstring']}
 
 " Pytest
 nnoremap <silent><Leader>p <Esc>:Pytest file<CR>
@@ -344,3 +376,5 @@ augroup vimrc
 augroup END
 
 autocmd BufEnter * :syntax sync fromstart
+autocmd! BufEnter * Neomake
+autocmd! BufWritePost * Neomake
