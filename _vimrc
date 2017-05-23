@@ -3,13 +3,13 @@ filetype off                  " required
 call plug#begin('~/.vim/bundle')
 
 "Plug 'scrooloose/syntastic'
+Plug 'Chiel92/vim-autoformat'
 Plug 'PeterRincker/vim-argumentative'
 Plug 'Valloric/YouCompleteMe'
 Plug 'airblade/vim-gitgutter'
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-sort-motion'
 Plug 'derekwyatt/vim-scala', {'for': 'scala'}
-Plug 'ensime/ensime-vim', {'for': 'scala', 'do': ':UpdateRemotePlugins' }
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'neomake/neomake'
@@ -310,8 +310,13 @@ augroup END
 
 let g:syntastic_scala_scalastyle_jar = '~/scalastyle/scalastyle_2.11-0.8.0-20150902.090323-5-batch.jar'
 let g:syntastic_scala_scalastyle_config_file = '~/scalastyle/scalastyle_config.xml'
-let g:syntastic_scala_checkers = ['scalastyle', 'ensime', 'fsc']
+let g:syntastic_scala_checkers = ['scalastyle', 'fsc']
 let g:syntastic_mode_map = { 'mode': 'active' }
+
+noremap <leader>r :Autoformat<CR>
+let g:formatdef_scalafmt = "'scalafmt --stdin'"
+let g:formatters_scala = ['scalafmt']
+let g:formatters_python = ['autopep8']
 
 if has('autocmd')
     function! FindClasspath(where)
