@@ -2,15 +2,17 @@ filetype off                  " required
 
 call plug#begin('~/.vim/bundle')
 
+"Plug 'Valloric/YouCompleteMe'
 "Plug 'scrooloose/syntastic'
 Plug 'Chiel92/vim-autoformat'
 Plug 'PeterRincker/vim-argumentative'
-Plug 'Valloric/YouCompleteMe'
 Plug 'airblade/vim-gitgutter'
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-sort-motion'
 Plug 'derekwyatt/vim-scala', {'for': 'scala'}
+Plug 'ervandew/supertab'
 Plug 'fatih/vim-go', {'for': 'go'}
+Plug 'metakirby5/codi.vim'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'neomake/neomake'
 Plug 'python-rope/ropevim', {'for': 'python'}
@@ -91,6 +93,7 @@ set shiftwidth=4 " but an indent level is 2 spaces wide.
 set softtabstop=4 " <BS> over an autoindent deletes both spaces.
 set expandtab " Use spaces, not tabs, for autoindent/tab key.
 set shiftround " rounds indent to a multiple of shiftwidth
+set autoindent
 
 """ brackets matching
 set showmatch " Briefly jump to a paren once it's balanced
@@ -111,6 +114,9 @@ set report=0 " : commands always print changed line count.
 set shortmess+=a " Use [+]/[RO]/[w] for modified/readonly/written.
 set laststatus=2 " Always show statusline, even if only 1 window.
 set statusline=[%l,%v\ %P%M]\ %f\ %r%h%w\ (%{&ff})
+set statusline+=%#warningmsg# 
+set statusline+=%*
+
 set showtabline=1
 
 " displays tabs with :set list & displays when a line runs off-screen
@@ -191,7 +197,7 @@ let g:neomake_python_enabled_makers = ['flake8', 'frosted', 'mypy', 'pylint']
 
 let g:neomake_python_pylint_maker = { 
         \ 'args': [
-            \ '-d', 'trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name',
+            \ '-d', 'bad-continuation,trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name',
             \ '--output-format=text',
             \ '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg} [{msg_id}]"',
             \ '--reports=no'
@@ -207,53 +213,47 @@ let g:neomake_python_pylint_maker = {
         \   function('neomake#makers#ft#python#PylintEntryProcess'),
 \ ]}
 
-let g:neomake_python_flake8_maker = {
-    \ 'args': ['--ignore', 'E712,E711', '--max-complexity', '12']}
+let g:neomake_python_flake8_maker_args = ['--ignore', 'E712,E711', '--max-complexity', '12']
 
-let g:neomake_python_mypy_maker = {
-    \ 'args': ['--strict-optional']}
+let g:neomake_python_mypy_maker_args = ['--strict-optional'] 
 
-" # ale
-let g:ale_sign_column_always = 0
-let g:ale_virtualenv_dir_names = ['.venv', 'venv', 'env', '.env']
-let g:ale_python_flake8_options = '--ignore=E712,E711 --max-complexity=12'
-let g:ale_python_pylint_options = '-d trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name'
-let g:ale_sign_error = '!'
-let g:ale_sign_warning = '?'
+hi link NeomakeErrorSign Error
+hi link NeomakeWarningSign Search
+hi link NeomakeError Error
+hi link NeomakeWarning Search
+set statusline+=\ %#ErrorMsg#%{neomake#statusline#LoclistStatus('')}
 
-hi link AleError Error
-hi link AleWarning Search
+nnoremap <Leader>f :lfirst<CR>
+nnoremap <Leader>n :lnext<CR>
+nnoremap <Leader>p :lprev<CR>
 
 " # syntastic
 
-syntax enable
+" syntax enable
 
-set statusline+=%#warningmsg# 
-" set statusline+=%{ALEGetStatusLine()}
-" set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
 
-hi link SyntasticErrorSign Error
-hi link SyntasticWarningSign Search
-hi link SyntasticError Error
-hi link SyntasticWarning Search
+" hi link SyntasticErrorSign Error
+" hi link SyntasticWarningSign Search
+" hi link SyntasticError Error
+" hi link SyntasticWarning Search
 
-let g:syntastic_aggregate_errors = 1
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_enable_signs = 1
-let g:syntastic_error_symbol='!'
-let g:syntastic_loc_list_height=10
-let g:syntastic_python_checkers = ['flake8', 'pylint', 'mypy']
-let g:syntastic_sh_checkers = ['shellcheck']
-let g:syntastic_python_flake8_args = '--ignore=E712,E711 --max-complexity=12'
-let g:syntastic_python_pylint_args = '-d trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name'
-let g:syntastic_python_mypy_args = '--strict-optional'
-let g:syntastic_style_error_symbol='x'
-let g:syntastic_style_warning_symbol='~'
-let g:syntastic_warning_symbol='?'
+" let g:syntastic_aggregate_errors = 1
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
+" let g:syntastic_enable_signs = 1
+" let g:syntastic_error_symbol='!'
+" let g:syntastic_loc_list_height=10
+" let g:syntastic_python_checkers = ['flake8', 'pylint', 'mypy']
+" let g:syntastic_sh_checkers = ['shellcheck']
+" let g:syntastic_python_flake8_args = '--ignore=E712,E711 --max-complexity=12'
+" let g:syntastic_python_pylint_args = '-d trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name'
+" let g:syntastic_python_mypy_args = '--strict-optional'
+" let g:syntastic_style_error_symbol='x'
+" let g:syntastic_style_warning_symbol='~'
+" let g:syntastic_warning_symbol='?'
+
 let base16colorspace=256  " Access colors present in 256 colorspace
 colorscheme base16-ocean
 set background=dark
@@ -272,12 +272,6 @@ augroup END
 let g:pyindent_open_paren = '&sw'
 let g:pyindent_nested_paren = '&sw'
 let g:pyindent_continue = '&sw'
-
-" Pytest
-nnoremap <silent><Leader>p <Esc>:Pytest file<CR>
-nnoremap <silent><Leader>c <Esc>:Pytest class<CR>
-nnoremap <silent><Leader>m <Esc>:Pytest method<CR>
-nnoremap <silent><Leader>f <Esc>:Pytest function<CR>
 
 let g:ropevim_goto_def_newwin = 'vnew'
 
@@ -380,6 +374,6 @@ augroup vimrc
     autocmd! BufWritePost init.vim source %
 augroup END
 
-autocmd BufEnter * :syntax sync fromstart
 autocmd! BufEnter * Neomake
 autocmd! BufWritePost * Neomake
+autocmd BufEnter * :syntax sync fromstart 
