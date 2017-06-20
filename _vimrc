@@ -4,6 +4,7 @@ call plug#begin('~/.vim/bundle')
 
 "Plug 'Valloric/YouCompleteMe'
 "Plug 'scrooloose/syntastic'
+"Plug 'w0rp/ale'
 Plug 'Chiel92/vim-autoformat'
 Plug 'PeterRincker/vim-argumentative'
 Plug 'airblade/vim-gitgutter'
@@ -12,7 +13,9 @@ Plug 'christoomey/vim-sort-motion'
 Plug 'derekwyatt/vim-scala', {'for': 'scala'}
 Plug 'ervandew/supertab'
 Plug 'fatih/vim-go', {'for': 'go'}
+Plug 'kassio/neoterm'
 Plug 'metakirby5/codi.vim'
+Plug 'mhinz/vim-grepper'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'neomake/neomake'
 Plug 'python-rope/ropevim', {'for': 'python'}
@@ -20,8 +23,10 @@ Plug 'rhysd/committia.vim'
 Plug 'thisfred/breakfast', {'for': 'python', 'rtp': 'vim'}
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
 
 call plug#end()
 
@@ -33,8 +38,16 @@ let mapleader=","
 set path+=**
 set history=10000
 set undolevels=1000
+"set inccommand=split
+
+""" undo
 set undofile
-set inccommand=split
+if !has('nvim')
+  set undodir=~/.vim/undo
+endif
+augroup vimrc
+  autocmd BufWritePre /tmp/* setlocal noundofile
+augroup END
 
 """ netrw
 let g:netrw_banner=0
@@ -142,11 +155,17 @@ noremap <c-h> <c-w><c-h>
 noremap <c-j> <c-w><c-j>
 noremap <c-k> <c-w><c-k>
 noremap <c-l> <c-w><c-l>
+
 " Move between windows
-tnoremap <c-h> <C-\><C-n><C-w>h
-tnoremap <c-j> <C-\><C-n><C-w>j
-tnoremap <c-k> <C-\><C-n><C-w>k
-tnoremap <c-l> <C-\><C-n><C-w>l
+if has('nvim')
+  tnoremap <c-h> <C-\><C-n><C-w>h
+  tnoremap <c-j> <C-\><C-n><C-w>j
+  tnoremap <c-k> <C-\><C-n><C-w>k
+  tnoremap <c-l> <C-\><C-n><C-w>l
+  tnoremap <Esc> <C-\><C-n>
+  highlight! link TermCursorNC Cursor
+  highlight! TermCursorNC guibg=red guifg=white
+endif
 
 " sudo write this
 cnoremap W! w !sudo tee % >/dev/null
@@ -377,3 +396,10 @@ augroup END
 autocmd! BufEnter * Neomake
 autocmd! BufWritePost * Neomake
 autocmd BufEnter * :syntax sync fromstart 
+
+" Grepper
+
+nnoremap <leader>* :Grepper -tool rg -cword -noprompt<cr>
+nmap gs <plug>(GrepperOperator)
+xmap gs <plug>(GrepperOperator)
+
