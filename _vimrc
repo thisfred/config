@@ -7,14 +7,13 @@ call plug#begin('~/.vim/bundle')
 "Plug 'w0rp/ale'
 Plug 'Chiel92/vim-autoformat'
 Plug 'PeterRincker/vim-argumentative'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'airblade/vim-gitgutter'
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-sort-motion'
 Plug 'derekwyatt/vim-scala', {'for': 'scala'}
 Plug 'ervandew/supertab'
 Plug 'fatih/vim-go', {'for': 'go'}
-Plug 'kassio/neoterm'
-Plug 'metakirby5/codi.vim'
 Plug 'mhinz/vim-grepper'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'neomake/neomake'
@@ -32,13 +31,16 @@ call plug#end()
 
 set modelines=0 " disable security holes
 
+" encoding
+set encoding=utf-8
+set fileencoding=utf-8
+set termencoding=utf-8
+
 set relativenumber
 set number
-let mapleader=","
 set path+=**
 set history=10000
 set undolevels=1000
-"set inccommand=split
 
 """ undo
 set undofile
@@ -48,6 +50,8 @@ endif
 augroup vimrc
   autocmd BufWritePre /tmp/* setlocal noundofile
 augroup END
+set inccommand=split
+let g:mapleader=','
 
 """ netrw
 let g:netrw_banner=0
@@ -59,28 +63,12 @@ set title " show title in console title bar
 set wildmenu
 set wildmode=longest,list,full
 set complete=.,w,b,u,t,i,kspell
-set completeopt=menu
+set completeopt=menuone,longest
 set wildignore+=*.o,*.obj,.git,*.pyc,.svn,.bzr,__pycache__,.ensime_cache,**/target/**,.git,.m2,.tox,.venv
 set tildeop
-set tags=tags
+set tags=.tags
 
 let g:ycm_python_binary_path = '.venv/bin/python'
-
-" function! SuperCleverTab()
-"     if strpart(getline('.'), 0, col('.') - 1) =~ '^\s*$'
-"         return "\<Tab>"
-"     else
-"         " if &omnifunc != ''
-"         "     return "\<C-X>\<C-O>"
-"         " else
-"         if &dictionary != ''
-"             return "\<C-K>"
-"         else
-"             return "\<C-N>"
-"         endif
-"     endif
-" endfunction
-" inoremap <Tab> <C-R>=SuperCleverTab()<cr>
 
 """ don't bell or blink
 set noerrorbells
@@ -98,7 +86,7 @@ set colorcolumn=+1
 set formatoptions=tcroqn1
 set nowrap " don't wrap text
 set linebreak " don't wrap textin the middle of a word
-set ffs=unix,dos,mac " Try recognizing dos, unix, and mac line endings.
+set fileformats=unix,dos,mac " Try recognizing dos, unix, and mac line endings.
 
 """ indentation
 set tabstop=4 " <tab> inserts 4 spaces
@@ -142,9 +130,23 @@ set gdefault " global by default
 set smarttab " Handle tabs more intelligently
 set hlsearch " Highlight searches by default.
 set incsearch " Incrementally search while typing a /regex
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+nnoremap <silent> * :let stay_star_view = winsaveview()<cr>*:call winrestview(stay_star_view)<cr>
+vnoremap <silent> * :let stay_star_view = winsaveview()<cr>*:call winrestview(stay_star_view)<cr>
+" Same when jumping around
+nnoremap g; g;zz
+nnoremap g, g,zz
+nnoremap <c-o> <c-o>zz
 
 " copying and pasting
-set clipboard=unnamed
+if has('clipboard')
+  set clipboard=unnamed
+  if has('xterm_clipboard')
+    set clipboard+=unnamedplus
+  endif
+endif
 set pastetoggle=<F2>
 
 " Seriously, guys. It's not like :W is bound to anything anyway.
@@ -212,8 +214,60 @@ let g:github_enterprise_urls = ['https://github.banksimple.com']
 " # neomake
 
 let g:neomake_logfile = 'neomake.log'
-let g:neomake_python_enabled_makers = ['flake8', 'frosted', 'mypy', 'pylint']
 
+" ## scala
+let g:neomake_scala_enabled_makers = ['scalastyle', 'fsc']
+let g:neomake_scala_scalastyle_maker = {
+            \ 'args': ['-c', '~/scalastyle/scalastyle_config.xml'],
+            \ 'errorformat': 
+                \ '%trror file=%f message=%m line=%l column=%c,' .
+                \ '%trror file=%f message=%m line=%l,' .
+                \ '%tarning file=%f message=%m line=%l column=%c,' .
+                \ '%tarning file=%f message=%m line=%l'
+\ }
+
+function! FindClasspath(where)
+    let l:cpf = findfile('.classpath', escape(a:where, ' ') . ';')
+    let l:sep = ':'
+    try
+        return l:cpf !=# '' ? [ '-classpath', join(readfile(cpf), sep) ] : []
+    catch
+        return []
+    endtry
+endfunction
+
+" let g:neomake_scala_fsc_maker = {
+"             \ 'args': [
+"                 \ '-Xfatal-warnings:false',
+"                 \ '-Xfuture',
+"                 \ '-Xlint',
+"                 \ '-Ywarn-adapted-args',
+"                 \ '-Ywarn-dead-code', 
+"                 \ '-Ywarn-inaccessible',
+"                 \ '-Ywarn-infer-any',
+"                 \ '-Ywarn-nullary-override',
+"                 \ '-Ywarn-nullary-unit',
+"                 \ '-Ywarn-numeric-widen',
+"                 \ '-Ywarn-unused-import',
+"                 \ '-Ywarn-value-discard',
+"                 \ '-deprecation',
+"                 \ '-encoding', 'UTF-8',
+"                 \ '-feature',
+"                 \ '-language:existentials',
+"                 \ '-language:higherKinds', 
+"                 \ '-language:implicitConversions',
+"                 \ '-unchecked',
+"                 \ '-d', ($TMPDIR !=# '' ? $TMPDIR : '/tmp') ] }
+
+augroup neomake_fsc
+    autocmd!
+    autocmd FileType scala let b:neomake_scala_fsc_maker_args =
+        \ get(g:, 'neomake_scala_fsc_maker_args', []) +
+        \ FindClasspath(expand('<afile>:p:h', 1))
+augroup END
+" ## python
+
+let g:neomake_python_enabled_makers = ['flake8', 'frosted', 'mypy', 'pylint']
 let g:neomake_python_pylint_maker = { 
         \ 'args': [
             \ '-d', 'bad-continuation,trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name',
@@ -250,6 +304,9 @@ nnoremap <Leader>p :lprev<CR>
 
 " syntax enable
 
+" set statusline+=%#warningmsg# 
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
 
 " hi link SyntasticErrorSign Error
 " hi link SyntasticWarningSign Search
@@ -269,10 +326,67 @@ nnoremap <Leader>p :lprev<CR>
 " let g:syntastic_python_flake8_args = '--ignore=E712,E711 --max-complexity=12'
 " let g:syntastic_python_pylint_args = '-d trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name'
 " let g:syntastic_python_mypy_args = '--strict-optional'
+" let g:syntastic_mode_map = { 'mode': 'active' }
+" let g:syntastic_sh_checkers = ['shellcheck']
 " let g:syntastic_style_error_symbol='x'
 " let g:syntastic_style_warning_symbol='~'
 " let g:syntastic_warning_symbol='?'
 
+" ## python
+
+" let g:syntastic_python_checkers = ['flake8', 'pylint', 'mypy']
+" let g:syntastic_python_flake8_args = '--ignore=E712,E711 --max-complexity=12'
+" let g:syntastic_python_mypy_args = '--strict-optional'
+" let g:syntastic_python_pylint_args = '-d trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name'
+
+" ## scala
+
+" let g:syntastic_scala_scalastyle_jar = '~/scalastyle/scalastyle_2.11-0.8.0-20150902.090323-5-batch.jar'
+" let g:syntastic_scala_scalastyle_config_file = '~/scalastyle/scalastyle_config.xml'
+" let g:syntastic_scala_checkers = ['scalastyle', 'fsc']
+
+" if has('autocmd')
+"     function! FindClasspath(where)
+"         let cpf = findfile('.classpath', escape(a:where, ' ') . ';')
+"         let sep = syntastic#util#isRunningWindows() || has('win32unix') ? ';' : ':'
+"         try
+"             return cpf !=# '' ? [ '-classpath', join(readfile(cpf), sep) ] : []
+"         catch
+"             return []
+"         endtry
+"     endfunction
+
+"     let g:syntastic_scala_fsc_args = [
+"         \ '-Xfatal-warnings:false',
+"         \ '-Xfuture',
+"         \ '-Xlint',
+"         \ '-Ywarn-adapted-args',
+"         \ '-Ywarn-dead-code', 
+"         \ '-Ywarn-inaccessible',
+"         \ '-Ywarn-infer-any',
+"         \ '-Ywarn-nullary-override',
+"         \ '-Ywarn-nullary-unit',
+"         \ '-Ywarn-numeric-widen',
+"         \ '-Ywarn-unused-import',
+"         \ '-Ywarn-value-discard',
+"         \ '-deprecation',
+"         \ '-encoding', 'UTF-8',
+"         \ '-feature',
+"         \ '-language:existentials',
+"         \ '-language:higherKinds', 
+"         \ '-language:implicitConversions',
+"         \ '-unchecked',
+"         \ '-d', ($TMPDIR !=# '' ? $TMPDIR : '/tmp') ]
+
+"     augroup syntastic_fsc
+"         autocmd!
+"         autocmd FileType scala let b:syntastic_scala_fsc_args =
+"             \ get(g:, 'syntastic_scala_fsc_args', []) +
+"             \ FindClasspath(expand('<afile>:p:h', 1))
+"     augroup END
+" endif
+
+" ## Color Scheme
 let base16colorspace=256  " Access colors present in 256 colorspace
 colorscheme base16-ocean
 set background=dark
@@ -321,67 +435,33 @@ augroup END
 
 " Scala :(
 
-let g:syntastic_scala_scalastyle_jar = '~/scalastyle/scalastyle_2.11-0.8.0-20150902.090323-5-batch.jar'
-let g:syntastic_scala_scalastyle_config_file = '~/scalastyle/scalastyle_config.xml'
-let g:syntastic_scala_checkers = ['scalastyle', 'fsc']
-let g:syntastic_mode_map = { 'mode': 'active' }
-
-noremap <leader>r :Autoformat<CR>
-let g:formatdef_scalafmt = "'scalafmt --stdin'"
-let g:formatters_scala = ['scalafmt']
-let g:formatters_python = ['autopep8']
-
-if has('autocmd')
-    function! FindClasspath(where)
-        let cpf = findfile('.classpath', escape(a:where, ' ') . ';')
-        let sep = syntastic#util#isRunningWindows() || has('win32unix') ? ';' : ':'
-        try
-            return cpf !=# '' ? [ '-classpath', join(readfile(cpf), sep) ] : []
-        catch
-            return []
-        endtry
-    endfunction
-
-    let g:syntastic_scala_fsc_args = [
-        \ '-Xfatal-warnings:false',
-        \ '-Xfuture',
-        \ '-Xlint',
-        \ '-Ywarn-adapted-args',
-        \ '-Ywarn-dead-code', 
-        \ '-Ywarn-inaccessible',
-        \ '-Ywarn-infer-any',
-        \ '-Ywarn-nullary-override',
-        \ '-Ywarn-nullary-unit',
-        \ '-Ywarn-numeric-widen',
-        \ '-Ywarn-unused-import',
-        \ '-Ywarn-value-discard',
-        \ '-deprecation',
-        \ '-encoding', 'UTF-8',
-        \ '-feature',
-        \ '-language:existentials',
-        \ '-language:higherKinds', 
-        \ '-language:implicitConversions',
-        \ '-unchecked',
-        \ '-d', ($TMPDIR !=# '' ? $TMPDIR : '/tmp') ]
-
-    augroup syntastic_fsc
-        autocmd!
-        autocmd FileType scala let b:syntastic_scala_fsc_args =
-            \ get(g:, 'syntastic_scala_fsc_args', []) +
-            \ FindClasspath(expand('<afile>:p:h', 1))
-    augroup END
-endif
-
 augroup scala
     autocmd!
     autocmd BufWritePre *.scala :call DeleteTrailingWS()
+    autocmd BufWritePre *.scala :Autoformat
 augroup END
+
+" vim-autoformat
+
+noremap <leader>f :Autoformat<CR>
+let g:formatdef_scalafmt = '"scalafmt --config .scalafmt.conf --stdin 2>/dev/null"'
+let g:formatters_scala = ['scalafmt']
+let g:formatters_python = ['autopep8']
 
 " ruby
 
 augroup ruby
     autocmd Filetype ruby setlocal ts=2 sts=2 sw=2
 augroup END
+
+" Grepper
+let g:grepper = {'tools': ['git', 'grep']}
+nmap ss  <plug>(GrepperOperator)
+xmap ss  <plug>(GrepperOperator)
+
+" terminal
+
+tnoremap <ESC> <C-\><C-n>
 
 " .vimrc
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
@@ -393,13 +473,58 @@ augroup vimrc
     autocmd! BufWritePost init.vim source %
 augroup END
 
+"augroup RememberLastView
+"    autocmd!
+"    autocmd BufWinLeave * silent! mkview "make vim save view (state) (folds, cursor, etc)
+"    autocmd BufWinEnter * silent! loadview "make vim load view (state) (folds, cursor, etc)
+"augroup END
+
+
+" Creates a session
+function! MakeSession()
+  let b:sessiondir = $HOME . "/.vim/sessions" . getcwd()
+  if (filewritable(b:sessiondir) != 2)
+    exe 'silent !mkdir -p ' b:sessiondir
+    redraw!
+  endif
+  let b:sessionfile = b:sessiondir . '/session.vim'
+  exe "mksession! " . b:sessionfile
+endfunction
+
+" Updates a session, BUT ONLY IF IT ALREADY EXISTS
+function! UpdateSession()
+  if argc() == 0
+    echo "attempting to update session"
+    let b:sessiondir = $HOME . "/.vim/sessions" . getcwd()
+    let b:sessionfile = b:sessiondir . "/session.vim"
+    if (filereadable(b:sessionfile))
+        exe "mksession! " . b:sessionfile
+        echo "updating session"
+    endif
+  endif
+endfunction
+
+" Loads a session if it exists
+function! LoadSession()
+  if argc() == 0
+    let b:sessiondir = $HOME . "/.vim/sessions" . getcwd()
+    let b:sessionfile = b:sessiondir . "/session.vim"
+    if (filereadable(b:sessionfile))
+      exe 'source ' b:sessionfile
+    else
+      echo "No session loaded."
+    endif
+  else
+    let b:sessionfile = ""
+    let b:sessiondir = ""
+  endif
+endfunction
+
+map <leader>m :call MakeSession()<CR>
+
+au VimEnter * nested :call LoadSession()
+au VimLeave * :call UpdateSession()
+
 autocmd! BufEnter * Neomake
 autocmd! BufWritePost * Neomake
-autocmd BufEnter * :syntax sync fromstart 
-
-" Grepper
-
-nnoremap <leader>* :Grepper -tool rg -cword -noprompt<cr>
-nmap gs <plug>(GrepperOperator)
-xmap gs <plug>(GrepperOperator)
-
+autocmd BufEnter * :syntax sync fromstart
