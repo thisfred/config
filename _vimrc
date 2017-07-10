@@ -216,7 +216,7 @@ let g:github_enterprise_urls = ['https://github.banksimple.com']
 let g:neomake_logfile = 'neomake.log'
 
 " ## scala
-let g:neomake_scala_enabled_makers = ['scalastyle', 'fsc']
+let g:neomake_scala_enabled_makers = ['scalastyle', 'scalac', 'fsc']
 let g:neomake_scala_scalastyle_maker = {
             \ 'args': ['-c', '~/scalastyle/scalastyle_config.xml'],
             \ 'errorformat': 
