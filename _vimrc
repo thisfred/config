@@ -12,7 +12,6 @@ Plug 'airblade/vim-gitgutter'
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-sort-motion'
 Plug 'derekwyatt/vim-scala', {'for': 'scala'}
-Plug 'ervandew/supertab'
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'mhinz/vim-grepper'
 Plug 'michaeljsmith/vim-indent-object'
@@ -48,8 +47,10 @@ if !has('nvim')
   set undodir=~/.vim/undo
 endif
 augroup vimrc
+  autocmd!
   autocmd BufWritePre /tmp/* setlocal noundofile
 augroup END
+
 set inccommand=split
 let g:mapleader=','
 
@@ -202,6 +203,7 @@ nnoremap <leader>T :execute '!make test'<cr>
 
 " deoplete.
 let g:deoplete#enable_at_startup = 1
+inoremap <silent><expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
 " # fugitive
 
@@ -473,13 +475,6 @@ augroup vimrc
     autocmd! BufWritePost init.vim source %
 augroup END
 
-"augroup RememberLastView
-"    autocmd!
-"    autocmd BufWinLeave * silent! mkview "make vim save view (state) (folds, cursor, etc)
-"    autocmd BufWinEnter * silent! loadview "make vim load view (state) (folds, cursor, etc)
-"augroup END
-
-
 " Creates a session
 function! MakeSession()
   let b:sessiondir = $HOME . "/.vim/sessions" . getcwd()
@@ -488,43 +483,37 @@ function! MakeSession()
     redraw!
   endif
   let b:sessionfile = b:sessiondir . '/session.vim'
-  exe "mksession! " . b:sessionfile
-endfunction
-
-" Updates a session, BUT ONLY IF IT ALREADY EXISTS
-function! UpdateSession()
-  if argc() == 0
-    echo "attempting to update session"
-    let b:sessiondir = $HOME . "/.vim/sessions" . getcwd()
-    let b:sessionfile = b:sessiondir . "/session.vim"
-    if (filereadable(b:sessionfile))
-        exe "mksession! " . b:sessionfile
-        echo "updating session"
-    endif
-  endif
+  exe 'mksession! ' . b:sessionfile
 endfunction
 
 " Loads a session if it exists
 function! LoadSession()
-  if argc() == 0
-    let b:sessiondir = $HOME . "/.vim/sessions" . getcwd()
-    let b:sessionfile = b:sessiondir . "/session.vim"
+    let b:sessiondir = $HOME . '/.vim/sessions' . getcwd()
+    let b:sessionfile = b:sessiondir . '/session.vim'
     if (filereadable(b:sessionfile))
       exe 'source ' b:sessionfile
     else
-      echo "No session loaded."
+      echo 'No session loaded.'
     endif
-  else
-    let b:sessionfile = ""
-    let b:sessiondir = ""
-  endif
 endfunction
 
 map <leader>m :call MakeSession()<CR>
 
-au VimEnter * nested :call LoadSession()
-au VimLeave * :call UpdateSession()
+augroup sessions
+  autocmd!
+  if argc() == 0
+    au VimEnter * nested :call LoadSession()
+    au VimLeave * :call MakeSession()
+  endif
+augroup END
 
-autocmd! BufEnter * Neomake
-autocmd! BufWritePost * Neomake
-autocmd BufEnter * :syntax sync fromstart
+augroup neomake
+  autocmd!
+  autocmd BufEnter * Neomake
+  autocmd BufWritePost * Neomake
+augroup END
+
+augroup syntax
+  autocmd!
+  autocmd BufEnter * :syntax sync fromstart
+augroup END
