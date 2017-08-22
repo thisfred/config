@@ -497,8 +497,6 @@ function! LoadSession()
     endif
 endfunction
 
-map <leader>m :call MakeSession()<CR>
-
 augroup sessions
   autocmd!
   if argc() == 0
@@ -507,13 +505,10 @@ augroup sessions
   endif
 augroup END
 
-augroup neomake
-  autocmd!
-  autocmd BufEnter * Neomake
-  autocmd BufWritePost * Neomake
-augroup END
-
 augroup syntax
   autocmd!
   autocmd BufEnter * :syntax sync fromstart
 augroup END
+
+autocmd BufEnter * Neomake
+autocmd BufWritePost * Neomake
