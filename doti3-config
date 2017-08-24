@@ -137,7 +137,7 @@ workspace_layout tabbed
 force_focus_wrapping yes
 
 
-bindsym XF86AudioPlay exec qdbus org.mpris.quodlibet /Player Pause
+bindsym XF86AudioPlay exec qdbus org.mpris.quodlibet /Player Play
 bindsym $mod+Shift+x exec dbus-send --system --print-reply --dest="org.freedesktop.ConsoleKit" /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Stop
 bindsym $mod+Shift+z exec /home/ericc/bin/screen-reset
 bindsym $mod+Shift+o exec i3lock -c 000000
