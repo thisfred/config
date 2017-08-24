@@ -269,7 +269,7 @@ augroup neomake_fsc
 augroup END
 " ## python
 
-let g:neomake_python_enabled_makers = ['flake8', 'frosted', 'mypy', 'pylint']
+let g:neomake_python_enabled_makers = ['flake8', 'frosted', 'pylint', 'pydocstyle']
 let g:neomake_python_pylint_maker = { 
         \ 'args': [
             \ '-d', 'bad-continuation,trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name',
