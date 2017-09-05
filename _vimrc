@@ -13,11 +13,13 @@ Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-sort-motion'
 Plug 'derekwyatt/vim-scala', {'for': 'scala'}
 Plug 'fatih/vim-go', {'for': 'go'}
+Plug 'fisadev/vim-isort'
 Plug 'mhinz/vim-grepper'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'neomake/neomake'
 Plug 'python-rope/ropevim', {'for': 'python'}
 Plug 'rhysd/committia.vim'
+Plug 'romainl/vim-qf'
 Plug 'thisfred/breakfast', {'for': 'python', 'rtp': 'vim'}
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
@@ -215,7 +217,8 @@ let g:github_enterprise_urls = ['https://github.banksimple.com']
 
 " # neomake
 
-let g:neomake_logfile = 'neomake.log'
+let g:neomake_logfile = expand('~/neomake.log')
+let g:neomake_open_list = 2
 
 " ## scala
 let g:neomake_scala_enabled_makers = ['scalastyle', 'scalac', 'fsc']
@@ -269,7 +272,7 @@ augroup neomake_fsc
 augroup END
 " ## python
 
-let g:neomake_python_enabled_makers = ['flake8', 'pylint', 'pydocstyle']
+let g:neomake_python_enabled_makers = ['flake8', 'pylint', 'mypy']
 let g:neomake_python_pylint_maker = { 
         \ 'args': [
             \ '-d', 'bad-continuation,trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name',
@@ -288,7 +291,7 @@ let g:neomake_python_pylint_maker = {
         \   function('neomake#makers#ft#python#PylintEntryProcess'),
 \ ]}
 
-let g:neomake_python_flake8_maker_args = ['--ignore', 'E712,E711', '--max-complexity', '12']
+let g:neomake_python_flake8_maker_args = ['--ignore', 'E712,E711', '--max-complexity', '10']
 
 let g:neomake_python_mypy_maker_args = ['--strict-optional'] 
 
@@ -401,6 +404,8 @@ augroup py
     autocmd!
     au FileType python setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4 tw=79
       \ nosmartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+    autocmd BufWritePre *.py :Isort
+    "autocmd BufWritePre *.py :Autoformat
     autocmd BufWritePre *.py :call DeleteTrailingWS()
 augroup END
 
@@ -448,7 +453,10 @@ augroup END
 noremap <leader>f :Autoformat<CR>
 let g:formatdef_scalafmt = '"scalafmt --config .scalafmt.conf --stdin 2>/dev/null"'
 let g:formatters_scala = ['scalafmt']
-let g:formatters_python = ['autopep8']
+let g:formatters_python = ['yapf']
+
+" vim-qf
+let g:qf_loclist_window_bottom=0
 
 " ruby
 
@@ -510,5 +518,4 @@ augroup syntax
   autocmd BufEnter * :syntax sync fromstart
 augroup END
 
-autocmd! BufEnter * Neomake
 autocmd! BufWritePost * Neomake
