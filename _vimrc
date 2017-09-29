@@ -11,7 +11,6 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'airblade/vim-gitgutter'
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-sort-motion'
-Plug 'derekwyatt/vim-scala', {'for': 'scala'}
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'fisadev/vim-isort'
 Plug 'mhinz/vim-grepper'
@@ -19,7 +18,6 @@ Plug 'michaeljsmith/vim-indent-object'
 Plug 'neomake/neomake'
 Plug 'python-rope/ropevim', {'for': 'python'}
 Plug 'rhysd/committia.vim'
-Plug 'romainl/vim-qf'
 Plug 'thisfred/breakfast', {'for': 'python', 'rtp': 'vim'}
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
@@ -221,7 +219,7 @@ let g:neomake_logfile = expand('~/neomake.log')
 let g:neomake_open_list = 2
 
 " ## scala
-let g:neomake_scala_enabled_makers = ['scalastyle', 'scalac', 'fsc']
+let g:neomake_scala_enabled_makers = ['scalastyle', 'scalac']
 let g:neomake_scala_scalastyle_maker = {
             \ 'args': ['-c', '~/scalastyle/scalastyle_config.xml'],
             \ 'errorformat': 
@@ -232,47 +230,52 @@ let g:neomake_scala_scalastyle_maker = {
 \ }
 
 function! FindClasspath(where)
-    let l:cpf = findfile('.classpath', escape(a:where, ' ') . ';')
-    let l:sep = ':'
+    let cpf = findfile('.classpath', escape(a:where, ' ') . ';')
+    let sep = ':'
     try
-        return l:cpf !=# '' ? [ '-classpath', join(readfile(cpf), sep) ] : []
+      return cpf !=# '' ? join(readfile(cpf), sep) : ''
     catch
-        return []
+      return ''
     endtry
 endfunction
 
-" let g:neomake_scala_fsc_maker = {
-"             \ 'args': [
-"                 \ '-Xfatal-warnings:false',
-"                 \ '-Xfuture',
-"                 \ '-Xlint',
-"                 \ '-Ywarn-adapted-args',
-"                 \ '-Ywarn-dead-code', 
-"                 \ '-Ywarn-inaccessible',
-"                 \ '-Ywarn-infer-any',
-"                 \ '-Ywarn-nullary-override',
-"                 \ '-Ywarn-nullary-unit',
-"                 \ '-Ywarn-numeric-widen',
-"                 \ '-Ywarn-unused-import',
-"                 \ '-Ywarn-value-discard',
-"                 \ '-deprecation',
-"                 \ '-encoding', 'UTF-8',
-"                 \ '-feature',
-"                 \ '-language:existentials',
-"                 \ '-language:higherKinds', 
-"                 \ '-language:implicitConversions',
-"                 \ '-unchecked',
-"                 \ '-d', ($TMPDIR !=# '' ? $TMPDIR : '/tmp') ] }
+let g:neomake_scala_scalac_maker = {
+    \ 'args': [
+        \ '-Xfatal-warnings:false',
+        \ '-Xfuture',
+        \ '-Xlint',
+        \ '-Ywarn-adapted-args',
+        \ '-Ywarn-dead-code', 
+        \ '-Ywarn-inaccessible',
+        \ '-Ywarn-infer-any',
+        \ '-Ywarn-nullary-override',
+        \ '-Ywarn-nullary-unit',
+        \ '-Ywarn-numeric-widen',
+        \ '-Ywarn-unused-import',
+        \ '-Ywarn-value-discard',
+        \ '-deprecation',
+        \ '-encoding', 'UTF-8',
+        \ '-feature',
+        \ '-language:existentials',
+        \ '-language:higherKinds', 
+        \ '-language:implicitConversions',
+        \ '-unchecked',
+        \ '-d', ($TMPDIR !=# '' ? $TMPDIR : '/tmp'),
+        \ '-classpath', FindClasspath(expand('<afile>:p:h', 1))
+        \],
+    \ 'errorformat': 
+        \ '%E%f:%l: %trror: %m,' .
+        \ '%W%f:%l: %tarning:%m,' .
+        \ '%Z%p^,' .
+        \ '%-G%.%#'
+\ }
 
-augroup neomake_fsc
-    autocmd!
-    autocmd FileType scala let b:neomake_scala_fsc_maker_args =
-        \ get(g:, 'neomake_scala_fsc_maker_args', []) +
-        \ FindClasspath(expand('<afile>:p:h', 1))
-augroup END
 " ## python
 
-let g:neomake_python_enabled_makers = ['flake8', 'pylint', 'mypy']
+let g:neomake_python_enabled_makers = ['flake8' , 'pylint']
+let g:neomake_python_flake8_maker = {
+        \ 'args': ['--ignore', 'E122,E126', '--max-complexity', '10']
+\}
 let g:neomake_python_pylint_maker = { 
         \ 'args': [
             \ '-d', 'bad-continuation,trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name',
@@ -291,7 +294,6 @@ let g:neomake_python_pylint_maker = {
         \   function('neomake#makers#ft#python#PylintEntryProcess'),
 \ ]}
 
-let g:neomake_python_flake8_maker_args = ['--ignore', 'E712,E711', '--max-complexity', '10']
 
 let g:neomake_python_mypy_maker_args = ['--strict-optional'] 
 
@@ -405,7 +407,7 @@ augroup py
     au FileType python setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4 tw=79
       \ nosmartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
     autocmd BufWritePre *.py :Isort
-    "autocmd BufWritePre *.py :Autoformat
+    autocmd BufWritePre *.py :Autoformat
     autocmd BufWritePre *.py :call DeleteTrailingWS()
 augroup END
 
@@ -451,12 +453,9 @@ augroup END
 " vim-autoformat
 
 noremap <leader>f :Autoformat<CR>
-let g:formatdef_scalafmt = '"scalafmt --config .scalafmt.conf --stdin 2>/dev/null"'
 let g:formatters_scala = ['scalafmt']
+let g:formatdef_scalafmt = '"scalafmt --config .scalafmt.conf --stdin 2>/dev/null"'
 let g:formatters_python = ['yapf']
-
-" vim-qf
-let g:qf_loclist_window_bottom=0
 
 " ruby
 
