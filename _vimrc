@@ -1,4 +1,4 @@
-filetype off                  " required
+filetype off                  " requiredu
 
 call plug#begin('~/.vim/bundle')
 
@@ -9,10 +9,13 @@ Plug 'Chiel92/vim-autoformat'
 Plug 'PeterRincker/vim-argumentative'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'airblade/vim-gitgutter'
+Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-sort-motion'
+Plug 'cohama/lexima.vim',
 Plug 'fatih/vim-go', {'for': 'go'}
-Plug 'fisadev/vim-isort'
+Plug 'fisadev/vim-isort', {'for': 'python'}
+Plug 'https://github.banksimple.com/eng/vim-simple-scala', {'for': 'scala'}
 Plug 'mhinz/vim-grepper'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'neomake/neomake'
@@ -23,6 +26,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-scriptease'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 
@@ -209,17 +213,12 @@ inoremap <silent><expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
 let g:fugitive_github_domains = ['https://github.banksimple.com']
 
-" # rhubarb
-
-let g:github_enterprise_urls = ['https://github.banksimple.com']
-
 " # neomake
-
 let g:neomake_logfile = expand('~/neomake.log')
 let g:neomake_open_list = 2
 
 " ## scala
-let g:neomake_scala_enabled_makers = ['scalastyle', 'scalac']
+let g:neomake_scala_enabled_makers = ['scalac', 'scalastyle']
 let g:neomake_scala_scalastyle_maker = {
             \ 'args': ['-c', '~/scalastyle/scalastyle_config.xml'],
             \ 'errorformat': 
@@ -408,7 +407,6 @@ augroup py
       \ nosmartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
     autocmd BufWritePre *.py :Isort
     autocmd BufWritePre *.py :Autoformat
-    autocmd BufWritePre *.py :call DeleteTrailingWS()
 augroup END
 
 let g:pyindent_open_paren = '&sw'
@@ -446,7 +444,7 @@ augroup END
 
 augroup scala
     autocmd!
-    autocmd BufWritePre *.scala :call DeleteTrailingWS()
+    autocmd BufWritePre *.scala :silent SortSimpleScalaImports
     autocmd BufWritePre *.scala :Autoformat
 augroup END
 
@@ -512,9 +510,23 @@ augroup sessions
   endif
 augroup END
 
+nnoremap <leader>s :call MakeSession()<CR>
+
 augroup syntax
   autocmd!
   autocmd BufEnter * :syntax sync fromstart
 augroup END
 
 autocmd! BufWritePost * Neomake
+
+nnoremap <leader>* :Grepper -tool git -open -switch -cword -noprompt<cr>
+au FileType scala nnoremap <buffer> <leader>s :silent SortSimpleScalaImports<cr>
+
+
+" language client
+
+" let g:LanguageClient_serverCommands = { 
+" \ 'scala': ['netcat', 'localhost', '62831'], 
+" \ } 
+" let g:LanguageClient_autoStart = 1 
+" nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR> 
