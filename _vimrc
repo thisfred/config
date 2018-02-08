@@ -9,13 +9,12 @@ Plug 'Chiel92/vim-autoformat'
 Plug 'PeterRincker/vim-argumentative'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'airblade/vim-gitgutter'
-Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-sort-motion'
-Plug 'cohama/lexima.vim',
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'fisadev/vim-isort', {'for': 'python'}
 Plug 'https://github.banksimple.com/eng/vim-simple-scala', {'for': 'scala'}
+Plug 'jceb/vim-orgmode'
 Plug 'mhinz/vim-grepper'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'neomake/neomake'
@@ -146,13 +145,11 @@ nnoremap g, g,zz
 nnoremap <c-o> <c-o>zz
 
 " copying and pasting
-if has('clipboard')
-  set clipboard=unnamed
-  if has('xterm_clipboard')
-    set clipboard+=unnamedplus
-  endif
-endif
+set clipboard+=unnamedplus
 set pastetoggle=<F2>
+
+" Don't restore empty windows in session
+set sessionoptions-=blank
 
 " Seriously, guys. It's not like :W is bound to anything anyway.
 command! W :w
@@ -406,7 +403,8 @@ augroup py
     au FileType python setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4 tw=79
       \ nosmartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
     autocmd BufWritePre *.py :Isort
-    autocmd BufWritePre *.py :Autoformat
+    autocmd BufWritePre *.py :call DeleteTrailingWS()
+    " autocmd BufWritePre *.py :Autoformat
 augroup END
 
 let g:pyindent_open_paren = '&sw'
@@ -528,5 +526,5 @@ au FileType scala nnoremap <buffer> <leader>s :silent SortSimpleScalaImports<cr>
 " let g:LanguageClient_serverCommands = { 
 " \ 'scala': ['netcat', 'localhost', '62831'], 
 " \ } 
-" let g:LanguageClient_autoStart = 1 
+" let g:LanguageClient_autoStart = 0 
 " nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR> 
