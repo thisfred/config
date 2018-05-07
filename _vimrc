@@ -18,7 +18,6 @@ Plug 'jceb/vim-orgmode'
 Plug 'mhinz/vim-grepper'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'neomake/neomake'
-Plug 'python-rope/ropevim', {'for': 'python'}
 Plug 'rhysd/committia.vim'
 Plug 'thisfred/breakfast', {'for': 'python', 'rtp': 'vim'}
 Plug 'tpope/vim-commentary'
@@ -71,8 +70,6 @@ set completeopt=menuone,longest
 set wildignore+=*.o,*.obj,.git,*.pyc,.svn,.bzr,__pycache__,.ensime_cache,**/target/**,.git,.m2,.tox,.venv
 set tildeop
 set tags=.tags
-
-let g:ycm_python_binary_path = '.venv/bin/python'
 
 """ don't bell or blink
 set noerrorbells
@@ -411,8 +408,6 @@ let g:pyindent_open_paren = '&sw'
 let g:pyindent_nested_paren = '&sw'
 let g:pyindent_continue = '&sw'
 
-let g:ropevim_goto_def_newwin = 'vnew'
-
 " git commits
 augroup git
     autocmd!
@@ -428,7 +423,6 @@ augroup END
 " markdown
 augroup md
     autocmd!
-    autocmd BufWritePre *.md :call DeleteTrailingWS()
     autocmd Filetype markdown setlocal spell textwidth=72
 augroup END
 
@@ -451,7 +445,7 @@ augroup END
 noremap <leader>f :Autoformat<CR>
 let g:formatters_scala = ['scalafmt']
 let g:formatdef_scalafmt = '"scalafmt --config .scalafmt.conf --stdin 2>/dev/null"'
-let g:formatters_python = ['yapf']
+let g:formatters_python = ['isort','yapf']
 
 " ruby
 
@@ -473,8 +467,6 @@ nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 
 augroup vimrc
     autocmd!
-    autocmd! BufWritePost .vimrc source %
-    autocmd! BufWritePost .nvimrc source %
     autocmd! BufWritePost init.vim source %
 augroup END
 
@@ -520,11 +512,14 @@ autocmd! BufWritePost * Neomake
 nnoremap <leader>* :Grepper -tool git -open -switch -cword -noprompt<cr>
 au FileType scala nnoremap <buffer> <leader>s :silent SortSimpleScalaImports<cr>
 
-
-" language client
-
-" let g:LanguageClient_serverCommands = { 
-" \ 'scala': ['netcat', 'localhost', '62831'], 
-" \ } 
-" let g:LanguageClient_autoStart = 0 
-" nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR> 
+" Rename current file
+function! RenameFile()
+    let old_name = expand('%')
+    let new_name = input('New file name: ', expand('%'), 'file')
+    if new_name != '' && new_name != old_name
+        exec ':saveas ' . new_name
+        exec ':silent !rm ' . old_name
+        redraw!
+    endif
+endfunction
+map <leader>r :call RenameFile()<cr>
