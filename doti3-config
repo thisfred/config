@@ -137,7 +137,7 @@ workspace_layout tabbed
 force_focus_wrapping yes
 
 
-bindsym XF86AudioPlay exec quodlibet --play-pause
+bindsym XF86AudioPlay exec python3 /home/eric/quodlibet-trunk/quodlibet/quodlibet.py --play-pause
 bindsym $mod+Shift+x exec dbus-send --system --print-reply --dest="org.freedesktop.ConsoleKit" /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Stop
 bindsym $mod+Shift+z exec /home/ericc/bin/screen-reset
 bindsym $mod+Shift+o exec i3lock -c 000000

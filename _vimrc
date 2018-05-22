@@ -2,9 +2,6 @@ filetype off                  " requiredu
 
 call plug#begin('~/.vim/bundle')
 
-"Plug 'Valloric/YouCompleteMe'
-"Plug 'scrooloose/syntastic'
-"Plug 'w0rp/ale'
 Plug 'Chiel92/vim-autoformat'
 Plug 'PeterRincker/vim-argumentative'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -13,7 +10,6 @@ Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-sort-motion'
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'fisadev/vim-isort', {'for': 'python'}
-Plug 'https://github.banksimple.com/eng/vim-simple-scala', {'for': 'scala'}
 Plug 'jceb/vim-orgmode'
 Plug 'mhinz/vim-grepper'
 Plug 'michaeljsmith/vim-indent-object'
@@ -151,6 +147,7 @@ set sessionoptions-=blank
 " Seriously, guys. It's not like :W is bound to anything anyway.
 command! W :w
 
+set sessionoptions-=blank
 " window navigation
 noremap <c-h> <c-w><c-h>
 noremap <c-j> <c-w><c-j>
@@ -266,29 +263,10 @@ let g:neomake_scala_scalac_maker = {
 " ## python
 
 let g:neomake_python_enabled_makers = ['flake8' , 'pylint']
-let g:neomake_python_flake8_maker = {
-        \ 'args': ['--ignore', 'E122,E126', '--max-complexity', '10']
-\}
-let g:neomake_python_pylint_maker = { 
-        \ 'args': [
-            \ '-d', 'bad-continuation,trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name',
-            \ '--output-format=text',
-            \ '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg} [{msg_id}]"',
-            \ '--reports=no'
-        \ ],
-        \ 'errorformat':
-            \ '%A%f:%l:%c:%t: %m,' .
-            \ '%A%f:%l: %m,' .
-            \ '%A%f:(%l): %m,' .
-            \ '%-Z%p^%.%#,' .
-            \ '%-G%.%#',
-        \ 'postprocess': [
-        \   function('neomake#postprocess#GenericLengthPostprocess'),
-        \   function('neomake#makers#ft#python#PylintEntryProcess'),
-\ ]}
+let g:neomake_python_flake8_args = ['--ignore', 'E122,E126', '--max-complexity', '10']
+let g:neomake_python_pylint_args = ['-d', 'bad-continuation,trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name', '--output-format=text', '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg} [{msg_id}]"', '--reports=no']
 
-
-let g:neomake_python_mypy_maker_args = ['--strict-optional'] 
+let g:neomake_python_mypy_args = ['--strict-optional'] 
 
 hi link NeomakeErrorSign Error
 hi link NeomakeWarningSign Search
@@ -401,7 +379,6 @@ augroup py
       \ nosmartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
     autocmd BufWritePre *.py :Isort
     autocmd BufWritePre *.py :call DeleteTrailingWS()
-    " autocmd BufWritePre *.py :Autoformat
 augroup END
 
 let g:pyindent_open_paren = '&sw'
