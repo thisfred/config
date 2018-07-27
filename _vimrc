@@ -208,58 +208,6 @@ let g:fugitive_github_domains = ['https://github.banksimple.com']
 let g:neomake_logfile = expand('~/neomake.log')
 let g:neomake_open_list = 2
 
-" ## scala
-let g:neomake_scala_enabled_makers = ['scalac', 'scalastyle']
-let g:neomake_scala_scalastyle_maker = {
-            \ 'args': ['-c', '~/scalastyle/scalastyle_config.xml'],
-            \ 'errorformat': 
-                \ '%trror file=%f message=%m line=%l column=%c,' .
-                \ '%trror file=%f message=%m line=%l,' .
-                \ '%tarning file=%f message=%m line=%l column=%c,' .
-                \ '%tarning file=%f message=%m line=%l'
-\ }
-
-function! FindClasspath(where)
-    let cpf = findfile('.classpath', escape(a:where, ' ') . ';')
-    let sep = ':'
-    try
-      return cpf !=# '' ? join(readfile(cpf), sep) : ''
-    catch
-      return ''
-    endtry
-endfunction
-
-let g:neomake_scala_scalac_maker = {
-    \ 'args': [
-        \ '-Xfatal-warnings:false',
-        \ '-Xfuture',
-        \ '-Xlint',
-        \ '-Ywarn-adapted-args',
-        \ '-Ywarn-dead-code', 
-        \ '-Ywarn-inaccessible',
-        \ '-Ywarn-infer-any',
-        \ '-Ywarn-nullary-override',
-        \ '-Ywarn-nullary-unit',
-        \ '-Ywarn-numeric-widen',
-        \ '-Ywarn-unused-import',
-        \ '-Ywarn-value-discard',
-        \ '-deprecation',
-        \ '-encoding', 'UTF-8',
-        \ '-feature',
-        \ '-language:existentials',
-        \ '-language:higherKinds', 
-        \ '-language:implicitConversions',
-        \ '-unchecked',
-        \ '-d', ($TMPDIR !=# '' ? $TMPDIR : '/tmp'),
-        \ '-classpath', FindClasspath(expand('<afile>:p:h', 1))
-        \],
-    \ 'errorformat': 
-        \ '%E%f:%l: %trror: %m,' .
-        \ '%W%f:%l: %tarning:%m,' .
-        \ '%Z%p^,' .
-        \ '%-G%.%#'
-\ }
-
 " ## python
 
 let g:neomake_python_enabled_makers = ['flake8' , 'pylint']
@@ -317,55 +265,9 @@ nnoremap <Leader>p :lprev<CR>
 " let g:syntastic_python_mypy_args = '--strict-optional'
 " let g:syntastic_python_pylint_args = '-d trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name'
 
-" ## scala
-
-" let g:syntastic_scala_scalastyle_jar = '~/scalastyle/scalastyle_2.11-0.8.0-20150902.090323-5-batch.jar'
-" let g:syntastic_scala_scalastyle_config_file = '~/scalastyle/scalastyle_config.xml'
-" let g:syntastic_scala_checkers = ['scalastyle', 'fsc']
-
-" if has('autocmd')
-"     function! FindClasspath(where)
-"         let cpf = findfile('.classpath', escape(a:where, ' ') . ';')
-"         let sep = syntastic#util#isRunningWindows() || has('win32unix') ? ';' : ':'
-"         try
-"             return cpf !=# '' ? [ '-classpath', join(readfile(cpf), sep) ] : []
-"         catch
-"             return []
-"         endtry
-"     endfunction
-
-"     let g:syntastic_scala_fsc_args = [
-"         \ '-Xfatal-warnings:false',
-"         \ '-Xfuture',
-"         \ '-Xlint',
-"         \ '-Ywarn-adapted-args',
-"         \ '-Ywarn-dead-code', 
-"         \ '-Ywarn-inaccessible',
-"         \ '-Ywarn-infer-any',
-"         \ '-Ywarn-nullary-override',
-"         \ '-Ywarn-nullary-unit',
-"         \ '-Ywarn-numeric-widen',
-"         \ '-Ywarn-unused-import',
-"         \ '-Ywarn-value-discard',
-"         \ '-deprecation',
-"         \ '-encoding', 'UTF-8',
-"         \ '-feature',
-"         \ '-language:existentials',
-"         \ '-language:higherKinds', 
-"         \ '-language:implicitConversions',
-"         \ '-unchecked',
-"         \ '-d', ($TMPDIR !=# '' ? $TMPDIR : '/tmp') ]
-
-"     augroup syntastic_fsc
-"         autocmd!
-"         autocmd FileType scala let b:syntastic_scala_fsc_args =
-"             \ get(g:, 'syntastic_scala_fsc_args', []) +
-"             \ FindClasspath(expand('<afile>:p:h', 1))
-"     augroup END
-" endif
 
 " ## Color Scheme
-let base16colorspace=256  " Access colors present in 256 colorspace
+" let base16colorspace=256  " Access colors present in 256 colorspace
 colorscheme base16-ocean
 set background=dark
 
@@ -408,21 +310,6 @@ augroup java
     autocmd!
     autocmd BufWritePre *.java :call DeleteTrailingWS()
 augroup END
-
-" Scala :(
-
-augroup scala
-    autocmd!
-    autocmd BufWritePre *.scala :silent SortSimpleScalaImports
-    autocmd BufWritePre *.scala :Autoformat
-augroup END
-
-" vim-autoformat
-
-noremap <leader>f :Autoformat<CR>
-let g:formatters_scala = ['scalafmt']
-let g:formatdef_scalafmt = '"scalafmt --config .scalafmt.conf --stdin 2>/dev/null"'
-let g:formatters_python = ['isort','yapf']
 
 " ruby
 
@@ -487,7 +374,6 @@ augroup END
 autocmd! BufWritePost * Neomake
 
 nnoremap <leader>* :Grepper -tool git -open -switch -cword -noprompt<cr>
-au FileType scala nnoremap <buffer> <leader>s :silent SortSimpleScalaImports<cr>
 
 " Rename current file
 function! RenameFile()
