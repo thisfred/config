@@ -6,8 +6,10 @@ Plug 'Chiel92/vim-autoformat'
 Plug 'PeterRincker/vim-argumentative'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'airblade/vim-gitgutter'
+Plug 'ambv/black'
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-sort-motion'
+Plug 'editorconfig/editorconfig-vim'
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'fisadev/vim-isort', {'for': 'python'}
 Plug 'jceb/vim-orgmode'
@@ -212,7 +214,7 @@ let g:neomake_open_list = 2
 
 let g:neomake_python_enabled_makers = ['flake8' , 'pylint']
 let g:neomake_python_flake8_args = ['--ignore', 'E122,E126', '--max-complexity', '10']
-let g:neomake_python_pylint_args = ['-d', 'bad-continuation,trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name', '--output-format=text', '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg} [{msg_id}]"', '--reports=no']
+let g:neomake_python_pylint_args = ['-d', 'redefined-outer-name,bad-continuation,trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name', '--output-format=text', '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg} [{msg_id}]"', '--reports=no']
 
 let g:neomake_python_mypy_args = ['--strict-optional'] 
 
