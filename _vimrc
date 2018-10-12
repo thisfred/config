@@ -13,6 +13,8 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'fisadev/vim-isort', {'for': 'python'}
 Plug 'jceb/vim-orgmode'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 Plug 'mhinz/vim-grepper'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'neomake/neomake'
@@ -25,6 +27,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-scriptease'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
+Plug 'vimwiki/vimwiki'
 
 call plug#end()
 
@@ -281,7 +284,7 @@ augroup py
     autocmd!
     au FileType python setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4 tw=79
       \ nosmartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
-    autocmd BufWritePre *.py :Isort
+    " autocmd BufWritePre *.py :Isort
     autocmd BufWritePre *.py :call DeleteTrailingWS()
 augroup END
 
@@ -388,3 +391,14 @@ function! RenameFile()
     endif
 endfunction
 map <leader>r :call RenameFile()<cr>
+
+
+" vimwiki
+
+let g:vimwiki_list = [{'path': '~/vimwiki/', 'syntax': 'markdown', 'ext': '.md'}]
+
+" fzf
+
+map <leader>f :Files<cr>
+map <leader>c :Commits<cr>
+imap <c-x><c-l> <plug>(fzf-complete-line)
