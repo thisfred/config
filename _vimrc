@@ -13,6 +13,7 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'fisadev/vim-isort', {'for': 'python'}
 Plug 'jceb/vim-orgmode'
+Plug 'jmcantrell/vim-virtualenv'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'mhinz/vim-grepper'
@@ -216,8 +217,8 @@ let g:neomake_open_list = 2
 " ## python
 
 let g:neomake_python_enabled_makers = ['flake8' , 'pylint']
-let g:neomake_python_flake8_args = ['--ignore', 'E122,E126', '--max-complexity', '10']
-let g:neomake_python_pylint_args = ['-d', 'redefined-outer-name,bad-continuation,trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name', '--output-format=text', '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg} [{msg_id}]"', '--reports=no']
+let g:neomake_python_flake8_args = ['--ignore', 'E122,E126,W503', '--max-complexity', '10']
+let g:neomake_python_pylint_args = ['-d', 'redefined-outer-name,bad-continuation,trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens', '--output-format=text', '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg} [{msg_id}]"', '--reports=no']
 
 let g:neomake_python_mypy_args = ['--strict-optional'] 
 
@@ -282,7 +283,7 @@ set background=dark
 
 augroup py
     autocmd!
-    au FileType python setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4 tw=79
+    au FileType python setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4 tw=88
       \ nosmartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
     " autocmd BufWritePre *.py :Isort
     autocmd BufWritePre *.py :call DeleteTrailingWS()
