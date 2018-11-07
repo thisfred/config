@@ -154,3 +154,4 @@ exec --no-startup-id unity-settings-daemon
 exec --no-startup-id udiskie --tray
 exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gsd-xsettings
+exec --no-startup-id redshift -t 5500:3400
