@@ -104,6 +104,7 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+x exec "shutdown now"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -135,10 +136,9 @@ hide_edge_borders both
 new_window none
 workspace_layout tabbed
 force_focus_wrapping yes
-
+focus_follows_mouse no
 
 bindsym XF86AudioPlay exec python3 /home/eric/quodlibet-trunk/quodlibet/quodlibet.py --play-pause
-bindsym $mod+Shift+x exec dbus-send --system --print-reply --dest="org.freedesktop.ConsoleKit" /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Stop
 bindsym $mod+Shift+z exec /home/ericc/bin/screen-reset
 bindsym $mod+Shift+o exec i3lock -c 000000
 bindsym Ctrl+i exec xdotool click 2
