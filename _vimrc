@@ -14,32 +14,36 @@ Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'fisadev/vim-isort', {'for': 'python'}
 Plug 'jceb/vim-orgmode'
 Plug 'jmcantrell/vim-virtualenv'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
+Plug 'ludovicchabant/vim-gutentags'
+Plug 'mgedmin/coverage-highlight.vim'
 Plug 'mhinz/vim-grepper'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'neomake/neomake'
 Plug 'rhysd/committia.vim'
 Plug 'thisfred/breakfast', {'for': 'python', 'rtp': 'vim'}
+Plug 'tpope/vim-apathy'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-scriptease'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
-Plug 'vimwiki/vimwiki'
 
 call plug#end()
 
 set modelines=0 " disable security holes
+
+" gutentags
+au FileType gitcommit,gitrebase let g:gutentags_enabled=0
+let g:gutentags_cache_dir='~/.vim/tags'
 
 " encoding
 set encoding=utf-8
 set fileencoding=utf-8
 set termencoding=utf-8
 
-set relativenumber
 set number
 set path+=**
 set history=10000
@@ -71,7 +75,6 @@ set complete=.,w,b,u,t,i,kspell
 set completeopt=menuone,longest
 set wildignore+=*.o,*.obj,.git,*.pyc,.svn,.bzr,__pycache__,.ensime_cache,**/target/**,.git,.m2,.tox,.venv
 set tildeop
-set tags=.tags
 
 """ don't bell or blink
 set noerrorbells
@@ -98,6 +101,7 @@ set softtabstop=4 " <BS> over an autoindent deletes both spaces.
 set expandtab " Use spaces, not tabs, for autoindent/tab key.
 set shiftround " rounds indent to a multiple of shiftwidth
 set autoindent
+set backspace=indent,eol,start
 
 """ brackets matching
 set showmatch " Briefly jump to a paren once it's balanced
@@ -203,6 +207,7 @@ nnoremap <leader>T :execute '!make test'<cr>
 " ## Plugins
 
 " deoplete.
+let deoplete#tag#cache_limit_size = 5000000
 let g:deoplete#enable_at_startup = 1
 inoremap <silent><expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
@@ -217,7 +222,7 @@ let g:neomake_open_list = 2
 " ## python
 
 let g:neomake_python_enabled_makers = ['flake8' , 'pylint']
-let g:neomake_python_flake8_args = ['--ignore', 'E122,E126,W503', '--max-complexity', '10']
+let g:neomake_python_flake8_args = ['--ignore', 'C101,C812,C815,D100,D101,D102,D103,E122,E126,W503,Q0,Z115,Z118,Z305,Z306,Z326', '--max-line-length', '88', '--max-complexity', '10']
 let g:neomake_python_pylint_args = ['-d', 'redefined-outer-name,bad-continuation,trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens', '--output-format=text', '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg} [{msg_id}]"', '--reports=no']
 
 let g:neomake_python_mypy_args = ['--strict-optional'] 
@@ -232,48 +237,12 @@ nnoremap <Leader>f :lfirst<CR>
 nnoremap <Leader>n :lnext<CR>
 nnoremap <Leader>p :lprev<CR>
 
-" # syntastic
-
-" syntax enable
-
-" set statusline+=%#warningmsg# 
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
-
-" hi link SyntasticErrorSign Error
-" hi link SyntasticWarningSign Search
-" hi link SyntasticError Error
-" hi link SyntasticWarning Search
-
-" let g:syntastic_aggregate_errors = 1
-" let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_loc_list = 1
-" let g:syntastic_check_on_open = 1
-" let g:syntastic_check_on_wq = 0
-" let g:syntastic_enable_signs = 1
-" let g:syntastic_error_symbol='!'
-" let g:syntastic_loc_list_height=10
-" let g:syntastic_python_checkers = ['flake8', 'pylint', 'mypy']
-" let g:syntastic_sh_checkers = ['shellcheck']
-" let g:syntastic_python_flake8_args = '--ignore=E712,E711 --max-complexity=12'
-" let g:syntastic_python_pylint_args = '-d trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name'
-" let g:syntastic_python_mypy_args = '--strict-optional'
-" let g:syntastic_mode_map = { 'mode': 'active' }
-" let g:syntastic_sh_checkers = ['shellcheck']
-" let g:syntastic_style_error_symbol='x'
-" let g:syntastic_style_warning_symbol='~'
-" let g:syntastic_warning_symbol='?'
-
-" ## python
-
-" let g:syntastic_python_checkers = ['flake8', 'pylint', 'mypy']
-" let g:syntastic_python_flake8_args = '--ignore=E712,E711 --max-complexity=12'
-" let g:syntastic_python_mypy_args = '--strict-optional'
-" let g:syntastic_python_pylint_args = '-d trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,invalid-name'
-
-
 " ## Color Scheme
-" let base16colorspace=256  " Access colors present in 256 colorspace
+"
+if filereadable(expand("~/.vimrc_background"))
+  let base16colorspace=256
+  source ~/.vimrc_background
+endif
 colorscheme base16-ocean
 set background=dark
 
@@ -285,8 +254,7 @@ augroup py
     autocmd!
     au FileType python setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4 tw=88
       \ nosmartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
-    " autocmd BufWritePre *.py :Isort
-    autocmd BufWritePre *.py :call DeleteTrailingWS()
+    autocmd BufWritePre *.py :Black
 augroup END
 
 let g:pyindent_open_paren = '&sw'
@@ -403,3 +371,6 @@ let g:vimwiki_list = [{'path': '~/vimwiki/', 'syntax': 'markdown', 'ext': '.md'}
 map <leader>f :Files<cr>
 map <leader>c :Commits<cr>
 imap <c-x><c-l> <plug>(fzf-complete-line)
+
+
+nmap <leader>c :let @+ = expand("%")<cr>
