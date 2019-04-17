@@ -6,13 +6,12 @@ Plug 'Chiel92/vim-autoformat'
 Plug 'PeterRincker/vim-argumentative'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'airblade/vim-gitgutter'
-Plug 'ambv/black'
+Plug 'ambv/black', {'for': 'python'}
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-sort-motion'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'fisadev/vim-isort', {'for': 'python'}
-Plug 'jceb/vim-orgmode'
 Plug 'jmcantrell/vim-virtualenv'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'mgedmin/coverage-highlight.vim'
@@ -24,7 +23,6 @@ Plug 'thisfred/breakfast', {'for': 'python', 'rtp': 'vim'}
 Plug 'tpope/vim-apathy'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-scriptease'
@@ -361,16 +359,5 @@ function! RenameFile()
 endfunction
 map <leader>r :call RenameFile()<cr>
 
-
-" vimwiki
-
-let g:vimwiki_list = [{'path': '~/vimwiki/', 'syntax': 'markdown', 'ext': '.md'}]
-
-" fzf
-
-map <leader>f :Files<cr>
-map <leader>c :Commits<cr>
-imap <c-x><c-l> <plug>(fzf-complete-line)
-
-
+" copy filename of current buffer
 nmap <leader>c :let @+ = expand("%")<cr>
