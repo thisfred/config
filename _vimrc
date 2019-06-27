@@ -87,7 +87,7 @@ set backspace=2 " Allow backspacing over autoindent, EOL, and BOL
 """ line endings/length
 set textwidth=100
 set colorcolumn=+1
-set formatoptions=tcroqn1
+set formatoptions=croqn1
 set nowrap " don't wrap text
 set linebreak " don't wrap textin the middle of a word
 set fileformats=unix,dos,mac " Try recognizing dos, unix, and mac line endings.
@@ -215,15 +215,12 @@ let g:fugitive_github_domains = ['https://github.banksimple.com']
 
 " # neomake
 let g:neomake_logfile = expand('~/neomake.log')
-let g:neomake_open_list = 2
 
 " ## python
 
-let g:neomake_python_enabled_makers = ['flake8' , 'pylint']
-let g:neomake_python_flake8_args = ['--ignore', 'C101,C812,C815,D100,D101,D102,D103,E122,E126,E203,W503,Q0,Z115,Z118,Z305,Z306,Z326', '--max-line-length', '88', '--max-complexity', '10']
-let g:neomake_python_pylint_args = ['-d', 'redefined-outer-name,bad-continuation,trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens', '--output-format=text', '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg} [{msg_id}]"', '--reports=no']
-
-let g:neomake_python_mypy_args = ['--strict-optional'] 
+let g:neomake_python_enabled_makers = ['flake8' , 'pylint', 'mypy']
+let g:neomake_python_flake8_args = ['--ignore', 'C101,C812,C815,D100,D101,D102,D103,E122,E126,E501,W503,Q0,Z111, Z115,Z118,Z305,Z306,Z326', '--max-line-length', '88', '--max-complexity', '10']
+let g:neomake_python_pylint_args = ['-d', 'invalid-name,redefined-outer-name,bad-continuation,trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,ungrouped-imports', '--output-format=text', '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg} [{msg_id}]"', '--reports=no']
 
 hi link NeomakeErrorSign Error
 hi link NeomakeWarningSign Search
