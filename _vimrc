@@ -60,7 +60,8 @@ let g:ale_linters = {
       \}
 let g:ale_fix_on_save = 1
 let g:ale_completion_enabled = 1
-nnoremap <leader>d :ALEGoToDefinition<cr>
+
+nnoremap <leader>G :ALEGoToDefinition<cr>
 
 set modelines=0 " disable security holes
 set cursorline
