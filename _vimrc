@@ -1,10 +1,9 @@
-filetype off                  " requiredu
+filetype off
 
 call plug#begin('~/.vim/bundle')
 
 Plug 'Chiel92/vim-autoformat'
 Plug 'PeterRincker/vim-argumentative'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'airblade/vim-gitgutter'
 Plug 'ambv/black', {'for': 'python'}
 Plug 'chriskempson/base16-vim'
@@ -13,10 +12,11 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'fisadev/vim-isort', {'for': 'python'}
 Plug 'jmcantrell/vim-virtualenv'
-Plug 'ludovicchabant/vim-gutentags'
+Plug 'ludovicchabant/vim-gutentags', {'for': 'python'}
 Plug 'mgedmin/coverage-highlight.vim'
 Plug 'mhinz/vim-grepper'
 Plug 'michaeljsmith/vim-indent-object'
+Plug 'ncm2/float-preview.nvim'
 Plug 'neomake/neomake'
 Plug 'rhysd/committia.vim'
 Plug 'thisfred/breakfast', {'for': 'python', 'rtp': 'vim'}
@@ -29,13 +29,45 @@ Plug 'tpope/vim-scriptease'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 
+" Clojure
+Plug 'guns/vim-sexp', {'for': 'clojure'}
+Plug 'nvim-treesitter/nvim-treesitter', {'do': 'TSUpdate'}
+Plug 'liquidz/vim-iced', {'for': 'clojure'}
+Plug 'neoclide/coc.nvim', {'branch': 'release', 'for': 'clojure'}
+
+" JS
+Plug 'pangloss/vim-javascript'    " JavaScript support
+Plug 'HerringtonDarkholme/yats.vim'
+Plug 'leafgarland/typescript-vim' " TypeScript syntax
+Plug 'maxmellon/vim-jsx-pretty'   " JS and JSX syntax
+
+Plug 'dense-analysis/ale', {'for': ['css', 'javascript', 'typescript', 'typescriptreact', 'clojure']}
+Plug 'sbdchd/neoformat', {'for': ['javascript', 'typescript']}
+
 call plug#end()
 
+highlight ALEErrorSign ctermbg=NONE ctermfg=red
+highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
+let g:ale_fixers = {
+\  'javascript': ['eslint'],
+\  'typescript': ['eslint'],
+\  'typescriptreact': ['eslint'],
+\}
+
+" Place configuration AFTER `call plug#end()`!
+let g:ale_linters = {
+      \ 'clojure': ['clj-kondo', 'joker']
+      \}
+let g:ale_fix_on_save = 1
+let g:ale_completion_enabled = 1
+nnoremap <leader>d :ALEGoToDefinition<cr>
+
 set modelines=0 " disable security holes
+set cursorline
 
 " gutentags
 au FileType gitcommit,gitrebase let g:gutentags_enabled=0
-let g:gutentags_cache_dir='~/.vim/tags'
+let g:gutentags_cache_dir='~/.cache/vim/tags'
 
 " encoding
 set encoding=utf-8
@@ -204,9 +236,6 @@ nnoremap <leader>T :execute '!make test'<cr>
 
 " ## Plugins
 
-" deoplete.
-let deoplete#tag#cache_limit_size = 5000000
-let g:deoplete#enable_at_startup = 1
 inoremap <silent><expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
 
 " # fugitive
@@ -218,9 +247,9 @@ let g:neomake_logfile = expand('~/neomake.log')
 
 " ## python
 
-let g:neomake_python_enabled_makers = ['flake8' , 'pylint', 'mypy']
-let g:neomake_python_flake8_args = ['--ignore', 'C101,C812,C815,D100,D101,D102,D103,E122,E126,E203,E501,W503,Q0,Z111, Z115,Z118,Z305,Z306,Z326', '--max-line-length', '88', '--max-complexity', '10']
-let g:neomake_python_pylint_args = ['-d', 'invalid-name,redefined-outer-name,bad-continuation,trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-docstring,superfluous-parens,ungrouped-imports', '--output-format=text', '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg} [{msg_id}]"', '--reports=no']
+let g:neomake_python_enabled_makers = ['flake8'] ", 'pylint', 'mypy']
+let g:neomake_python_flake8_args = ['--ignore', 'E501', '--max-complexity', '10']
+let g:neomake_python_pylint_args = ['-d', 'unsubscriptable-object,invalid-name,redefined-outer-name,bad-continuation,trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-function,docstring,missing-docstring,superfluous-parens,ungrouped-imports', '--output-format=text', '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg} [{msg_id}]"', '--reports=no']
 
 hi link NeomakeErrorSign Error
 hi link NeomakeWarningSign Search
@@ -248,15 +277,19 @@ augroup py
     autocmd!
     au FileType python setlocal expandtab indentkeys-=<:> shiftwidth=4 tabstop=4 softtabstop=4 tw=88
       \ nosmartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
+    autocmd BufWritePre *.py :Isort
     autocmd BufWritePre *.py :Black
-    "autocmd BufWritePre *.py :Isort
     autocmd BufWritePre *.py :call DeleteTrailingWS()
 augroup END
 
-let g:pyindent_open_paren = '&sw'
-let g:pyindent_nested_paren = '&sw'
-let g:pyindent_continue = '&sw'
+augroup js
+    autocmd BufWritePre *.js Neoformat prettier
+augroup END
 
+augroup ts
+    autocmd BufWritePre *.ts Neoformat prettier
+augroup END    
+    
 " git commits
 augroup git
     autocmd!
@@ -359,3 +392,81 @@ map <leader>r :call RenameFile()<cr>
 
 " copy filename of current buffer
 nmap <leader>c :let @+ = expand("%")<cr>
+
+" vim-iced
+" Enable vim-iced's default key mapping
+" This is recommended for newbies
+let g:iced_enable_default_key_mappings = v:true
+let g:iced_enable_clj_kondo_analysis = v:true
+let g:iced_enable_clj_kondo_local_analysis = v:true
+let g:sexp_mappings = {'sexp_indent': '', 'sexp_indent_top': ''}
+
+
+aug VimAutoFormatOnWriting
+  au!
+  au BufWritePre *.clj,*.edn :%!bin/zprintm-1.1.2 '{:search-config? true}'
+aug END
+
+let g:float_preview#docked = 0
+let g:float_preview#max_width = 80
+let g:float_preview#max_height = 40
+
+" COC
+let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
+let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <leader>u <Plug>(coc-references)
+nmap <leader>rn <Plug>(coc-rename)
+
+let g:coc_enable_locationlist = 0
+autocmd User CocLocationsChange CocList --normal location
+
+inoremap <silent><expr> <c-space> coc#refresh()
+nmap <silent> [l <Plug>(coc-diagnostic-prev)
+nmap <silent> ]l <Plug>(coc-diagnostic-next)
+nmap <silent> [k :CocPrev<cr>
+nmap <silent> ]k :CocNext<cr>
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! Expand(exp) abort
+    let l:result = expand(a:exp)
+    return l:result ==# '' ? '' : "file://" . l:result
+endfunction
+
+nnoremap <silent> crcc :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'cycle-coll', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+nnoremap <silent> crth :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'thread-first', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+nnoremap <silent> crtt :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'thread-last', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+nnoremap <silent> crtf :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'thread-first-all', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+nnoremap <silent> crtl :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'thread-last-all', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+nnoremap <silent> cruw :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'unwind-thread', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+nnoremap <silent> crua :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'unwind-all', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+nnoremap <silent> crml :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'move-to-let', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1, input('Binding name: ')]})<CR>
+nnoremap <silent> cril :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'introduce-let', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1, input('Binding name: ')]})<CR>
+nnoremap <silent> crel :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'expand-let', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+nnoremap <silent> cram :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'add-missing-libspec', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+nnoremap <silent> crcn :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'clean-ns', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+nnoremap <silent> crcp :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'cycle-privacy', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+nnoremap <silent> cris :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'inline-symbol', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
+nnoremap <silent> cref :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'extract-function', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1, input('Function name: ')]})<CR>
+
+" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+vmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap for do codeAction of current line
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Fix autofix problem of current line
+nmap <leader>aq  <Plug>(coc-fix-current)
+" workspace symbols 
+nnoremap <silent><leader>s  :<C-u>CocList -I symbols<cr>
+
+autocmd BufReadCmd,FileReadCmd,SourceCmd jar:file://* call s:LoadClojureContent(expand("<amatch>"))
+ function! s:LoadClojureContent(uri)
+  setfiletype clojure
+  let content = CocRequest('clojure-lsp', 'clojure/dependencyContents', {'uri': a:uri})
+  call setline(1, split(content, "\n"))
+  setl nomodified
+  setl readonly
+endfunction
