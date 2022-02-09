@@ -5,7 +5,7 @@ call plug#begin('~/.vim/bundle')
 Plug 'Chiel92/vim-autoformat'
 Plug 'PeterRincker/vim-argumentative'
 Plug 'airblade/vim-gitgutter'
-Plug 'ambv/black', {'for': 'python'}
+Plug 'psf/black', {'for': 'python'}
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-sort-motion'
 Plug 'editorconfig/editorconfig-vim'
@@ -28,9 +28,11 @@ Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-scriptease'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
+Plug 'ervandew/supertab'
 
 " Clojure
 Plug 'guns/vim-sexp', {'for': 'clojure'}
+Plug 'tpope/vim-sexp-mappings-for-regular-people', {'for': 'clojure'}
 Plug 'nvim-treesitter/nvim-treesitter', {'do': 'TSUpdate'}
 Plug 'liquidz/vim-iced', {'for': 'clojure'}
 Plug 'neoclide/coc.nvim', {'branch': 'release', 'for': 'clojure'}
@@ -46,8 +48,17 @@ Plug 'sbdchd/neoformat', {'for': ['javascript', 'typescript']}
 
 call plug#end()
 
-highlight ALEErrorSign ctermbg=NONE ctermfg=red
-highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
+" ## Color Scheme
+if filereadable(expand("~/.vimrc_background"))
+  let base16colorspace=256
+  source ~/.vimrc_background
+endif
+colorscheme base16-ocean
+set background=dark
+
+highlight SpellBad ctermbg=NONE ctermfg=1 cterm=undercurl 
+highlight SpellCap ctermbg=NONE ctermfg=3 cterm=undercurl
+
 let g:ale_fixers = {
 \  'javascript': ['eslint'],
 \  'typescript': ['eslint'],
@@ -59,7 +70,6 @@ let g:ale_linters = {
       \ 'clojure': ['clj-kondo', 'joker']
       \}
 let g:ale_fix_on_save = 1
-let g:ale_completion_enabled = 1
 
 nnoremap <leader>G :ALEGoToDefinition<cr>
 
@@ -107,6 +117,11 @@ set completeopt=menuone,longest
 set wildignore+=*.o,*.obj,.git,*.pyc,.svn,.bzr,__pycache__,.ensime_cache,**/target/**,.git,.m2,.tox,.venv
 set tildeop
 
+" supertab
+
+"let g:SuperTabLongestHighlight=1
+let g:SuperTabCrMapping=1
+let g:SuperTabDefaultCompletionType = "<c-n>"
 """ don't bell or blink
 set noerrorbells
 
@@ -248,27 +263,17 @@ let g:neomake_logfile = expand('~/neomake.log')
 
 " ## python
 
-let g:neomake_python_enabled_makers = ['flake8'] ", 'pylint', 'mypy']
-let g:neomake_python_flake8_args = ['--ignore', 'E501', '--max-complexity', '10']
+let g:neomake_python_enabled_makers = ['flake8', 'pylint', 'mypy']
+let g:neomake_python_flake8_args = ['--ignore', 'E203,E501,W503', '--max-complexity', '10']
 let g:neomake_python_pylint_args = ['-d', 'unsubscriptable-object,invalid-name,redefined-outer-name,bad-continuation,trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-function,docstring,missing-docstring,superfluous-parens,ungrouped-imports', '--output-format=text', '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg} [{msg_id}]"', '--reports=no']
+let g:black_virtualenv = '~/eden/grdn/.pyenv'
 
-hi link NeomakeErrorSign Error
-hi link NeomakeWarningSign Search
-hi link NeomakeError Error
-hi link NeomakeWarning Search
+
 set statusline+=\ %#ErrorMsg#%{neomake#statusline#LoclistStatus('')}
 
 nnoremap <Leader>f :lfirst<CR>
 nnoremap <Leader>n :lnext<CR>
 nnoremap <Leader>p :lprev<CR>
-
-" ## Color Scheme
-if filereadable(expand("~/.vimrc_background"))
-  let base16colorspace=256
-  source ~/.vimrc_background
-endif
-colorscheme base16-ocean
-set background=dark
 
 " ## auto/FileType specific changes
 
@@ -397,15 +402,13 @@ nmap <leader>c :let @+ = expand("%")<cr>
 " vim-iced
 " Enable vim-iced's default key mapping
 " This is recommended for newbies
-let g:iced_enable_default_key_mappings = v:true
 let g:iced_enable_clj_kondo_analysis = v:true
 let g:iced_enable_clj_kondo_local_analysis = v:true
-let g:sexp_mappings = {'sexp_indent': '', 'sexp_indent_top': ''}
 
 
 aug VimAutoFormatOnWriting
   au!
-  au BufWritePre *.clj,*.edn :%!bin/zprintm-1.1.2 '{:search-config? true}'
+  au BufWritePre *.clj,*.edn :%!zprint '{:search-config? true}'
 aug END
 
 let g:float_preview#docked = 0
