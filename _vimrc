@@ -5,19 +5,20 @@ call plug#begin('~/.vim/bundle')
 Plug 'Chiel92/vim-autoformat'
 Plug 'PeterRincker/vim-argumentative'
 Plug 'airblade/vim-gitgutter'
-Plug 'psf/black', {'for': 'python'}
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-sort-motion'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'ervandew/supertab'
 Plug 'fatih/vim-go', {'for': 'go'}
-Plug 'fisadev/vim-isort', {'for': 'python'}
 Plug 'jmcantrell/vim-virtualenv'
-Plug 'ludovicchabant/vim-gutentags', {'for': 'python'}
-Plug 'mgedmin/coverage-highlight.vim'
+Plug 'ludovicchabant/vim-gutentags'
 Plug 'mhinz/vim-grepper'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'ncm2/float-preview.nvim'
 Plug 'neomake/neomake'
+Plug 'neovim/nvim-lspconfig'
+Plug 'pangloss/vim-javascript', {'for': 'javascript'}
+Plug 'psf/black', {'for': 'python', 'branch': 'stable'}
 Plug 'rhysd/committia.vim'
 Plug 'thisfred/breakfast', {'for': 'python', 'rtp': 'vim'}
 Plug 'tpope/vim-apathy'
@@ -45,6 +46,7 @@ Plug 'maxmellon/vim-jsx-pretty'   " JS and JSX syntax
 
 Plug 'dense-analysis/ale', {'for': ['css', 'javascript', 'typescript', 'typescriptreact', 'clojure']}
 Plug 'sbdchd/neoformat', {'for': ['javascript', 'typescript']}
+Plug 'vim-test/vim-test'
 
 call plug#end()
 
@@ -110,15 +112,14 @@ let g:netrw_banner=0
 set title " show title in console title bar
 
 """ completions
-set wildmenu
 set wildmode=longest,list,full
-set complete=.,w,b,u,t,i,kspell
-set completeopt=menuone,longest
+set wildmenu
+" set complete=.,w,b,u,t,i,kspell
+" set completeopt=menuone,longest
 set wildignore+=*.o,*.obj,.git,*.pyc,.svn,.bzr,__pycache__,.ensime_cache,**/target/**,.git,.m2,.tox,.venv
 set tildeop
 
 " supertab
-
 "let g:SuperTabLongestHighlight=1
 let g:SuperTabCrMapping=1
 let g:SuperTabDefaultCompletionType = "<c-n>"
@@ -248,26 +249,27 @@ cnoremap <C-k> <t_ku>
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
 nnoremap <leader>T :execute '!make test'<cr>
+nnoremap <leader>t :TestFile<CR>
+nnoremap <leader>n :tn<CR>
 
 
 " ## Plugins
-
-inoremap <silent><expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-
-" # fugitive
-
-let g:fugitive_github_domains = ['https://github.banksimple.com']
 
 " # neomake
 let g:neomake_logfile = expand('~/neomake.log')
 
 " ## python
 
-let g:neomake_python_enabled_makers = ['flake8', 'pylint', 'mypy']
-let g:neomake_python_flake8_args = ['--ignore', 'E203,E501,W503', '--max-complexity', '10']
-let g:neomake_python_pylint_args = ['-d', 'unsubscriptable-object,invalid-name,redefined-outer-name,bad-continuation,trailing-newlines,misplaced-comparison-constant,line-too-long,unused-import,undefined-variable,unnecessary-semicolon,multiple-statements,missing-function,docstring,missing-docstring,superfluous-parens,ungrouped-imports', '--output-format=text', '--msg-template="{path}:{line}:{column}:{C}: [{symbol}] {msg} [{msg_id}]"', '--reports=no']
-let g:black_virtualenv = '~/eden/grdn/.pyenv'
+let g:neomake_python_enabled_makers = ['mypy']
+let g:neomake_python_mypy_args = ['--check-untyped-defs', '--config-file', 'mypy.ini']
 
+" ## Color Scheme
+if filereadable(expand("~/.vimrc_background"))
+  let base16colorspace=256
+  source ~/.vimrc_background
+endif
+colorscheme base16-ocean
+set background=dark
 
 set statusline+=\ %#ErrorMsg#%{neomake#statusline#LoclistStatus('')}
 
@@ -399,78 +401,9 @@ map <leader>r :call RenameFile()<cr>
 " copy filename of current buffer
 nmap <leader>c :let @+ = expand("%")<cr>
 
-" vim-iced
-" Enable vim-iced's default key mapping
-" This is recommended for newbies
-let g:iced_enable_clj_kondo_analysis = v:true
-let g:iced_enable_clj_kondo_local_analysis = v:true
+map <C-w>f <C-w>vgf
+map <C-w>F <C-w>vgF
 
+set cursorline
 
-aug VimAutoFormatOnWriting
-  au!
-  au BufWritePre *.clj,*.edn :%!zprint '{:search-config? true}'
-aug END
-
-let g:float_preview#docked = 0
-let g:float_preview#max_width = 80
-let g:float_preview#max_height = 40
-
-" COC
-let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
-let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
-
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <leader>u <Plug>(coc-references)
-nmap <leader>rn <Plug>(coc-rename)
-
-let g:coc_enable_locationlist = 0
-autocmd User CocLocationsChange CocList --normal location
-
-inoremap <silent><expr> <c-space> coc#refresh()
-nmap <silent> [l <Plug>(coc-diagnostic-prev)
-nmap <silent> ]l <Plug>(coc-diagnostic-next)
-nmap <silent> [k :CocPrev<cr>
-nmap <silent> ]k :CocNext<cr>
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! Expand(exp) abort
-    let l:result = expand(a:exp)
-    return l:result ==# '' ? '' : "file://" . l:result
-endfunction
-
-nnoremap <silent> crcc :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'cycle-coll', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
-nnoremap <silent> crth :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'thread-first', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
-nnoremap <silent> crtt :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'thread-last', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
-nnoremap <silent> crtf :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'thread-first-all', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
-nnoremap <silent> crtl :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'thread-last-all', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
-nnoremap <silent> cruw :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'unwind-thread', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
-nnoremap <silent> crua :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'unwind-all', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
-nnoremap <silent> crml :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'move-to-let', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1, input('Binding name: ')]})<CR>
-nnoremap <silent> cril :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'introduce-let', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1, input('Binding name: ')]})<CR>
-nnoremap <silent> crel :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'expand-let', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
-nnoremap <silent> cram :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'add-missing-libspec', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
-nnoremap <silent> crcn :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'clean-ns', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
-nnoremap <silent> crcp :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'cycle-privacy', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
-nnoremap <silent> cris :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'inline-symbol', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1]})<CR>
-nnoremap <silent> cref :call CocRequest('clojure-lsp', 'workspace/executeCommand', {'command': 'extract-function', 'arguments': [Expand('%:p'), line('.') - 1, col('.') - 1, input('Function name: ')]})<CR>
-
-" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-vmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-" Remap for do codeAction of current line
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Fix autofix problem of current line
-nmap <leader>aq  <Plug>(coc-fix-current)
-" workspace symbols 
-nnoremap <silent><leader>s  :<C-u>CocList -I symbols<cr>
-
-autocmd BufReadCmd,FileReadCmd,SourceCmd jar:file://* call s:LoadClojureContent(expand("<amatch>"))
- function! s:LoadClojureContent(uri)
-  setfiletype clojure
-  let content = CocRequest('clojure-lsp', 'clojure/dependencyContents', {'uri': a:uri})
-  call setline(1, split(content, "\n"))
-  setl nomodified
-  setl readonly
-endfunction
+lua require('lspruff')

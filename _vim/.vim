@@ -1,1 +1,0 @@
-/home/eric/github/vim-config/_vim
