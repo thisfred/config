@@ -5,6 +5,7 @@ call plug#begin('~/.vim/bundle')
 Plug 'Chiel92/vim-autoformat'
 Plug 'PeterRincker/vim-argumentative'
 Plug 'airblade/vim-gitgutter'
+Plug 'bogado/file-line'
 Plug 'chriskempson/base16-vim'
 Plug 'christoomey/vim-sort-motion'
 Plug 'editorconfig/editorconfig-vim'
@@ -20,6 +21,7 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'pangloss/vim-javascript', {'for': 'javascript'}
 Plug 'psf/black', {'for': 'python', 'branch': 'stable'}
 Plug 'rhysd/committia.vim'
+Plug 'rust-lang/rust.vim'
 Plug 'thisfred/breakfast', {'for': 'python', 'rtp': 'vim'}
 Plug 'tpope/vim-apathy'
 Plug 'tpope/vim-commentary'
@@ -29,23 +31,6 @@ Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-scriptease'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
-Plug 'ervandew/supertab'
-
-" Clojure
-Plug 'guns/vim-sexp', {'for': 'clojure'}
-Plug 'tpope/vim-sexp-mappings-for-regular-people', {'for': 'clojure'}
-Plug 'nvim-treesitter/nvim-treesitter', {'do': 'TSUpdate'}
-Plug 'liquidz/vim-iced', {'for': 'clojure'}
-Plug 'neoclide/coc.nvim', {'branch': 'release', 'for': 'clojure'}
-
-" JS
-Plug 'pangloss/vim-javascript'    " JavaScript support
-Plug 'HerringtonDarkholme/yats.vim'
-Plug 'leafgarland/typescript-vim' " TypeScript syntax
-Plug 'maxmellon/vim-jsx-pretty'   " JS and JSX syntax
-
-Plug 'dense-analysis/ale', {'for': ['css', 'javascript', 'typescript', 'typescriptreact', 'clojure']}
-Plug 'sbdchd/neoformat', {'for': ['javascript', 'typescript']}
 Plug 'vim-test/vim-test'
 
 call plug#end()
@@ -120,9 +105,8 @@ set wildignore+=*.o,*.obj,.git,*.pyc,.svn,.bzr,__pycache__,.ensime_cache,**/targ
 set tildeop
 
 " supertab
-"let g:SuperTabLongestHighlight=1
+let g:SuperTabLongestHighlight=1
 let g:SuperTabCrMapping=1
-let g:SuperTabDefaultCompletionType = "<c-n>"
 """ don't bell or blink
 set noerrorbells
 
@@ -262,6 +246,9 @@ let g:neomake_logfile = expand('~/neomake.log')
 
 let g:neomake_python_enabled_makers = ['mypy']
 let g:neomake_python_mypy_args = ['--check-untyped-defs', '--config-file', 'mypy.ini']
+nnoremap <Leader>f :lfirst<CR>
+nnoremap <Leader>n :lnext<CR>
+nnoremap <Leader>p :lprev<CR>
 
 " ## Color Scheme
 if filereadable(expand("~/.vimrc_background"))
@@ -407,3 +394,8 @@ map <C-w>F <C-w>vgF
 set cursorline
 
 lua require('lspruff')
+
+" Rust
+lua require'lspconfig'.rust_analyzer.setup({})
+
+let g:rustfmt_autosave = 1

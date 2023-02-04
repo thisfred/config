@@ -6,3 +6,5 @@ pytest-testmon
 python-lsp-ruff
 python-lsp-server 
 ruff-lsp
+pynvim
+git+ssh://git@github.com/thisfred/breakfast
