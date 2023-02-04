@@ -272,7 +272,6 @@ augroup py
     autocmd!
     au FileType python setlocal expandtab indentkeys-=<:> shiftwidth=4 tabstop=4 softtabstop=4 tw=88
       \ nosmartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
-    autocmd BufWritePre *.py :Isort
     autocmd BufWritePre *.py :Black
     autocmd BufWritePre *.py :call DeleteTrailingWS()
 augroup END
