@@ -11,7 +11,6 @@ Plug 'christoomey/vim-sort-motion'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'ervandew/supertab'
 Plug 'fatih/vim-go', {'for': 'go'}
-Plug 'jmcantrell/vim-virtualenv'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'mhinz/vim-grepper'
 Plug 'michaeljsmith/vim-indent-object'
@@ -245,7 +244,6 @@ let g:neomake_logfile = expand('~/neomake.log')
 " ## python
 
 let g:neomake_python_enabled_makers = ['mypy']
-let g:neomake_python_mypy_args = ['--check-untyped-defs', '--config-file', 'mypy.ini']
 nnoremap <Leader>f :lfirst<CR>
 nnoremap <Leader>n :lnext<CR>
 nnoremap <Leader>p :lprev<CR>
@@ -382,7 +380,7 @@ function! RenameFile()
         redraw!
     endif
 endfunction
-map <leader>r :call RenameFile()<cr>
+" map <leader>r :call RenameFile()<cr>
 
 " copy filename of current buffer
 nmap <leader>c :let @+ = expand("%")<cr>
@@ -398,3 +396,12 @@ lua require('lspruff')
 lua require'lspconfig'.rust_analyzer.setup({})
 
 let g:rustfmt_autosave = 1
+
+
+" lua << EOF
+" vim.api.nvim_create_autocmd('DiagnosticChanged', {
+"     callback = function(args)
+"       vim.diagnostic.setloclist({open = false})
+"     end,
+" })
+" EOF

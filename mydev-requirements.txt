@@ -3,8 +3,8 @@ mypy
 pynvim
 pytest
 pytest-testmon
-python-lsp-ruff
 python-lsp-server 
+python-lsp-ruff
 ruff-lsp
 pynvim
 git+ssh://git@github.com/thisfred/breakfast
