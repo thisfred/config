@@ -18,7 +18,6 @@ Plug 'ncm2/float-preview.nvim'
 Plug 'neomake/neomake'
 Plug 'neovim/nvim-lspconfig'
 Plug 'pangloss/vim-javascript', {'for': 'javascript'}
-Plug 'psf/black', {'for': 'python', 'branch': 'stable'}
 Plug 'rhysd/committia.vim'
 Plug 'rust-lang/rust.vim'
 Plug 'thisfred/breakfast', {'for': 'python', 'rtp': 'vim'}
@@ -231,6 +230,7 @@ cnoremap <C-k> <t_ku>
 
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
+let test#python#runner = 'pytest'
 nnoremap <leader>T :execute '!make test'<cr>
 nnoremap <leader>t :TestFile<CR>
 nnoremap <leader>n :tn<CR>
@@ -270,8 +270,9 @@ augroup py
     autocmd!
     au FileType python setlocal expandtab indentkeys-=<:> shiftwidth=4 tabstop=4 softtabstop=4 tw=88
       \ nosmartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
-    autocmd BufWritePre *.py :Black
-    autocmd BufWritePre *.py :call DeleteTrailingWS()
+    autocmd BufWritePost *.py silent! :RuffAutofix
+    autocmd BufWritePost *.py silent! :RuffOrganizeImports
+    autocmd BufWritePost *.py silent! :lua vim.lsp.buf.format()
 augroup END
 
 augroup js
@@ -391,17 +392,9 @@ map <C-w>F <C-w>vgF
 set cursorline
 
 lua require('lspruff')
+lua require('lspbreakfast')
 
 " Rust
 lua require'lspconfig'.rust_analyzer.setup({})
 
 let g:rustfmt_autosave = 1
-
-
-" lua << EOF
-" vim.api.nvim_create_autocmd('DiagnosticChanged', {
-"     callback = function(args)
-"       vim.diagnostic.setloclist({open = false})
-"     end,
-" })
-" EOF

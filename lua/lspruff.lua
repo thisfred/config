@@ -16,7 +16,51 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
 end
 
+
+local lspconfig = require 'lspconfig'
+
+lspconfig.ruff_lsp.setup {
+  on_attach = on_attach,
+  commands = {
+    RuffAutofix = {
+      function()
+        vim.lsp.buf.execute_command {
+          command = 'ruff.applyAutofix',
+          arguments = {
+            { uri = vim.uri_from_bufnr(0) },
+          },
+        }
+      end,
+      description = 'Ruff: Fix all auto-fixable problems',
+    },
+    RuffOrganizeImports = {
+      function()
+        vim.lsp.buf.execute_command {
+          command = 'ruff.applyOrganizeImports',
+          arguments = {
+            { uri = vim.uri_from_bufnr(0) },
+          },
+        }
+      end,
+      description = 'Ruff: Format imports',
+    },
+    RuffFormat = {
+      function()
+        vim.lsp.buf.execute_command {
+          command = 'ruff.applyFormat',
+          arguments = {
+            { uri = vim.uri_from_bufnr(0) },
+          },
+        }
+      end,
+      description = 'Ruff: Format code',
+    },
+  },
+}
+
+
 local on_attach_breakfast = function(clien, bufnr)
+  vim.keymap.set('v', '<leader>ca', vim.lsp.buf.code_action, bufopts)
   vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, bufopts)
   vim.keymap.set('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
@@ -28,13 +72,8 @@ local on_attach_breakfast = function(clien, bufnr)
   end, bufopts)
 end
 
-local lspconfig = require 'lspconfig'
-
-lspconfig.ruff_lsp.setup {
-  on_attach = on_attach,
-}
-
 local configs = require 'lspconfig.configs'
+
 if not configs.breakfast_lsp then
     configs.breakfast_lsp =  {
         default_config = {
@@ -44,6 +83,9 @@ if not configs.breakfast_lsp then
         },
     }
 end
+
+
 lspconfig.breakfast_lsp.setup {
   on_attach = on_attach_breakfast,
 }
+
