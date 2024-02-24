@@ -21,6 +21,7 @@ Plug 'pangloss/vim-javascript', {'for': 'javascript'}
 Plug 'rhysd/committia.vim'
 Plug 'rust-lang/rust.vim'
 Plug 'thisfred/breakfast', {'for': 'python', 'rtp': 'vim'}
+Plug 'tmsvg/pear-tree'
 Plug 'tpope/vim-apathy'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
@@ -270,9 +271,9 @@ augroup py
     autocmd!
     au FileType python setlocal expandtab indentkeys-=<:> shiftwidth=4 tabstop=4 softtabstop=4 tw=88
       \ nosmartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
-    autocmd BufWritePost *.py silent! :RuffAutofix
-    autocmd BufWritePost *.py silent! :RuffOrganizeImports
-    autocmd BufWritePost *.py silent! :lua vim.lsp.buf.format()
+    autocmd BufWritePre *.py silent! :RuffAutofix
+    autocmd BufWritePre *.py silent! :RuffOrganizeImports
+    autocmd BufWritePre *.py silent! :lua vim.lsp.buf.format()
 augroup END
 
 augroup js
