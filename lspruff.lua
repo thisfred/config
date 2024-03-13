@@ -46,7 +46,7 @@ lspconfig.ruff_lsp.setup {
       RuffAutofix = {
           function()
               lsp_client("ruff_lsp").request("workspace/executeCommand",{
-                  command = "ruff.applyOrganizeImports",
+                  command = "ruff.applyAutofix",
                   arguments = {
                       {uri = vim.uri_from_bufnr(0)},
 

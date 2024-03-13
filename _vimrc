@@ -271,8 +271,8 @@ augroup py
     autocmd!
     au FileType python setlocal expandtab indentkeys-=<:> shiftwidth=4 tabstop=4 softtabstop=4 tw=88
       \ nosmartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
-    autocmd BufWritePre *.py silent! :RuffAutofix
     autocmd BufWritePre *.py silent! :RuffOrganizeImports
+    autocmd BufWritePre *.py silent! :RuffAutofix
     autocmd BufWritePre *.py silent! :lua vim.lsp.buf.format()
 augroup END
 
