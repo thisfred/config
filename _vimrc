@@ -6,7 +6,7 @@ Plug 'Chiel92/vim-autoformat'
 Plug 'PeterRincker/vim-argumentative'
 Plug 'airblade/vim-gitgutter'
 Plug 'bogado/file-line'
-Plug 'chriskempson/base16-vim'
+Plug 'RRethy/base16-nvim'
 Plug 'christoomey/vim-sort-motion'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'ervandew/supertab'
@@ -31,6 +31,7 @@ Plug 'tpope/vim-scriptease'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-unimpaired'
 Plug 'vim-test/vim-test'
+Plug 'AndrewRadev/id3.vim'
 
 call plug#end()
 
@@ -45,19 +46,6 @@ set background=dark
 highlight SpellBad ctermbg=NONE ctermfg=1 cterm=undercurl 
 highlight SpellCap ctermbg=NONE ctermfg=3 cterm=undercurl
 
-let g:ale_fixers = {
-\  'javascript': ['eslint'],
-\  'typescript': ['eslint'],
-\  'typescriptreact': ['eslint'],
-\}
-
-" Place configuration AFTER `call plug#end()`!
-let g:ale_linters = {
-      \ 'clojure': ['clj-kondo', 'joker']
-      \}
-let g:ale_fix_on_save = 1
-
-nnoremap <leader>G :ALEGoToDefinition<cr>
 
 set modelines=0 " disable security holes
 set cursorline
@@ -69,7 +57,6 @@ let g:gutentags_cache_dir='~/.cache/vim/tags'
 " encoding
 set encoding=utf-8
 set fileencoding=utf-8
-set termencoding=utf-8
 
 set number
 set path+=**
@@ -110,7 +97,6 @@ let g:SuperTabCrMapping=1
 set noerrorbells
 
 """ Moving Around/Editing
-"set cursorline " have a line indicate the cursor location
 set nostartofline " Avoid moving cursor to BOL when jumping around
 set virtualedit=block " Let cursor move past the last char in <C-v> mode
 set scrolloff=5 " Keep context lines above and below the cursor
@@ -179,7 +165,6 @@ nnoremap <c-o> <c-o>zz
 
 " copying and pasting
 set clipboard+=unnamedplus
-set pastetoggle=<F2>
 
 " Don't restore empty windows in session
 set sessionoptions-=blank
@@ -241,6 +226,7 @@ nnoremap <leader>n :tn<CR>
 
 " # neomake
 let g:neomake_logfile = expand('~/neomake.log')
+let g:neomake_open_list = 2
 
 " ## python
 
@@ -248,14 +234,6 @@ let g:neomake_python_enabled_makers = ['mypy']
 nnoremap <Leader>f :lfirst<CR>
 nnoremap <Leader>n :lnext<CR>
 nnoremap <Leader>p :lprev<CR>
-
-" ## Color Scheme
-if filereadable(expand("~/.vimrc_background"))
-  let base16colorspace=256
-  source ~/.vimrc_background
-endif
-colorscheme base16-ocean
-set background=dark
 
 set statusline+=\ %#ErrorMsg#%{neomake#statusline#LoclistStatus('')}
 
@@ -271,9 +249,8 @@ augroup py
     autocmd!
     au FileType python setlocal expandtab indentkeys-=<:> shiftwidth=4 tabstop=4 softtabstop=4 tw=88
       \ nosmartindent cinwords=if,elif,else,for,while,try,except,finally,def,class,with
-    autocmd BufWritePre *.py silent! :RuffOrganizeImports
-    autocmd BufWritePre *.py silent! :RuffAutofix
-    autocmd BufWritePre *.py silent! :lua vim.lsp.buf.format()
+    " autocmd BufWritePre *.py silent! :lua vim.lsp.buf.format()
+
 augroup END
 
 augroup js
@@ -390,12 +367,14 @@ nmap <leader>c :let @+ = expand("%")<cr>
 map <C-w>f <C-w>vgf
 map <C-w>F <C-w>vgF
 
-set cursorline
 
-lua require('lspruff')
 lua require('lspbreakfast')
 
 " Rust
 lua require'lspconfig'.rust_analyzer.setup({})
 
 let g:rustfmt_autosave = 1
+
+" for geotags: move line to top of file then select it minus newline
+noremap <leader>g :norm ddggP<cr>0y$
+xnoremap <leader>G c<C-R>=trim(system("python3 -c " . shellescape("import pygeohash; print(pygeohash.encode(" . @" . "))")))<CR><Esc>
